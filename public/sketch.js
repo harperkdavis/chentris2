@@ -564,7 +564,7 @@ function update() {
             }
         }
 
-        buttonState(20, 95, 180, 30, () => {}, () => navigator.clipboard.writeText(`localhost:8080/chentris2#${game.gameData.match.joinCode}`), !game.gameData.match.options.allowJoining);
+        buttonState(20, 95, 180, 30, () => {}, () => navigator.clipboard.writeText(`play.hked.live/chentris2#${game.gameData.match.joinCode}`), !game.gameData.match.options.allowJoining);
         buttonState(20, 130, 180, 30, () => {}, () => { socket.io.emit('leave_match'); reset(); connect(); }, false);
 
         if (!game.inGame) {
