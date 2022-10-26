@@ -525,6 +525,9 @@ async function tick() {
 
                     for (let id of match.players) {
                         match.boards[id] = createNewBoard(id, match.code, uuidv4(), seedrandom);
+                        const userData = await database.findUser({ _id: id });
+                        userData.secret = 'shh!';
+                        match.data[id] = userData;
                         io.to(id).emit('board_reset');
                     }
                 }
