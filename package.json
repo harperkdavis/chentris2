@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "nodemon --watch src/ src/index.ts",
-    "dev:client": "parcel --public-url . public/index.html"
+    "dev:client": "parcel --public-url . public/index.html",
+    "start": "node src/index.ts"
   },
   "author": "harperkdavis",
   "license": "ISC",
