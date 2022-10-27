@@ -428,22 +428,28 @@ async function tick() {
                     
                     if (!match.solo) {
                         const eloChange = {};
+                        const playerDatas = {};
+
+                        for (let player of match.order) {
+                            playerDatas[player] = await database.findUser({_id: player});
+                        }
+
                         if (match.options.ranked) {
                             
-
                             for (let player of match.order) {
                                 eloChange[player] = 0;
+                                
                             }
 
                             const kValue = Math.ceil(K_VALUE / Math.sqrt(match.order.length - 1) / 2);
 
                             for (let i = 0; i < match.order.length; i += 1) {
                                 const playerId = match.order[i];
-                                const playerElo = match.rules.competitive ? match.data[playerId].compElo : match.data[playerId].normalElo;
+                                const playerElo = match.rules.competitive ? playerDatas[playerId].compElo : playerDatas[playerId].normalElo;
 
                                 for (let j = 0; j < match.order.length; j += 1) {
                                     const otherId = match.order[j];
-                                    const otherElo = match.rules.competitive ? match.data[otherId].compElo : match.data[otherId].normalElo;
+                                    const otherElo = match.rules.competitive ? playerDatas[otherId].compElo : playerDatas[otherId].normalElo;
 
                                     if (i !== j) {
                                         const elo = EloRating.calculate(playerElo, otherElo, (i > j), kValue);
@@ -454,30 +460,33 @@ async function tick() {
                             }
                         }
 
-                        for (let id of match.players) {
-                            const juice = match.boards[id].juice;
-                            const lines = match.boards[id].lines;
-                            const kills = match.kills[id];
-
-                            const xp = Math.floor((juice / 100 + lines * 4) * (kills + 1));
+                        for (let id of match.order) {
+                            const user = await database.findUser({ _id: id });
                             const elo = match.options.ranked ? Math.round(eloChange[id]) : 0;
 
-                            match.results.rewards[id] = {
-                                juice,
-                                xp,
-                                elo,
-                            }
-
-                            const user = await database.findUser({ _id: id });
-
-                            user.juice += juice;
-                            user.xp += xp;
                             if (match.rules.competitive) {
                                 user.compElo += elo;
                             } else {
                                 user.normalElo += elo;
                             }
 
+                            if (match.players.includes(id)) {
+                                const juice = match.boards[id].juice;
+                                const lines = match.boards[id].lines;
+                                const kills = match.kills[id];
+
+                                const xp = Math.floor((juice / 100 + lines * 4) * (kills + 1));
+
+                                match.results.rewards[id] = {
+                                    juice,
+                                    xp,
+                                    elo,
+                                }
+
+                                user.juice += juice;
+                                user.xp += xp;
+                            }
+                            
                             await user.save();
                         }
 

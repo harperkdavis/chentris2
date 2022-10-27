@@ -625,6 +625,10 @@ function update() {
         
         game.localData.stateAcc += deltaTime;
 
+        if (!game.localData.board) {
+            return;
+        }
+
         if (game.localData.board.lost) {
             game.localData.deadAnim += deltaTime;
         } else {
@@ -760,7 +764,7 @@ function update() {
         if (game.gameData.match.playing) {
             let i = 0;
             const count = game.gameData.match.players.filter(id => !game.gameData.match.boards[id].lost).length;
-            const size = count <= 2 ? SQUARE_SIZE : (height - 150) / ceil(sqrt(count)) / 24;
+            const size = count <= 2 ? SQUARE_SIZE : (height - 150) / ceil(sqrt(count - 1)) / 24;
 
             let spectating = game.gameData.match.boards[game.playerData._id].lost;
             for (let id of game.gameData.match.players.filter(id => id !== game.playerData._id)) {
@@ -1574,6 +1578,10 @@ function drawState() {
     let deadAnimX = 0;
     let deadAnimY = 0;
 
+    if (!game.localData.board) {
+        return;
+    }
+
     if (game.localData.board.lost) {
 
         const anim = game.localData.deadAnim * 50;
@@ -1779,7 +1787,6 @@ function drawState() {
         textSize(16);
         textStyle(BOLD);
         
-        const count = game.gameData.match.players.length;
         const players = game.gameData.match.players.filter(id => id !== game.playerData._id);
         const alivePlayers = game.gameData.match.players.filter(id => !game.gameData.match.boards[id].lost);
         
@@ -1796,7 +1803,7 @@ function drawState() {
             
             drawBoard(game.gameData.match.boards[id], game.gameData.match.states[id].state || defaultSubmoveState(), 
                 game.gameData.match.states[id].timers || { fall: 0, dropping: false, shortDrop: 0, longDrop: 0}, 
-            game.localData.boardSizes[id], count >= 25 ? 0 : ( count >= 17 ? 1 : ( count >= 10 ? 2 : ( count >= 5 ? 3 : (count <= 2 ? 4 : 3)))));
+            game.localData.boardSizes[id], alivePlayers.length >= 25 ? 0 : ( alivePlayers.length >= 17 ? 1 : ( alivePlayers.length >= 10 ? 2 : ( alivePlayers.length >= 5 ? 3 : (alivePlayers.length <= 2 ? 4 : 3)))));
 
             noStroke();
             fill(0);
