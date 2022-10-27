@@ -11,7 +11,7 @@ import { Match } from './game';
 
 import { createNewBoard, defaultSubmoveState, makeMove, COMPETITIVE_DEFAULTS, NORMAL_DEFAULTS, getCombos, getJuiceLevel, highestTile } from './tetris';
 
-const K_VALUE = 50;
+const K_VALUE = 100;
 
 const basePath = '/chentris2';
 const port = 8080;
