@@ -48,7 +48,7 @@ const RANKS = [
         elo: 1000000000,
         name: "Chenmeister",
         icon: "./assets/rank-chenmeister.png"
-    }, 
+    }
 ];
 function loadRankIcons() {
     for (let rank of RANKS){

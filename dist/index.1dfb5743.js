@@ -622,8 +622,8 @@
                 if (t.input) Array.isArray(t.input) ? (i.prototype.isUndef(n) && (n = 0), this.connect(t.input[n])) : this.connect(t.input, e, n);
                 else try {
                     t instanceof AudioNode ? r.call(this, t, e, n) : r.call(this, t, e);
-                } catch (e1) {
-                    throw new Error("error connecting to node: " + t + "\n" + e1);
+                } catch (e) {
+                    throw new Error("error connecting to node: " + t + "\n" + e);
                 }
             }
             var r, o;
@@ -706,8 +706,8 @@
                 else if (t && t.input) this.disconnect(t.input, e, n);
                 else try {
                     o.apply(this, arguments);
-                } catch (e1) {
-                    throw new Error("error disconnecting node: " + t + "\n" + e1);
+                } catch (e) {
+                    throw new Error("error disconnecting node: " + t + "\n" + e);
                 }
             }), i.context = new i.Context), i.Context;
         }).apply(e, i)) || (t.exports = r);
@@ -1532,7 +1532,7 @@
         }();
         try {
             n = n || new Function("return this")();
-        } catch (t1) {
+        } catch (t) {
             "object" == typeof window && (n = window);
         }
         t.exports = n;
@@ -1728,7 +1728,7 @@
                 var i, r = this._parseTree(t);
                 try {
                     i = this._eval(r);
-                } catch (e1) {
+                } catch (e) {
                     throw this._disposeNodes(), new Error("Tone.Expr: Could evaluate expression: " + t);
                 }
                 this.output = i;
@@ -2431,7 +2431,7 @@
                                 var r = this.bufferSourceNodes[i];
                                 if (r) try {
                                     r.stop(e + n);
-                                } catch (t1) {}
+                                } catch (t) {}
                             }
                             this._counterNode.stop(e + n);
                         }
@@ -2576,13 +2576,13 @@
                                 this.bufferSourceNodes[n].disconnect();
                                 try {
                                     this.bufferSourceNodes[n].stop(t);
-                                } catch (t1) {}
+                                } catch (t) {}
                                 this.bufferSourceNodes[n] = null;
                             }
                             if (this.isPlaying()) {
                                 try {
                                     this._counterNode.stop(t);
-                                } catch (t2) {}
+                                } catch (t) {}
                                 this._counterNode = null;
                             }
                         }

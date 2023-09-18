@@ -38,7 +38,91 @@ const game = {
 
     awaitingKeypress: false,
     keypressToChange: '',
+
+    hocoAnim: -1,
+
+    leaderboard: {},
+    normalRank: 0,
+    competitiveRank: 0,
 };
+
+const HOCO_SECRET = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 1, 1, 1, 1 ,1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1 ,1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 1, 1, 1, 1, 1 ,1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1 ,1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0 ,1, 0, 0,
+    0, 0, 0, 0, 1, 1, 1 ,1, 0, 0,
+    0, 0, 0, 0, 1, 0, 0 ,0, 0, 0,
+    0, 0, 0, 0, 1, 0, 0 ,0, 0, 0,
+    0, 0, 0, 0, 1, 0, 0 ,0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0 ,0, 0, 0,
+    0, 0, 0, 0, 1, 0, 0 ,0, 0, 0,
+]
 
 const state = {
     creatingNewAccount: false,
@@ -119,6 +203,12 @@ function resetState() {
 
     game.awaitingKeypress = false;
     game.keypressToChange = '';
+
+    game.hocoAnim = -1;
+
+    game.leaderboard = {};
+    game.normalRank = 0;
+    game.competitiveRank = 0;
 }
 
 function preload() {
@@ -252,6 +342,12 @@ function connect() {
         game.loadMessage = '';
 
         game.playerData = data.user;
+        console.log(data);
+        if (data.leaderboard) {
+            game.leaderboard = data.leaderboard;
+            game.normalRank = data.normalRank;
+            game.competitiveRank = data.competitiveRank;
+        }
 
         if (!data.inGame) {
             game.mainMenuAnim = 1;
@@ -260,7 +356,7 @@ function connect() {
 
             if (window.location.hash.length >= 1) {
                 
-                if (window.location.hash.length === 10) {
+                if (window.location.hash.length === 5) {
                     joinMatch(window.location.hash.substring(1));
                 } else {
                     game.error = 'Invalid match link.';
@@ -268,8 +364,6 @@ function connect() {
                 }
 
             }
-        } else {
-            // setup game
         }
     });
 
@@ -314,7 +408,7 @@ function connect() {
             board,
             state: defaultSubmoveState(),
             stateAcc: 0,
-            speed: 80,
+            speed: game.gameData.match.rules.initialSpeed,
             timers: {
                 fall: 0,
                 dropping: false,
@@ -347,7 +441,7 @@ function connect() {
             board,
             state: defaultSubmoveState(),
             stateAcc: 0,
-            speed: 80,
+            speed: game.gameData.match.rules.initialSpeed,
             timers: {
                 fall: 0,
                 dropping: false,
@@ -504,7 +598,7 @@ function update() {
                     stopJoiningMatch();
                 }
 
-                if (game.typedString.length === 9) {
+                if (game.typedString.length === 4) {
                     joinMatch(game.typedString);
 
                     game.isTyping = false;
@@ -589,7 +683,7 @@ function update() {
 
         const comp = game.gameData.match.rules.competitive;
         selectState(150, 325, 40, 20, ON_OR_OFF, () => comp, (v) => changeRule('competitive', v), false);
-        selectState(150, 350, 40, 20, [{ key: 'slow', value: 80 }, { key: 'medium', value: 160 }, { key: 'fast', value: 320 }, { key: 'very fast', value: 640 }], () => game.gameData.match.rules.initialSpeed, (v) => changeRule('initialSpeed', v), comp);
+        selectState(150, 350, 40, 20, [ { key: 'slow', value: 80 }, { key: 'medium', value: 320 }, { key: 'fast', value: 640 }, { key: 'very fast', value: 1280 }, { key: 'good luck', value: 5120 }, { key: 'why', value: 40960 }, { key: 'snail', value: 20 }], () => game.gameData.match.rules.initialSpeed, (v) => changeRule('initialSpeed', v), comp);
         selectState(150, 375, 40, 20, ON_OR_OFF, () => game.gameData.match.rules.resendGarbage, (v) => changeRule('resendGarbage', v), comp);
         selectState(150, 400, 40, 20, ON_OR_OFF, () => game.gameData.match.rules.forgivingCombos, (v) => changeRule('forgivingCombos', v), comp);
         selectState(150, 425, 40, 20, [{ key: 'one', value: 1 }, { key: 'two', value: 2 }, { key: 'three', value: 3 }], () => game.gameData.match.rules.garbageTurns, (v) => changeRule('garbageTurns', v), comp);
@@ -603,6 +697,16 @@ function update() {
             notif.time += deltaTime;
         }
         game.boardNotifications = game.boardNotifications.filter(notif => notif.time <= 1);
+
+        if (game.hocoAnim >= 0 && game.hocoAnim <= 100) {
+            game.hocoAnim += deltaTime * 10;
+        } else if (game.hocoAnim > 100) {
+            game.hocoAnim = -1;
+        }
+
+        if (input.keys['J'.charCodeAt(0)] === 0) {
+            game.hocoAnim = 0;
+        }
 
         let origin = {x: 0, y: 0};
 
@@ -1068,6 +1172,26 @@ function drawBoard(board, state, timers, squareSize, detail) {
 
     }
 
+    if (detail >= 5 && game.hocoAnim >= 0) {
+        const anim = floor(game.hocoAnim);
+        for (let y = 0; y < 20; y += 1) {
+            const indexY = (y + anim) * 10;
+            for (let x = 0; x < 10; x += 1) {
+                const index = indexY + x;
+                if (index >= 0 && index < HOCO_SECRET.length) {
+                    const tile = HOCO_SECRET[index];
+                    
+                    if (tile > 0) {
+                        const color = PIECES[floor(random(0, 7))].color;
+                        stroke(0);
+                        fill(color[0], color[1], color[2]);
+                        rect((-5 + x) * squareSize, (-30 + (y + 20)) * squareSize, squareSize, squareSize);
+                    }
+                }
+            }
+        }
+    }
+
     if (detail >= 4) {
 
         const combos = getCombos(board.combo);
@@ -1183,6 +1307,8 @@ function drawBoard(board, state, timers, squareSize, detail) {
         
     }
 
+    
+
 }
 
 function getKeyName(k) {
@@ -1258,6 +1384,57 @@ function drawState() {
 
         translate(0, -600 * game.mainMenuAnim);
 
+        textAlign(LEFT, TOP);
+        textStyle(BOLD);
+        textSize(16);
+        noStroke();
+        fill(0);
+        text('TOP NORMAL', width - 650, 10);
+        text('TOP COMPETITIVE', width - 450, 10);
+
+        push();
+
+        for (let i = 0; i < 20; i += 1) {
+            translate(-game.mainMenuAnim * 10, -40 * game.mainMenuAnim * i);
+            noStroke();
+            fill(0);
+            textAlign(RIGHT, TOP);
+            textStyle(BOLD);
+            text(`${i + 1}.`, width - 655, 30 + 20 * i);
+            text(`${i + 1}.`, width - 455, 30 + 20 * i);
+
+            textAlign(LEFT, TOP);
+            if (game.leaderboard.normal[i] && game.leaderboard.normal[i].id === game.playerData._id) {
+                textStyle(BOLD);
+            } else {
+                textStyle(NORMAL);
+            }
+            text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].username : '-', width - 650, 30 + 20 * i);
+            if (game.leaderboard.competitive[i] && game.leaderboard.competitive[i].id === game.playerData._id) {
+                textStyle(BOLD);
+            } else {
+                textStyle(NORMAL);
+            }
+            text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].username : '-', width - 450, 30 + 20 * i);
+
+            textStyle(ITALIC);
+            textAlign(RIGHT, TOP);
+            text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : '-', width - 500, 30 + 20 * i);
+            text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : '-', width - 300, 30 + 20 * i);
+
+            noFill();
+            stroke(0);
+
+            image(getRank(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : 0).icon, width - 495, 37 + 20 * i - 8, 16, 16);
+            image(getRank(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : 0).icon, width - 295, 37 + 20 * i - 8, 16, 16);
+
+            rect(width - 495, 37 + 20 * i - 8, 16, 16);
+            rect(width - 295, 37 + 20 * i - 8, 16, 16);
+            
+        }
+
+        pop();
+
         fill(250);
         stroke(0);
 
@@ -1296,8 +1473,8 @@ function drawState() {
         text('Competitive', width - 55, 88);
         
         textSize(16);
-        text(game.playerData.normalElo, width - 155, 100);
-        text(game.playerData.compElo, width - 55, 100);
+        text(game.playerData.normalElo + ' (#' + game.normalRank + ')', width - 155, 100);
+        text(game.playerData.compElo + ' (#' + game.competitiveRank + ')', width - 55, 100);
 
         const normalRank = getRank(game.playerData.normalElo);
         const compRank = getRank(game.playerData.compElo);
@@ -1424,8 +1601,8 @@ function drawState() {
             text('Enter Join Code', width / 2, height / 2 - 40);
 
             textSize(32);
-            for (let i = 0; i < 9; i++) {
-                const x = (i - 4) * (380 / 9);
+            for (let i = 0; i < 4; i++) {
+                const x = (i - 1.5) * (380 / 9);
                 rect(width / 2 - x - 10, height / 2 + 40, 20, 2);
 
                 const char = game.typedString.charAt(i);
@@ -1496,6 +1673,17 @@ function drawState() {
                 text('Press any key to set keybind. Press ESC to cancel.', width / 2 + 10, height / 2); // text for when you are setting a control
             }
         }
+
+        textAlign(LEFT, TOP);
+        textSize(16);
+        text('Update 2', 20 - 400 * game.mainMenuAnim, height - 200);
+        textStyle(NORMAL);
+        text('- Fixed more than 2 players not sending lines', 20 - 400 * game.mainMenuAnim, height - 180);
+        text('- Fixed score after matches', 20 - 400 * game.mainMenuAnim, height - 160);
+        text('- Lobby codes are 4 numbers instead of 9', 20 - 400 * game.mainMenuAnim, height - 140);
+        text('- Find matches now works for the first time', 20 - 400 * game.mainMenuAnim, height - 120);
+        text('- Added leaderboard and rankings', 20 - 400 * game.mainMenuAnim, height - 100);
+        text('- Initial speed actually changes speed', 20 - 400 * game.mainMenuAnim, height - 80);
 
         return;
     }
@@ -1595,7 +1783,7 @@ function drawState() {
     scale(game.boardScale);
     translate(game.boardTranslation[0], game.boardTranslation[1]);
     
-    drawBoard(game.localData.board, game.localData.state, game.localData.timers, SQUARE_SIZE, 4);
+    drawBoard(game.localData.board, game.localData.state, game.localData.timers, SQUARE_SIZE, 5);
 
     
     if (!game.gameData.match.playing) {
@@ -1653,7 +1841,7 @@ function drawState() {
         text('Code', 20, 40);
 
         textSize(32);
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 4; i++) {
             text(game.gameData.match.joinCode[i], 20 + i * 20, 60);
         }
 
@@ -1691,7 +1879,7 @@ function drawState() {
         text('Garbage Defense', 20, 450);
 
         drawSelect(150, 325, 50, 20, ON_OR_OFF, () => getRule('competitive'), false);
-        drawSelect(150, 350, 50, 20, [{ key: 'slow', value: 80 }, { key: 'medium', value: 160 }, { key: 'fast', value: 320 }, { key: 'very fast', value: 640 }], () => getRule('initialSpeed'), getRule('competitive'));
+        drawSelect(150, 350, 50, 20, [ { key: 'slow', value: 80 }, { key: 'medium', value: 320 }, { key: 'fast', value: 640 }, { key: 'very fast', value: 1280 }, { key: 'good luck', value: 5120 }, { key: 'why', value: 40960 }, { key: 'snail', value: 20 }], () => getRule('initialSpeed'), getRule('competitive'));
         drawSelect(150, 375, 50, 20, ON_OR_OFF, () => getRule('resendGarbage'), getRule('competitive'));
         drawSelect(150, 400, 50, 20, ON_OR_OFF, () => getRule('forgivingCombos'), getRule('competitive'));
         drawSelect(150, 425, 50, 20, [{ key: 'one', value: 1 }, { key: 'two', value: 2 }, { key: 'three', value: 3 }], () => getRule('garbageTurns'), getRule('competitive'));

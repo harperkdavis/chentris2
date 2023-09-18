@@ -30,7 +30,7 @@ const menus = {
             onClick: ()=>{
                 state.inSettings = true;
             }
-        }, 
+        }
     ]
 };
 function switchMenu(menu) {

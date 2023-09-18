@@ -36,8 +36,764 @@ const game = {
     boardScale: 0,
     boardNotifications: [],
     awaitingKeypress: false,
-    keypressToChange: ""
+    keypressToChange: "",
+    hocoAnim: -1,
+    leaderboard: {},
+    normalRank: 0,
+    competitiveRank: 0
 };
+const HOCO_SECRET = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+];
 const state = {
     creatingNewAccount: false,
     loadingData: false,
@@ -113,6 +869,10 @@ function resetState() {
     game.boardNotifications = [];
     game.awaitingKeypress = false;
     game.keypressToChange = "";
+    game.hocoAnim = -1;
+    game.leaderboard = {};
+    game.normalRank = 0;
+    game.competitiveRank = 0;
 }
 function preload() {
     images.nathan = loadImage("./assets/nathan.png");
@@ -219,11 +979,17 @@ function connect() {
         game.loading = false;
         game.loadMessage = "";
         game.playerData = data.user;
+        console.log(data);
+        if (data.leaderboard) {
+            game.leaderboard = data.leaderboard;
+            game.normalRank = data.normalRank;
+            game.competitiveRank = data.competitiveRank;
+        }
         if (!data.inGame) {
             game.mainMenuAnim = 1;
             switchMenu("main");
             if (window.location.hash.length >= 1) {
-                if (window.location.hash.length === 10) joinMatch(window.location.hash.substring(1));
+                if (window.location.hash.length === 5) joinMatch(window.location.hash.substring(1));
                 else {
                     game.error = "Invalid match link.";
                     game.errorAnim = 5;
@@ -270,7 +1036,7 @@ function connect() {
             board,
             state: defaultSubmoveState(),
             stateAcc: 0,
-            speed: 80,
+            speed: game.gameData.match.rules.initialSpeed,
             timers: {
                 fall: 0,
                 dropping: false,
@@ -304,7 +1070,7 @@ function connect() {
             board,
             state: defaultSubmoveState(),
             stateAcc: 0,
-            speed: 80,
+            speed: game.gameData.match.rules.initialSpeed,
             timers: {
                 fall: 0,
                 dropping: false,
@@ -411,7 +1177,7 @@ function update() {
                 };
                 buttonState(width / 2 + 160, height / 2 - 50, 40, 20, ()=>{}, stopJoiningMatch);
                 if (input.keys[ESCAPE] === 0) stopJoiningMatch();
-                if (game.typedString.length === 9) {
+                if (game.typedString.length === 4) {
                     joinMatch(game.typedString);
                     game.isTyping = false;
                     game.typedString = "";
@@ -453,7 +1219,7 @@ function update() {
                 });
             }
         }
-        buttonState(20, 95, 180, 30, ()=>{}, ()=>navigator.clipboard.writeText(`localhost:8080/chentris2#${game.gameData.match.joinCode}`), !game.gameData.match.options.allowJoining);
+        buttonState(20, 95, 180, 30, ()=>{}, ()=>navigator.clipboard.writeText(`https://play.hked.live/chentris2#${game.gameData.match.joinCode}`), !game.gameData.match.options.allowJoining);
         buttonState(20, 130, 180, 30, ()=>{}, ()=>{
             socket.io.emit("leave_match");
             reset();
@@ -490,15 +1256,27 @@ function update() {
             },
             {
                 key: "medium",
-                value: 160
-            },
-            {
-                key: "fast",
                 value: 320
             },
             {
-                key: "very fast",
+                key: "fast",
                 value: 640
+            },
+            {
+                key: "very fast",
+                value: 1280
+            },
+            {
+                key: "good luck",
+                value: 5120
+            },
+            {
+                key: "why",
+                value: 40960
+            },
+            {
+                key: "snail",
+                value: 20
             }
         ], ()=>game.gameData.match.rules.initialSpeed, (v)=>changeRule("initialSpeed", v), comp);
         selectState(150, 375, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.resendGarbage, (v)=>changeRule("resendGarbage", v), comp);
@@ -521,6 +1299,9 @@ function update() {
         if (!game.inGame) return;
         for (let notif of game.boardNotifications)notif.time += deltaTime;
         game.boardNotifications = game.boardNotifications.filter((notif)=>notif.time <= 1);
+        if (game.hocoAnim >= 0 && game.hocoAnim <= 100) game.hocoAnim += deltaTime * 10;
+        else if (game.hocoAnim > 100) game.hocoAnim = -1;
+        if (input.keys["J".charCodeAt(0)] === 0) game.hocoAnim = 0;
         let origin = {
             x: 0,
             y: 0
@@ -541,6 +1322,7 @@ function update() {
         game.boardScale = lerp(game.boardScale, 1, clamp(6 * deltaTime, 0, 1));
         game.localData.timers.fall += deltaTime;
         game.localData.stateAcc += deltaTime;
+        if (!game.localData.board) return;
         if (game.localData.board.lost) game.localData.deadAnim += deltaTime;
         else game.localData.deadAnim = lerp(game.localData.deadAnim, 0, clamp(30 * deltaTime, 0, 1));
         if (game.localData.stateAcc > 0.05) {
@@ -602,7 +1384,7 @@ function update() {
                 game.boardRotation -= 0.001;
             }
         }
-        for(let i1 = 0; i1 < 5; i1 += 1)if (input.keys[(i1 + 1).toString().charCodeAt(0)] === 0) game.localData.attackOption = i1;
+        for(let i = 0; i < 5; i += 1)if (input.keys[(i + 1).toString().charCodeAt(0)] === 0) game.localData.attackOption = i;
         if (input.keys[settings["controls.rotate180"]] === 0) {
             game.localData.state = makeSubmove("rotate180", game.localData.board, game.localData.state);
             if (game.localData.state.lastMoveSuccessful) {
@@ -647,12 +1429,12 @@ function update() {
             game.localData.board.move += 1;
         }
         if (game.gameData.match.playing) {
-            let i2 = 0;
+            let i = 0;
             const count = game.gameData.match.players.filter((id)=>!game.gameData.match.boards[id].lost).length;
-            const size = count <= 2 ? SQUARE_SIZE : (height - 150) / ceil(sqrt(count)) / 24;
+            const size = count <= 2 ? SQUARE_SIZE : (height - 150) / ceil(sqrt(count - 1)) / 24;
             let spectating = game.gameData.match.boards[game.playerData._id].lost;
             for (let id of game.gameData.match.players.filter((id)=>id !== game.playerData._id)){
-                const idealPos = getIdealPos(i2, count - 1, width - 200 - SQUARE_SIZE * 17, height - 200);
+                const idealPos = getIdealPos(i, count - 1, width - 200 - SQUARE_SIZE * 17, height - 200);
                 idealPos[0] += SQUARE_SIZE * 17 + 100;
                 idealPos[1] += 100;
                 const isSpectator = spectating && !game.gameData.match.boards[id].lost;
@@ -671,7 +1453,7 @@ function update() {
                 game.localData.boardAnims[id][1] = lerp(game.localData.boardAnims[id][1], idealPos[1], clamp(6 * deltaTime, 0, 1));
                 game.localData.boardSizes[id] = lerp(game.localData.boardSizes[id], isSpectator ? SQUARE_SIZE : size, clamp(3 * deltaTime, 0, 1));
                 if (!game.gameData.match.boards[id].lost) {
-                    if (!isSpectator) i2 += 1;
+                    if (!isSpectator) i += 1;
                 } else {
                     const anim = game.localData.boardAnims[id][2] * 50;
                     const deadAnimY = anim ** 2 - 20 * anim;
@@ -801,7 +1583,7 @@ function drawBoard(board, state, timers, squareSize, detail) {
         rect(-5 * squareSize, -10 * squareSize, 10 * squareSize, 20 * squareSize);
         stroke(200);
         for(let i = 0; i < 19; i++)line(-5 * squareSize + 1, (-9 + i) * squareSize, 5 * squareSize - 1, (-9 + i) * squareSize);
-        for(let i1 = 0; i1 < 9; i1++)line((-4 + i1) * squareSize, -10 * squareSize + 1, (-4 + i1) * squareSize, 10 * squareSize - 1);
+        for(let i = 0; i < 9; i++)line((-4 + i) * squareSize, -10 * squareSize + 1, (-4 + i) * squareSize, 10 * squareSize - 1);
     }
     if (detail >= 2) {
         fill(250);
@@ -809,8 +1591,8 @@ function drawBoard(board, state, timers, squareSize, detail) {
         rect(5 * squareSize, -10 * squareSize, 0.5 * squareSize, 20 * squareSize);
         rect(-5.5 * squareSize, -10 * squareSize, 0.5 * squareSize, 20 * squareSize);
         let sum = 0;
-        for(let i2 = 0; i2 < board.garbageQueue.length; i2++){
-            const garbage = board.garbageQueue[i2];
+        for(let i = 0; i < board.garbageQueue.length; i++){
+            const garbage = board.garbageQueue[i];
             const amount = garbage.amount;
             sum += amount;
             if (garbage.turns === 1) fill(250, 100 + 150 * sin(millis() * 0.04), 100);
@@ -823,11 +1605,11 @@ function drawBoard(board, state, timers, squareSize, detail) {
         stroke(0);
         fill(50 + random(0, 50), 100 + random(0, 50), 200 + random(0, 50));
         rect(-5.5 * squareSize, (10 - progress * 20) * squareSize, 0.5 * squareSize, progress * 20 * squareSize);
-        for(let i3 = 0; i3 < currentLevel; i3 += 1){
+        for(let i = 0; i < currentLevel; i += 1){
             fill(50 + random(0, 50), 100 + random(0, 50), 200 + random(0, 50));
-            rect(-6 * squareSize, (9.5 - i3 * 0.5) * squareSize, 0.5 * squareSize, 0.5 * squareSize);
+            rect(-6 * squareSize, (9.5 - i * 0.5) * squareSize, 0.5 * squareSize, 0.5 * squareSize);
         }
-        for(let i4 = 0; i4 < 5; i4++)drawPiece(6.5 * squareSize, (-10 + 4 * i4) * squareSize, 0, squareSize, board.bag[i4 + 1]);
+        for(let i = 0; i < 5; i++)drawPiece(6.5 * squareSize, (-10 + 4 * i) * squareSize, 0, squareSize, board.bag[i + 1]);
         if (board.hold !== -1) drawPiece((-6 - PIECES[board.hold].layout.length) * squareSize, -10 * squareSize, 0, squareSize, board.hold, board.canHold ? 255 : 100);
     }
     if (detail >= 1) {
@@ -843,14 +1625,32 @@ function drawBoard(board, state, timers, squareSize, detail) {
         drawPiece((dropSubmove.pieceX - 5) * squareSize, (dropSubmove.pieceY - 30) * squareSize, state.pieceRotation, squareSize, board.bag[0], 100, true);
     }
     if (detail >= 1) {
-        for(let i5 = 0; i5 < 40; i5++)for(let j = 0; j < 10; j++){
-            const index = i5 * 10 + j;
+        for(let i = 0; i < 40; i++)for(let j = 0; j < 10; j++){
+            const index = i * 10 + j;
             const tile = board.tiles[index];
             if (tile >= 0) {
                 const color = PIECES[tile].color;
                 stroke(0);
                 fill(color[0], color[1], color[2]);
-                rect((-5 + j) * squareSize, (-30 + i5) * squareSize, squareSize, squareSize);
+                rect((-5 + j) * squareSize, (-30 + i) * squareSize, squareSize, squareSize);
+            }
+        }
+    }
+    if (detail >= 5 && game.hocoAnim >= 0) {
+        const anim = floor(game.hocoAnim);
+        for(let y = 0; y < 20; y += 1){
+            const indexY = (y + anim) * 10;
+            for(let x = 0; x < 10; x += 1){
+                const index = indexY + x;
+                if (index >= 0 && index < HOCO_SECRET.length) {
+                    const tile = HOCO_SECRET[index];
+                    if (tile > 0) {
+                        const color = PIECES[floor(random(0, 7))].color;
+                        stroke(0);
+                        fill(color[0], color[1], color[2]);
+                        rect((-5 + x) * squareSize, (-30 + (y + 20)) * squareSize, squareSize, squareSize);
+                    }
+                }
             }
         }
     }
@@ -862,7 +1662,7 @@ function drawBoard(board, state, timers, squareSize, detail) {
             textAlign(RIGHT, CENTER);
             textStyle(NORMAL);
             textSize(16);
-            let i6 = 0;
+            let i = 0;
             let sumLines = 0;
             let juice = 0;
             for (let combo of combos){
@@ -880,17 +1680,17 @@ function drawBoard(board, state, timers, squareSize, detail) {
                     let b = random(0, 1) < 0.5 && !r && !g;
                     fill(r ? 250 : 50, g ? 250 : 50, b ? 250 : 50);
                 }
-                text(combo.name, -7 * squareSize, (-3.5 + i6) * squareSize);
-                rect(-6.75 * squareSize, (-3.9 + i6) * squareSize, 0.8 * squareSize, 0.8 * squareSize, 5);
+                text(combo.name, -7 * squareSize, (-3.5 + i) * squareSize);
+                rect(-6.75 * squareSize, (-3.9 + i) * squareSize, 0.8 * squareSize, 0.8 * squareSize, 5);
                 let lines = parseInt(combo.original.substring(0, 1));
                 if (lines) {
                     fill(250);
-                    if (lines >= 1) rect(-6.65 * squareSize, (-3.8 + i6) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
-                    if (lines >= 2) rect(-6.3 * squareSize, (-3.8 + i6) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
-                    if (lines >= 3) rect(-6.65 * squareSize, (-3.45 + i6) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
-                    if (lines >= 4) rect(-6.3 * squareSize, (-3.45 + i6) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
+                    if (lines >= 1) rect(-6.65 * squareSize, (-3.8 + i) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
+                    if (lines >= 2) rect(-6.3 * squareSize, (-3.8 + i) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
+                    if (lines >= 3) rect(-6.65 * squareSize, (-3.45 + i) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
+                    if (lines >= 4) rect(-6.3 * squareSize, (-3.45 + i) * squareSize, 0.25 * squareSize, 0.25 * squareSize, 2);
                 }
-                i6 += 1;
+                i += 1;
             }
             textStyle(BOLD);
             textSize(12 + 4 * count);
@@ -902,10 +1702,10 @@ function drawBoard(board, state, timers, squareSize, detail) {
             else if (sumLines <= 6) fill(30, 140, 20);
             else if (sumLines <= 7) fill(140, 30, 50);
             else {
-                let r1 = random(0, 1) < 0.5;
-                let g1 = random(0, 1) < 0.5;
-                let b1 = random(0, 1) < 0.5 && !r1 && !g1;
-                fill(r1 ? 250 : 50, g1 ? 250 : 50, b1 ? 250 : 50);
+                let r = random(0, 1) < 0.5;
+                let g = random(0, 1) < 0.5;
+                let b = random(0, 1) < 0.5 && !r && !g;
+                fill(r ? 250 : 50, g ? 250 : 50, b ? 250 : 50);
             }
             textAlign(RIGHT, BOTTOM);
             text(`x${count}`, -6 * squareSize, -5 * squareSize);
@@ -980,6 +1780,41 @@ function drawState() {
         text("Chentris 2", 20 - 400 * game.mainMenuAnim, 20);
         push();
         translate(0, -600 * game.mainMenuAnim);
+        textAlign(LEFT, TOP);
+        textStyle(BOLD);
+        textSize(16);
+        noStroke();
+        fill(0);
+        text("TOP NORMAL", width - 650, 10);
+        text("TOP COMPETITIVE", width - 450, 10);
+        push();
+        for(let i = 0; i < 20; i += 1){
+            translate(-game.mainMenuAnim * 10, -40 * game.mainMenuAnim * i);
+            noStroke();
+            fill(0);
+            textAlign(RIGHT, TOP);
+            textStyle(BOLD);
+            text(`${i + 1}.`, width - 655, 30 + 20 * i);
+            text(`${i + 1}.`, width - 455, 30 + 20 * i);
+            textAlign(LEFT, TOP);
+            if (game.leaderboard.normal[i] && game.leaderboard.normal[i].id === game.playerData._id) textStyle(BOLD);
+            else textStyle(NORMAL);
+            text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].username : "-", width - 650, 30 + 20 * i);
+            if (game.leaderboard.competitive[i] && game.leaderboard.competitive[i].id === game.playerData._id) textStyle(BOLD);
+            else textStyle(NORMAL);
+            text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].username : "-", width - 450, 30 + 20 * i);
+            textStyle(ITALIC);
+            textAlign(RIGHT, TOP);
+            text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : "-", width - 500, 30 + 20 * i);
+            text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : "-", width - 300, 30 + 20 * i);
+            noFill();
+            stroke(0);
+            image(getRank(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : 0).icon, width - 495, 37 + 20 * i - 8, 16, 16);
+            image(getRank(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : 0).icon, width - 295, 37 + 20 * i - 8, 16, 16);
+            rect(width - 495, 37 + 20 * i - 8, 16, 16);
+            rect(width - 295, 37 + 20 * i - 8, 16, 16);
+        }
+        pop();
         fill(250);
         stroke(0);
         textSize(32);
@@ -1009,8 +1844,8 @@ function drawState() {
         text("Normal", width - 155, 88);
         text("Competitive", width - 55, 88);
         textSize(16);
-        text(game.playerData.normalElo, width - 155, 100);
-        text(game.playerData.compElo, width - 55, 100);
+        text(game.playerData.normalElo + " (#" + game.normalRank + ")", width - 155, 100);
+        text(game.playerData.compElo + " (#" + game.competitiveRank + ")", width - 55, 100);
         const normalRank = getRank(game.playerData.normalElo);
         const compRank = getRank(game.playerData.compElo);
         image(normalRank.icon, width - 170, 120);
@@ -1075,28 +1910,28 @@ function drawState() {
         textAlign(LEFT, CENTER);
         textSize(24);
         textStyle(BOLD);
-        for(let i1 = 0; i1 < game.menu.length; i1++){
-            const menu = game.menu[i1];
-            const anim = 1000 * pow(2, i1) * game.menuAnim;
-            const backAnim = 2000 * pow(2, i1) * game.menuAnim;
+        for(let i = 0; i < game.menu.length; i++){
+            const menu = game.menu[i];
+            const anim = 1000 * pow(2, i) * game.menuAnim;
+            const backAnim = 2000 * pow(2, i) * game.menuAnim;
             stroke(0);
             fill(230);
             beginShape();
-            vertex(-100, 100 + i1 * 50);
-            vertex(310 - backAnim - i1 * 10 + game.menuButtonAnims[i1] * 20, 100 + i1 * 50);
-            vertex(300 - backAnim - i1 * 10 + game.menuButtonAnims[i1] * 20, 140 + i1 * 50);
-            vertex(-100, 140 + i1 * 50);
+            vertex(-100, 100 + i * 50);
+            vertex(310 - backAnim - i * 10 + game.menuButtonAnims[i] * 20, 100 + i * 50);
+            vertex(300 - backAnim - i * 10 + game.menuButtonAnims[i] * 20, 140 + i * 50);
+            vertex(-100, 140 + i * 50);
             endShape();
             fill(255);
             beginShape();
-            vertex(-100, 100 + i1 * 50);
-            vertex(300 - anim - i1 * 10 + game.menuButtonAnims[i1] * 10, 100 + i1 * 50);
-            vertex(290 - anim - i1 * 10 + game.menuButtonAnims[i1] * 10, 140 + i1 * 50);
-            vertex(-100, 140 + i1 * 50);
+            vertex(-100, 100 + i * 50);
+            vertex(300 - anim - i * 10 + game.menuButtonAnims[i] * 10, 100 + i * 50);
+            vertex(290 - anim - i * 10 + game.menuButtonAnims[i] * 10, 140 + i * 50);
+            vertex(-100, 140 + i * 50);
             endShape();
             noStroke();
             fill(0);
-            text(menu.name, 20 - anim, 122 + i1 * 50);
+            text(menu.name, 20 - anim, 122 + i * 50);
         }
         if (state.joiningMatch) {
             stroke(0);
@@ -1109,10 +1944,10 @@ function drawState() {
             textAlign(CENTER, TOP);
             text("Enter Join Code", width / 2, height / 2 - 40);
             textSize(32);
-            for(let i2 = 0; i2 < 9; i2++){
-                const x = (i2 - 4) * (380 / 9);
+            for(let i = 0; i < 4; i++){
+                const x = (i - 1.5) * (380 / 9);
                 rect(width / 2 - x - 10, height / 2 + 40, 20, 2);
-                const char = game.typedString.charAt(i2);
+                const char = game.typedString.charAt(i);
                 if (char) text(char, width / 2 + x, height / 2);
             }
             fill(250, 120, 100);
@@ -1168,6 +2003,16 @@ function drawState() {
                 text("Press any key to set keybind. Press ESC to cancel.", width / 2 + 10, height / 2); // text for when you are setting a control
             }
         }
+        textAlign(LEFT, TOP);
+        textSize(16);
+        text("Update 2", 20 - 400 * game.mainMenuAnim, height - 200);
+        textStyle(NORMAL);
+        text("- Fixed more than 2 players not sending lines", 20 - 400 * game.mainMenuAnim, height - 180);
+        text("- Fixed score after matches", 20 - 400 * game.mainMenuAnim, height - 160);
+        text("- Lobby codes are 4 numbers instead of 9", 20 - 400 * game.mainMenuAnim, height - 140);
+        text("- Find matches now works for the first time", 20 - 400 * game.mainMenuAnim, height - 120);
+        text("- Added leaderboard and rankings", 20 - 400 * game.mainMenuAnim, height - 100);
+        text("- Initial speed actually changes speed", 20 - 400 * game.mainMenuAnim, height - 80);
         return;
     }
     // In game
@@ -1183,36 +2028,36 @@ function drawState() {
         text("Winner: " + (winner ? winner.username : "Nobody"), 20, 60);
         text(`Returning to lobby in ${floor((400 - game.gameData.match.matchOverDelay) / 20)}...`, 20, height - 50);
         const rewards = game.gameData.match.results.rewards[game.playerData._id];
-        const anim1 = clamp(game.gameData.match.matchOverDelay - 20, 0, 80) / 80;
-        const animXp = floor(game.playerData.xp + anim1 * rewards.xp);
-        const animElo = floor((game.gameData.match.rules.competitive ? game.playerData.compElo : game.playerData.normalElo) + anim1 * rewards.elo);
-        const animJuice = floor(game.playerData.juice + anim1 * rewards.juice);
-        text(`XP: +${floor(anim1 * rewards.xp)}`, 20, height - 200);
-        text(`JUICE: +${floor(anim1 * rewards.juice)}`, 20, height - 170);
-        text(`ELO: ${rewards.elo > 0 ? "+" : ""}${round(anim1 * rewards.elo)}`, 20, height - 140);
+        const anim = clamp(game.gameData.match.matchOverDelay - 20, 0, 80) / 80;
+        const animXp = floor(game.playerData.xp + anim * rewards.xp);
+        const animElo = floor((game.gameData.match.rules.competitive ? game.playerData.compElo : game.playerData.normalElo) + anim * rewards.elo);
+        const animJuice = floor(game.playerData.juice + anim * rewards.juice);
+        text(`XP: +${floor(anim * rewards.xp)}`, 20, height - 200);
+        text(`JUICE: +${floor(anim * rewards.juice)}`, 20, height - 170);
+        text(`ELO: ${rewards.elo > 0 ? "+" : ""}${round(anim * rewards.elo)}`, 20, height - 140);
         fill(0);
         textAlign(LEFT, BOTTOM);
         textSize(24);
-        const level1 = floor(getLevel(animXp));
-        text(`Level ${level1}`, 40, 200);
-        const baseLevelXp1 = getXp(level1);
-        const nextLevelXp1 = getXp(level1 + 1);
-        const deltaXp1 = nextLevelXp1 - baseLevelXp1;
-        const progress1 = animXp - baseLevelXp1;
+        const level = floor(getLevel(animXp));
+        text(`Level ${level}`, 40, 200);
+        const baseLevelXp = getXp(level);
+        const nextLevelXp = getXp(level + 1);
+        const deltaXp = nextLevelXp - baseLevelXp;
+        const progress = animXp - baseLevelXp;
         fill(0);
         textSize(20);
         textStyle(NORMAL);
-        text(`${progress1.toLocaleString()} / ${deltaXp1.toLocaleString()}`, 40, 220);
+        text(`${progress.toLocaleString()} / ${deltaXp.toLocaleString()}`, 40, 220);
         textAlign(LEFT, TOP);
-        text(baseLevelXp1.toLocaleString(), 40, 245);
+        text(baseLevelXp.toLocaleString(), 40, 245);
         textAlign(RIGHT, TOP);
-        text(nextLevelXp1.toLocaleString(), width - 40, 245);
+        text(nextLevelXp.toLocaleString(), width - 40, 245);
         stroke(200);
         fill(250);
         rect(40, 220, width - 80, 20);
         stroke(0);
-        fill(50 + sqrt(progress1 / deltaXp1) * 250, 50, 50 + sqrt(1 - progress1 / deltaXp1) * 250);
-        rect(40, 220, (width - 80) * (progress1 / deltaXp1), 20);
+        fill(50 + sqrt(progress / deltaXp) * 250, 50, 50 + sqrt(1 - progress / deltaXp) * 250);
+        rect(40, 220, (width - 80) * (progress / deltaXp), 20);
         fill(50 + random(0, 50), 100 + random(0, 50), 200 + random(0, 50));
         rect(300, 310, 20, 20);
         noStroke();
@@ -1220,26 +2065,27 @@ function drawState() {
         textAlign(RIGHT, CENTER);
         textSize(24);
         text(animJuice.toLocaleString(), 290, 320);
-        const rank1 = getRank(animElo);
+        const rank = getRank(animElo);
         text(animElo, 590, 320);
-        image(rank1.icon, 600, 300, 40, 40);
+        image(rank.icon, 600, 300, 40, 40);
         textSize(16);
-        text(rank1.name, 590, 340);
+        text(rank.name, 590, 340);
         return;
     }
     push();
     let deadAnimX = 0;
     let deadAnimY = 0;
+    if (!game.localData.board) return;
     if (game.localData.board.lost) {
-        const anim2 = game.localData.deadAnim * 50;
-        deadAnimY = anim2 ** 2 - 20 * anim2;
-        deadAnimX = -(anim2 * log(anim2 + 1));
+        const anim = game.localData.deadAnim * 50;
+        deadAnimY = anim ** 2 - 20 * anim;
+        deadAnimX = -(anim * log(anim + 1));
     }
     translate(game.boardOrigin[0] + deadAnimX, game.boardOrigin[1] + deadAnimY);
     rotate(game.boardRotation + deadAnimX * 0.002);
     scale(game.boardScale);
     translate(game.boardTranslation[0], game.boardTranslation[1]);
-    drawBoard(game.localData.board, game.localData.state, game.localData.timers, SQUARE_SIZE, 4);
+    drawBoard(game.localData.board, game.localData.state, game.localData.timers, SQUARE_SIZE, 5);
     if (!game.gameData.match.playing) {
         textStyle(BOLD);
         textSize(32);
@@ -1281,7 +2127,7 @@ function drawState() {
         textAlign(LEFT, TOP);
         text("Code", 20, 40);
         textSize(32);
-        for(let i3 = 0; i3 < 9; i3++)text(game.gameData.match.joinCode[i3], 20 + i3 * 20, 60);
+        for(let i = 0; i < 4; i++)text(game.gameData.match.joinCode[i], 20 + i * 20, 60);
         stroke(0);
         fill(120, 100, 250);
         drawButton(20, 95, 180, 30, "Copy Link", ()=>fill(100, 80, 230), ()=>{}, !game.gameData.match.options.allowJoining);
@@ -1316,15 +2162,27 @@ function drawState() {
             },
             {
                 key: "medium",
-                value: 160
-            },
-            {
-                key: "fast",
                 value: 320
             },
             {
-                key: "very fast",
+                key: "fast",
                 value: 640
+            },
+            {
+                key: "very fast",
+                value: 1280
+            },
+            {
+                key: "good luck",
+                value: 5120
+            },
+            {
+                key: "why",
+                value: 40960
+            },
+            {
+                key: "snail",
+                value: 20
             }
         ], ()=>getRule("initialSpeed"), getRule("competitive"));
         drawSelect(150, 375, 50, 20, ON_OR_OFF, ()=>getRule("resendGarbage"), getRule("competitive"));
@@ -1345,11 +2203,11 @@ function drawState() {
         ], ()=>getRule("garbageTurns"), getRule("competitive"));
         drawSelect(150, 450, 50, 20, ON_OR_OFF, ()=>getRule("garbageDefense"), getRule("competitive"));
         pop();
-        for(let i4 = 0; i4 < game.gameData.match.players.length; i4++){
-            const id = game.gameData.match.players[i4];
+        for(let i = 0; i < game.gameData.match.players.length; i++){
+            const id = game.gameData.match.players[i];
             const userData = game.gameData.match.data[id];
             if (!userData) continue;
-            const y = i4 * 45;
+            const y = i * 45;
             fill(250);
             stroke(0);
             rect(width - 210, 10 + y, 200, 40);
@@ -1361,14 +2219,14 @@ function drawState() {
             textSize(16);
             text(userData.username, width - 50, 15 + y);
             const elo = game.gameData.match.rules.competitive ? userData.compElo : userData.normalElo;
-            const rank2 = getRank(elo);
+            const rank = getRank(elo);
             textStyle(NORMAL);
             text(elo, width - 70, 33 + y);
             textStyle(BOLD);
             textSize(12);
             textAlign(CENTER, CENTER);
             text(getLevel(userData.xp), width - 30, 30 + y);
-            image(rank2.icon, width - 65, 32 + y, 14, 14);
+            image(rank.icon, width - 65, 32 + y, 14, 14);
             stroke(0);
             noFill();
             rect(width - 65, 32 + y, 14, 14);
@@ -1404,46 +2262,45 @@ function drawState() {
         textAlign(LEFT, TOP);
         textSize(16);
         textStyle(BOLD);
-        const count = game.gameData.match.players.length;
         const players = game.gameData.match.players.filter((id)=>id !== game.playerData._id);
         const alivePlayers = game.gameData.match.players.filter((id)=>!game.gameData.match.boards[id].lost);
-        for (let id1 of players){
-            const pos = game.localData.boardAnims[id1];
+        for (let id of players){
+            const pos = game.localData.boardAnims[id];
             if (pos[2] > 5) continue;
             push();
             translate(pos[0], pos[1]);
             rotate(-(pos[2] * 50 * log(pos[2] * 50 + 1)) * 0.002);
-            drawBoard(game.gameData.match.boards[id1], game.gameData.match.states[id1].state || defaultSubmoveState(), game.gameData.match.states[id1].timers || {
+            drawBoard(game.gameData.match.boards[id], game.gameData.match.states[id].state || defaultSubmoveState(), game.gameData.match.states[id].timers || {
                 fall: 0,
                 dropping: false,
                 shortDrop: 0,
                 longDrop: 0
-            }, game.localData.boardSizes[id1], count >= 25 ? 0 : count >= 17 ? 1 : count >= 10 ? 2 : count >= 5 ? 3 : count <= 2 ? 4 : 3);
+            }, game.localData.boardSizes[id], alivePlayers.length >= 25 ? 0 : alivePlayers.length >= 17 ? 1 : alivePlayers.length >= 10 ? 2 : alivePlayers.length >= 5 ? 3 : alivePlayers.length <= 2 ? 4 : 3);
             noStroke();
             fill(0);
             textSize(16);
             textAlign(CENTER, BOTTOM);
             textStyle(BOLD);
-            text(`${game.gameData.match.data[id1].username} (${game.gameData.match.kills[id1]} KO${game.gameData.match.kills[id1] === 1 ? "" : "s"})`, 0, -11 * game.localData.boardSizes[id1]);
+            text(`${game.gameData.match.data[id].username} (${game.gameData.match.kills[id]} KO${game.gameData.match.kills[id] === 1 ? "" : "s"})`, 0, -11 * game.localData.boardSizes[id]);
             pop();
         }
-        if (alivePlayers.length > 2) for(let i5 = 0; i5 < 5; i5 += 1){
+        if (alivePlayers.length > 2) for(let i = 0; i < 5; i += 1){
             stroke(0);
-            fill(game.localData.attackOption === i5 ? 0 : 250);
-            rect(width / 2 - 250 + i5 * 100, height - 35, 95, 20);
-            rect(width / 2 - 250 + i5 * 100, height - 40, 30, 30);
+            fill(game.localData.attackOption === i ? 0 : 250);
+            rect(width / 2 - 250 + i * 100, height - 35, 95, 20);
+            rect(width / 2 - 250 + i * 100, height - 40, 30, 30);
             noStroke();
-            fill(game.localData.attackOption === i5 ? 250 : 0);
+            fill(game.localData.attackOption === i ? 250 : 0);
             textAlign(CENTER, CENTER);
             textStyle(BOLD);
-            text(i5 + 1, width / 2 - 235 + i5 * 100, height - 25);
+            text(i + 1, width / 2 - 235 + i * 100, height - 25);
             textStyle(NORMAL);
             textAlign(LEFT, CENTER);
-            if (i5 === 0) text("random", width / 2 - 216 + i5 * 100, height - 24);
-            else if (i5 === 1) text("kills", width / 2 - 216 + i5 * 100, height - 24);
-            else if (i5 === 2) text("revenge", width / 2 - 216 + i5 * 100, height - 24);
-            else if (i5 === 3) text("winners", width / 2 - 216 + i5 * 100, height - 24);
-            else if (i5 === 4) text("losers", width / 2 - 216 + i5 * 100, height - 24);
+            if (i === 0) text("random", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 1) text("kills", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 2) text("revenge", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 3) text("winners", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 4) text("losers", width / 2 - 216 + i * 100, height - 24);
         }
         if (game.localData.board.lost) {
             textSize(32);

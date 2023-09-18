@@ -27,8 +27,18 @@ async function findUser(filter: object) {
     return await User.findOne(filter).exec();
 }
 
+async function getLeaderboard(competitive: boolean) {
+    return (await User.find({ [competitive ? 'compElo' : 'normalElo']: { $gt: 1000 } }).sort({ [competitive ? 'compElo' : 'normalElo']: -1 }).limit(20).exec()).map(user => ({ id: user._id, username: user.username, elo: user[competitive ? 'compElo' : 'normalElo'] }));
+}
+
+async function getRank(user: string, competitive: boolean) {
+    return await User.find({ [competitive ? 'compElo' : 'normalElo']: { $gt: (await findUser({ _id: user }))[competitive ? 'compElo' : 'normalElo'] } }).countDocuments().exec() + 1;
+}
+
 export default {
     connect,
     newUser,
     findUser,
+    getLeaderboard,
+    getRank,
 }

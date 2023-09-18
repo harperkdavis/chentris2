@@ -1162,7 +1162,7 @@ const WALL_KICK = {
             [
                 1,
                 -2
-            ], 
+            ]
         ],
         1: [
             [
@@ -1184,7 +1184,7 @@ const WALL_KICK = {
             [
                 -1,
                 -2
-            ], 
+            ]
         ],
         2: [
             [
@@ -1258,7 +1258,7 @@ const WALL_KICK = {
             [
                 1,
                 2
-            ], 
+            ]
         ],
         2: [
             [
@@ -1280,7 +1280,7 @@ const WALL_KICK = {
             [
                 1,
                 2
-            ], 
+            ]
         ],
         3: [
             [
@@ -1354,7 +1354,7 @@ const WALL_KICK = {
             [
                 -1,
                 -2
-            ], 
+            ]
         ],
         3: [
             [
@@ -1376,7 +1376,7 @@ const WALL_KICK = {
             [
                 1,
                 -2
-            ], 
+            ]
         ],
         0: [
             [
@@ -1450,7 +1450,7 @@ const WALL_KICK = {
             [
                 -1,
                 2
-            ], 
+            ]
         ],
         0: [
             [
@@ -1472,7 +1472,7 @@ const WALL_KICK = {
             [
                 -1,
                 2
-            ], 
+            ]
         ],
         1: [
             [
@@ -1548,7 +1548,7 @@ const WALL_KICK_I = {
             [
                 2,
                 -1
-            ], 
+            ]
         ],
         1: [
             [
@@ -1570,7 +1570,7 @@ const WALL_KICK_I = {
             [
                 -2,
                 -1
-            ], 
+            ]
         ],
         2: [
             [
@@ -1620,7 +1620,7 @@ const WALL_KICK_I = {
             [
                 -1,
                 -2
-            ], 
+            ]
         ],
         2: [
             [
@@ -1642,7 +1642,7 @@ const WALL_KICK_I = {
             [
                 2,
                 -1
-            ], 
+            ]
         ],
         3: [
             [
@@ -1692,7 +1692,7 @@ const WALL_KICK_I = {
             [
                 1,
                 -1
-            ], 
+            ]
         ],
         3: [
             [
@@ -1714,7 +1714,7 @@ const WALL_KICK_I = {
             [
                 -1,
                 -1
-            ], 
+            ]
         ],
         0: [
             [
@@ -1764,7 +1764,7 @@ const WALL_KICK_I = {
             [
                 -2,
                 -1
-            ], 
+            ]
         ],
         0: [
             [
@@ -1786,7 +1786,7 @@ const WALL_KICK_I = {
             [
                 1,
                 -2
-            ], 
+            ]
         ],
         1: [
             [
@@ -1816,7 +1816,7 @@ const WALL_KICK_I = {
         ]
     }
 };
-let Piece;
+var Piece;
 (function(Piece) {
     Piece[Piece["Empty"] = -1] = "Empty";
     Piece[Piece["I"] = 0] = "I";
@@ -1828,13 +1828,13 @@ let Piece;
     Piece[Piece["S"] = 6] = "S";
     Piece[Piece["Garbage"] = 7] = "Garbage";
 })(Piece || (Piece = {}));
-let MoveType;
+var MoveType;
 (function(MoveType) {
     MoveType["Move"] = "move";
     MoveType["Hold"] = "hold";
     MoveType["AddGarbage"] = "addGarbage";
 })(MoveType || (MoveType = {}));
-let Direction;
+var Direction;
 (function(Direction) {
     Direction["Left"] = "left";
     Direction["Right"] = "right";
@@ -2124,8 +2124,8 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
     }
     const lines = [];
     let clears = 0;
-    for(let i1 = 0; i1 < 40; i1++){
-        const line = newBoard.tiles.slice(i1 * 10, (i1 + 1) * 10);
+    for(let i = 0; i < 40; i++){
+        const line = newBoard.tiles.slice(i * 10, (i + 1) * 10);
         const cleared = line.every((tile)=>tile !== Piece.Empty);
         if (cleared) {
             if (rules.resendGarbage) clears += 1;
@@ -2137,16 +2137,16 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
     newBoard.lines += newBoard.clears;
     if (newBoard.clears > 0) {
         if (board.finishingMoves >= 0) newBoard.finishingMoves += newBoard.clears;
-        let j1 = 0;
-        for(let i2 = 0; i2 < newBoard.clears; i2++){
+        let j = 0;
+        for(let i = 0; i < newBoard.clears; i++){
             if (newBoard.garbageQueue.length <= 0) break;
-            j1 += 1;
-            const garbage1 = newBoard.garbageQueue.shift();
-            garbage1.amount -= 1;
-            if (garbage1.amount > 0) newBoard.garbageQueue.unshift(garbage1);
+            j += 1;
+            const garbage = newBoard.garbageQueue.shift();
+            garbage.amount -= 1;
+            if (garbage.amount > 0) newBoard.garbageQueue.unshift(garbage);
         }
-        newBoard.clears -= j1;
-        if (rules.garbageDefense) for (let garbage2 of newBoard.garbageQueue)garbage2.turns += 1;
+        newBoard.clears -= j;
+        if (rules.garbageDefense) for (let garbage of newBoard.garbageQueue)garbage.turns += 1;
         if (newBoard.clears > 0 && usedPiece === Piece.T && submoveState.dropLines === 0) {
             const submoves = move.submoves || [];
             const lastMove = [
@@ -2156,11 +2156,11 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
                 function check(x, y) {
                     return x < 0 || x >= 10 || y < 0 || y >= 40 || newBoard.tiles[y * 10 + x] !== Piece.Empty;
                 }
-                const piece1 = rotateArray(T_CHECK, submoveState.pieceRotation);
+                const piece = rotateArray(T_CHECK, submoveState.pieceRotation);
                 let corners = 0;
-                for(let i3 = 0; i3 < piece1.length; i3++)for(let j2 = 0; j2 < piece1[i3].length; j2++){
-                    if (piece1[i3][j2] === 1) {
-                        if (check(submoveState.pieceX + j2, submoveState.pieceY + i3)) corners += 1;
+                for(let i = 0; i < piece.length; i++)for(let j = 0; j < piece[i].length; j++){
+                    if (piece[i][j] === 1) {
+                        if (check(submoveState.pieceX + j, submoveState.pieceY + i)) corners += 1;
                     }
                 }
                 if (corners >= 3) tSpin = true;
@@ -2168,27 +2168,27 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
         }
     }
     const newTiles = new Array(400).fill(Piece.Empty);
-    for(let i4 = 0; i4 < lines.length; i4++)newTiles.splice((i4 + (40 - lines.length)) * 10, 10, ...lines[i4]);
+    for(let i = 0; i < lines.length; i++)newTiles.splice((i + (40 - lines.length)) * 10, 10, ...lines[i]);
     newBoard.tiles = newTiles;
     if (!ignoreGarbage && move.type === MoveType.Move) {
-        for(let i5 = 0; i5 < newBoard.garbageQueue.length; i5++){
-            const garbage3 = newBoard.garbageQueue[i5];
-            garbage3.turns -= 1;
-            if (garbage3.turns <= 0) {
-                newBoard.lastDamager = garbage3.player;
+        for(let i = 0; i < newBoard.garbageQueue.length; i++){
+            const garbage = newBoard.garbageQueue[i];
+            garbage.turns -= 1;
+            if (garbage.turns <= 0) {
+                newBoard.lastDamager = garbage.player;
                 newBoard = makeMove({
                     type: MoveType.AddGarbage,
-                    garbage: garbage3.amount
+                    garbage: garbage.amount
                 }, newBoard, generator, rules, true);
             }
         }
         newBoard.garbageQueue = newBoard.garbageQueue.filter((garbage)=>garbage.turns > 0);
     }
     const newLayout = PIECES[newBoard.bag[0]].layout;
-    for(let i6 = 0; i6 < newLayout.length; i6++){
-        for(let j3 = 0; j3 < newLayout[i6].length; j3++)if (newLayout[i6][j3] === 1) {
-            const index1 = (i6 + 16) * 10 + (j3 + 3);
-            if (newBoard.tiles[index1] !== Piece.Empty) newBoard.lost = true;
+    for(let i = 0; i < newLayout.length; i++){
+        for(let j = 0; j < newLayout[i].length; j++)if (newLayout[i][j] === 1) {
+            const index = (i + 16) * 10 + (j + 3);
+            if (newBoard.tiles[index] !== Piece.Empty) newBoard.lost = true;
         }
     }
     if (move.type === MoveType.Move) {

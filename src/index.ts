@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import http from 'http';
 import { Server, Socket } from 'socket.io';
@@ -33,6 +36,15 @@ const matches = new Map<string, Match>();
 
 setInterval(tick, 50);
 let ticks = 0;
+
+let leaderboardCache = { normal: [], competitive: [] };
+const getLeaderboardCache = async () => {
+    leaderboardCache =  { normal: await database.getLeaderboard(false), competitive: await database.getLeaderboard(true) };
+}
+
+getLeaderboardCache();
+
+let searching = 0;
 
 io.on('connection', async (socket: Socket) => {
     const secret = socket.handshake.query.id;
@@ -118,6 +130,9 @@ io.on('connection', async (socket: Socket) => {
 
         socket.emit('player_data', {
             user,
+            leaderboard: leaderboardCache,
+            normalRank: await database.getRank(id, false),
+            competitiveRank: await database.getRank(id, true),
         });
     });
 
@@ -168,6 +183,34 @@ io.on('connection', async (socket: Socket) => {
         
     });
 
+    socket.on('find_match', async () => {
+        searching += 1;
+        const search = async (tries: number) => {
+            const validMatches = Array.from(matches.values()).filter(match => !match.playing && match.options.public && match.options.allowJoining);
+            if (searching > 1) {
+                // make a new game
+                const match = await createNewGame(socket);
+                match.options.public = true;
+                searching -= 1;
+                return;
+            }
+            if (tries > 30) {
+                socket.emit('match_found', { error: true, message: 'Could not find a match. Try creating one.' });
+                searching -= 1;
+                return;
+            }
+            if (validMatches.length > 0) {
+                const match = validMatches[Math.floor(Math.random() * validMatches.length)];
+                joinMatch(socket, match);
+                searching -= 1;
+            } else {
+                setTimeout(() => search(tries + 1), 1000)
+            }
+        }
+        search(0);
+
+    });
+
     socket.on('leave_match', async (data: any) => {
         leaveMatch(socket);
     });
@@ -212,7 +255,9 @@ io.on('connection', async (socket: Socket) => {
                 
                     const index = match.players.indexOf(id);
                     let otherIndex;
-                    if (alivePlayers.length > 2 && match.states[id].attackOption === 1) { // Kills (gets highest line)
+                    if (alivePlayers.length === 2) {
+                        otherIndex = match.players.indexOf(alivePlayers[0] === id ? alivePlayers[1] : alivePlayers[0]);
+                    } else if (alivePlayers.length > 2 && match.states[id].attackOption === 1) { // Kills (gets highest line)
                         let highest = 40;
                         let highestId = 0;
                         for (let player of alivePlayers) {
@@ -490,7 +535,7 @@ async function tick() {
                             await user.save();
                         }
 
-                        
+                        getLeaderboardCache();
                     } else {
                         match.over = false;
                         match.playing = false;
@@ -537,6 +582,7 @@ async function tick() {
                         userData.secret = 'shh!';
                         match.data[id] = userData;
                         io.to(id).emit('board_reset');
+                        io.to(id).emit('player_data', { user: userData });
                     }
                 }
             }
@@ -552,7 +598,10 @@ async function createNewGame(socket: Socket) {
     const code = 'game_' + uuidv4(); 
     socket.join(code); 
 
-    const joinCode = (Math.floor(Math.random() * 900000000) + 100000000).toString();
+    let joinCode = (Math.floor(Math.random() * 9000) + 1000).toString();
+    while (Array.from(matches.values()).some(match => match.joinCode === joinCode)) {
+        joinCode = (Math.floor(Math.random() * 9000) + 1000).toString();
+    }
 
     let leader = await database.findUser({ _id: users.get(socket.id) });
     leader.secret = 'shh';
@@ -621,6 +670,8 @@ async function createNewGame(socket: Socket) {
     
     socket.emit('match_found', { match });
     socket.emit('board_reset');
+
+    return match;
 }
 
 async function joinMatch(socket: Socket, match: Match) {
@@ -659,6 +710,9 @@ async function joinMatch(socket: Socket, match: Match) {
     socket.emit('match_found', { match });
     socket.emit('board_reset');
 
+    match.newNotification = true;
+    match.notification = `${user.username} joined!`;
+
     return;
 }
 
@@ -677,6 +731,9 @@ function leaveMatch(socket: Socket) {
 
     if (match) {
         const index = match.players.indexOf(id);
+
+        match.newNotification = true;
+        match.notification = `${match.data[id].username} left!`;
 
         if (index > -1) {
             match.players.splice(index, 1);
