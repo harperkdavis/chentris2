@@ -29,6 +29,7 @@ database.connect();
 
 server.listen(port, () => {
     console.log(`Server started. Listening on port ${port}.`);
+    printMemoryUsage();
 });
 
 const users = new Map<string, string>();
@@ -45,6 +46,12 @@ const getLeaderboardCache = async () => {
 getLeaderboardCache();
 
 let searching = 0;
+
+function printMemoryUsage() {
+    console.log(process.memoryUsage());
+}
+
+setInterval(printMemoryUsage, 3_600_000);
 
 io.on('connection', async (socket: Socket) => {
     const secret = socket.handshake.query.id;
