@@ -295,7 +295,7 @@ function loadData() {
 }
 
 function connect() {
-    socket.io = io({ path: '/chentris2/socket.io', query: { id: getId(), forceNew: true} });
+    socket.io = io({ query: { id: getId(), forceNew: true} });
     socket.connected = true;
 
     game.loading = true;

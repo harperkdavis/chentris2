@@ -16,14 +16,14 @@ import { createNewBoard, defaultSubmoveState, makeMove, COMPETITIVE_DEFAULTS, NO
 
 const K_VALUE = 100;
 
-const basePath = '/chentris2';
+const basePath = '/';
 const port = 8080;
 
 const app: any = express();
 app.use(basePath, express.static('dist'));
 const server = http.createServer(app);
 
-const io = new Server(server, { path: `${basePath}/socket.io` });
+const io = new Server(server);
 
 database.connect();
 

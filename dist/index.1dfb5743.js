@@ -644,7 +644,7 @@
             }, i.Context.prototype._createWorker = function() {
                 window.URL = window.URL || window.webkitURL;
                 var t = new Blob([
-                    "var timeoutTime = " + (1e3 * this._updateInterval).toFixed(1) + ";self.onmessage = function(msg){	timeoutTime = parseInt(msg.data);};function tick(){	setTimeout(tick, timeoutTime);	self.postMessage('tick');}tick();"
+                    "var timeoutTime = " + (1e3 * this._updateInterval).toFixed(1) + ";self.onmessage = function(msg){\ttimeoutTime = parseInt(msg.data);};function tick(){\tsetTimeout(tick, timeoutTime);\tself.postMessage('tick');}tick();"
                 ]), e = URL.createObjectURL(t), n = new Worker(e);
                 return n.addEventListener("message", (function() {
                     this.emit("tick");

@@ -3,9 +3,9 @@ const menus = {
         {
             name: "FIND MATCH",
             onClick: ()=>{
-                socket.io.emit("find_match");
+                socket.io.emit('find_match');
                 game.loading = true;
-                game.loadMessage = "Finding match...";
+                game.loadMessage = 'Finding match...';
             }
         },
         {
@@ -13,16 +13,16 @@ const menus = {
             onClick: ()=>{
                 state.joiningMatch = true;
                 game.isTyping = true;
-                game.typedString = "";
+                game.typedString = '';
                 game.typeLengthLimit = 9;
             }
         },
         {
             name: "CREATE MATCH",
             onClick: ()=>{
-                socket.io.emit("create_match");
+                socket.io.emit('create_match');
                 game.loading = true;
-                game.loadMessage = "Creating...";
+                game.loadMessage = 'Creating...';
             }
         },
         {

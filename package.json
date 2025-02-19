@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "nodemon --watch src/ src/index.ts",
-    "dev:client": "parcel --public-url . public/index.html",
-    "start": "parcel build --public-url . public/index.html && ts-node src/index.ts"
+    "dev:client": "parcel --no-cache --public-url . public/index.html",
+    "start": "ts-node src/index.ts"
   },
   "author": "harperkdavis",
   "license": "ISC",
@@ -17,16 +17,17 @@
     "elo-rating": "^1.0.1",
     "express": "^4.18.1",
     "mongoose": "^6.5.5",
+    "parcel": "^2.12.0",
     "seedrandom": "^3.0.5",
     "socket.io": "^4.5.2",
+    "ts-node": "^10.9.2",
     "typescript": "^4.8.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.9",
     "@types/node": "^18.7.15",
     "concurrently": "^7.3.0",
-    "nodemon": "^2.0.19",
-    "parcel": "^2.7.0",
-    "ts-node": "^10.9.1"
+    "nodemon": "^2.0.19"
   }
 }

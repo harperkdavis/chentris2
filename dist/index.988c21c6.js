@@ -183,942 +183,942 @@ const PIECES = [
     }
 ];
 const COMBOS = {
-    "00": {
-        name: "none",
+    '00': {
+        name: 'none',
         lines: {
-            type: "add",
+            type: 'add',
             count: 0
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 0
         }
     },
     // 1 - order
-    "1l": {
-        name: "single",
+    '1l': {
+        name: 'single',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 100
         }
     },
-    "2l": {
-        name: "double",
+    '2l': {
+        name: 'double',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 400
         }
     },
-    "3l": {
-        name: "triple",
+    '3l': {
+        name: 'triple',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 900
         }
     },
-    "4l": {
-        name: "chentris",
+    '4l': {
+        name: 'chentris',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1600
         }
     },
-    "1t": {
-        name: "t-spin single",
+    '1t': {
+        name: 't-spin single',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 400
         }
     },
-    "2t": {
-        name: "t-spin double",
+    '2t': {
+        name: 't-spin double',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1000
         }
     },
-    "3t": {
-        name: "t-spin triple",
+    '3t': {
+        name: 't-spin triple',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3200
         }
     },
-    "fc": {
-        name: "full clear",
+    'fc': {
+        name: 'full clear',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
     // 2 - order
-    "1l1l": {
-        name: "snake eyes",
+    '1l1l': {
+        name: 'snake eyes',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 200
         }
     },
-    "1l2l": {
-        name: "the old one two",
+    '1l2l': {
+        name: 'the old one two',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 500
         }
     },
-    "1l3l": {
-        name: "the old one three",
+    '1l3l': {
+        name: 'the old one three',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1000
         }
     },
-    "1l4l": {
-        name: "big five",
+    '1l4l': {
+        name: 'big five',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1800
         }
     },
-    "1l1t": {
-        name: "snake spins",
+    '1l1t': {
+        name: 'snake spins',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 500
         }
     },
-    "1l2t": {
-        name: "the old one two spin",
+    '1l2t': {
+        name: 'the old one two spin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1100
         }
     },
-    "1l3t": {
-        name: "the old one three spin",
+    '1l3t': {
+        name: 'the old one three spin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3400
         }
     },
-    "1lfc": {
-        name: "one line full clear",
+    '1lfc': {
+        name: 'one line full clear',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
-    "2l1l": {
-        name: "stepdown",
+    '2l1l': {
+        name: 'stepdown',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 300
         }
     },
-    "2l2l": {
-        name: "halftris",
+    '2l2l': {
+        name: 'halftris',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 600
         }
     },
-    "2l3l": {
-        name: "up a notch",
+    '2l3l': {
+        name: 'up a notch',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1100
         }
     },
-    "2l4l": {
-        name: "big six",
+    '2l4l': {
+        name: 'big six',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2000
         }
     },
-    "2l1t": {
-        name: "spindown",
+    '2l1t': {
+        name: 'spindown',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 600
         }
     },
-    "2l2t": {
-        name: "spindle",
+    '2l2t': {
+        name: 'spindle',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1200
         }
     },
-    "2l3t": {
-        name: "up a spin",
+    '2l3t': {
+        name: 'up a spin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3600
         }
     },
-    "2lfc": {
-        name: "double trouble",
+    '2lfc': {
+        name: 'double trouble',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
-    "3l1l": {
-        name: "downtris",
+    '3l1l': {
+        name: 'downtris',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 500
         }
     },
-    "3l2l": {
-        name: "leapdown",
+    '3l2l': {
+        name: 'leapdown',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 800
         }
     },
-    "3l3l": {
-        name: "trippy",
+    '3l3l': {
+        name: 'trippy',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1300
         }
     },
-    "3l4l": {
-        name: "lucky guy",
+    '3l4l': {
+        name: 'lucky guy',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2400
         }
     },
-    "3l1t": {
-        name: "spinleap",
+    '3l1t': {
+        name: 'spinleap',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 800
         }
     },
-    "3l2t": {
-        name: "trippy spin",
+    '3l2t': {
+        name: 'trippy spin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1400
         }
     },
-    "3l3t": {
-        name: "linespin equality",
+    '3l3t': {
+        name: 'linespin equality',
         lines: {
-            type: "add",
+            type: 'add',
             count: 7
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 4000
         }
     },
-    "3lfc": {
-        name: "trippy clear",
+    '3lfc': {
+        name: 'trippy clear',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
-    "4l1l": {
-        name: "small five",
+    '4l1l': {
+        name: 'small five',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 900
         }
     },
-    "4l2l": {
-        name: "small six",
+    '4l2l': {
+        name: 'small six',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1200
         }
     },
-    "4l3l": {
-        name: "guy lucky",
+    '4l3l': {
+        name: 'guy lucky',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1700
         }
     },
-    "4l4l": {
-        name: "b2b",
+    '4l4l': {
+        name: 'b2b',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3200
         }
     },
-    "4l1t": {
-        name: "chenspin",
+    '4l1t': {
+        name: 'chenspin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1200
         }
     },
-    "4l2t": {
-        name: "halfdown",
+    '4l2t': {
+        name: 'halfdown',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1800
         }
     },
-    "4l3t": {
-        name: "spinlucky",
+    '4l3t': {
+        name: 'spinlucky',
         lines: {
-            type: "add",
+            type: 'add',
             count: 8
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 4800
         }
     },
-    "4lfc": {
-        name: "perfect clear",
+    '4lfc': {
+        name: 'perfect clear',
         lines: {
-            type: "add",
+            type: 'add',
             count: 8
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
-    "1t1l": {
-        name: "singulari-t",
+    '1t1l': {
+        name: 'singulari-t',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 300
         }
     },
-    "1t2l": {
-        name: "reverse spindle",
+    '1t2l': {
+        name: 'reverse spindle',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 600
         }
     },
-    "1t3l": {
-        name: "trip from t",
+    '1t3l': {
+        name: 'trip from t',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1100
         }
     },
-    "1t4l": {
-        name: "post-t chentris",
+    '1t4l': {
+        name: 'post-t chentris',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2000
         }
     },
-    "1t1t": {
-        name: "double it",
+    '1t1t': {
+        name: 'double it',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 600
         }
     },
-    "1t2t": {
-        name: "red-t blue-t",
+    '1t2t': {
+        name: 'red-t blue-t',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1200
         }
     },
-    "1t3t": {
-        name: "chen-t",
+    '1t3t': {
+        name: 'chen-t',
         lines: {
-            type: "add",
+            type: 'add',
             count: 7
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3600
         }
     },
-    "1tfc": {
-        name: "t-clear",
+    '1tfc': {
+        name: 't-clear',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
-    "2t1l": {
-        name: "keep it on the t-l",
+    '2t1l': {
+        name: 'keep it on the t-l',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 500
         }
     },
-    "2t2l": {
-        name: "2 spin 2 line",
+    '2t2l': {
+        name: '2 spin 2 line',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 800
         }
     },
-    "2t3l": {
-        name: "spinny trip",
+    '2t3l': {
+        name: 'spinny trip',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1300
         }
     },
-    "2t4l": {
-        name: "2 spin 4 me",
+    '2t4l': {
+        name: '2 spin 4 me',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2400
         }
     },
-    "2t1t": {
-        name: "stepdown-t",
+    '2t1t': {
+        name: 'stepdown-t',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 800
         }
     },
-    "2t2t": {
-        name: "adds to 40",
+    '2t2t': {
+        name: 'adds to 40',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1400
         }
     },
-    "2t3t": {
-        name: "nathan special",
+    '2t3t': {
+        name: 'nathan special',
         lines: {
-            type: "add",
+            type: 'add',
             count: 7
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 4000
         }
     },
-    "2tfc": {
-        name: "double t-clear",
+    '2tfc': {
+        name: 'double t-clear',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
-    "3t1l": {
-        name: "leapspin",
+    '3t1l': {
+        name: 'leapspin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 300
         }
     },
-    "3t2l": {
-        name: "stepspin",
+    '3t2l': {
+        name: 'stepspin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 600
         }
     },
-    "3t3l": {
-        name: "trippy spinline",
+    '3t3l': {
+        name: 'trippy spinline',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1100
         }
     },
-    "3t4l": {
-        name: "luckyspin",
+    '3t4l': {
+        name: 'luckyspin',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2000
         }
     },
-    "3t1t": {
-        name: "t-chen",
+    '3t1t': {
+        name: 't-chen',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 600
         }
     },
-    "3t2t": {
-        name: "reverse nathan special",
+    '3t2t': {
+        name: 'reverse nathan special',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1200
         }
     },
-    "3t3t": {
-        name: "trip trip goose",
+    '3t3t': {
+        name: 'trip trip goose',
         lines: {
-            type: "add",
+            type: 'add',
             count: 8
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3600
         }
     },
-    "3tfc": {
-        name: "nasty triple t-clear",
+    '3tfc': {
+        name: 'nasty triple t-clear',
         lines: {
-            type: "add",
+            type: 'add',
             count: 8
         },
         juice: {
-            type: "multiply",
+            type: 'multiply',
             count: 2
         }
     },
     // 3 - order
     // 1 line
-    "1l1l1l": {
-        name: "three eyed snake",
+    '1l1l1l': {
+        name: 'three eyed snake',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 500
         }
     },
-    "1l1l2l": {
-        name: "fibonacci-3",
+    '1l1l2l': {
+        name: 'fibonacci-3',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 800
         }
     },
-    "1l1l3l": {
-        name: "1 + 1 = 3",
+    '1l1l3l': {
+        name: '1 + 1 = 3',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1300
         }
     },
-    "1l1l4l": {
-        name: "eeh ?!",
+    '1l1l4l': {
+        name: 'eeh ?!',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2400
         }
     },
-    "1l1l1l1l": {
-        name: "still single?",
+    '1l1l1l1l': {
+        name: 'still single?',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 900
         }
     },
-    "1l1l1l1l1l": {
-        name: "leave the house",
+    '1l1l1l1l1l': {
+        name: 'leave the house',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1700
         }
     },
-    "1l1l2l3l": {
-        name: "fibonacci-4",
+    '1l1l2l3l': {
+        name: 'fibonacci-4',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2500
         }
     },
-    "1l2l1l": {
-        name: "up then down",
+    '1l2l1l': {
+        name: 'up then down',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 500
         }
     },
-    "1l2l2l": {
-        name: "bad at counting",
+    '1l2l2l': {
+        name: 'bad at counting',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 800
         }
     },
-    "1l2l3l": {
-        name: "counting up",
+    '1l2l3l': {
+        name: 'counting up',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1300
         }
     },
-    "1l2l4l": {
-        name: "powers of two",
+    '1l2l4l': {
+        name: 'powers of two',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2400
         }
     },
-    "1l2l3l4l": {
-        name: "counting higher",
+    '1l2l3l4l': {
+        name: 'counting higher',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3200
         }
     },
-    "1l3l1l": {
-        name: "small spark",
+    '1l3l1l': {
+        name: 'small spark',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 500
         }
     },
-    "1l3l2l": {
-        name: "really bad at counting",
+    '1l3l2l': {
+        name: 'really bad at counting',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 800
         }
     },
-    "1l3l3l": {
-        name: "two triple post single",
+    '1l3l3l': {
+        name: 'two triple post single',
         lines: {
-            type: "add",
+            type: 'add',
             count: 3
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1300
         }
     },
-    "1l3l4l": {
-        name: "building chentris",
+    '1l3l4l': {
+        name: 'building chentris',
         lines: {
-            type: "add",
+            type: 'add',
             count: 5
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 2400
         }
     },
-    "1l4l1l": {
-        name: "big spark",
+    '1l4l1l': {
+        name: 'big spark',
         lines: {
-            type: "add",
+            type: 'add',
             count: 1
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 900
         }
     },
-    "1l4l2l": {
-        name: "single meaning",
+    '1l4l2l': {
+        name: 'single meaning',
         lines: {
-            type: "add",
+            type: 'add',
             count: 2
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1200
         }
     },
-    "1l4l3l": {
-        name: "composite",
+    '1l4l3l': {
+        name: 'composite',
         lines: {
-            type: "add",
+            type: 'add',
             count: 4
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 1700
         }
     },
-    "1l4l4l": {
-        name: "single into b2b",
+    '1l4l4l': {
+        name: 'single into b2b',
         lines: {
-            type: "add",
+            type: 'add',
             count: 6
         },
         juice: {
-            type: "add",
+            type: 'add',
             count: 3200
         }
     }
@@ -1816,8 +1816,7 @@ const WALL_KICK_I = {
         ]
     }
 };
-var Piece;
-(function(Piece) {
+var Piece = /*#__PURE__*/ function(Piece) {
     Piece[Piece["Empty"] = -1] = "Empty";
     Piece[Piece["I"] = 0] = "I";
     Piece[Piece["J"] = 1] = "J";
@@ -1827,15 +1826,15 @@ var Piece;
     Piece[Piece["Z"] = 5] = "Z";
     Piece[Piece["S"] = 6] = "S";
     Piece[Piece["Garbage"] = 7] = "Garbage";
-})(Piece || (Piece = {}));
-var MoveType;
-(function(MoveType) {
+    return Piece;
+}(Piece || {});
+var MoveType = /*#__PURE__*/ function(MoveType) {
     MoveType["Move"] = "move";
     MoveType["Hold"] = "hold";
     MoveType["AddGarbage"] = "addGarbage";
-})(MoveType || (MoveType = {}));
-var Direction;
-(function(Direction) {
+    return MoveType;
+}(MoveType || {});
+var Direction = /*#__PURE__*/ function(Direction) {
     Direction["Left"] = "left";
     Direction["Right"] = "right";
     Direction["Down"] = "down";
@@ -1843,7 +1842,8 @@ var Direction;
     Direction["RotateRight"] = "rotateRight";
     Direction["RotateLeft"] = "rotateLeft";
     Direction["Rotate180"] = "rotate180";
-})(Direction || (Direction = {}));
+    return Direction;
+}(Direction || {});
 const COMPETITIVE_DEFAULTS = {
     competitive: true,
     initialSpeed: 80,
@@ -1862,13 +1862,13 @@ const NORMAL_DEFAULTS = {
 };
 function createNewBag(srng, bagIndex, generator) {
     let pieces = [
-        Piece.I,
-        Piece.J,
-        Piece.L,
-        Piece.O,
-        Piece.T,
-        Piece.Z,
-        Piece.S
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
     ];
     const bag = [];
     const rng = generator(`${srng}-bag-${bagIndex}`);
@@ -1883,15 +1883,15 @@ function createNewBoard(playerId, matchId, gameId, generator) {
     const srng = `${playerId}-${matchId}-${gameId}`;
     return {
         srng,
-        tiles: new Array(400).fill(Piece.Empty),
+        tiles: new Array(400).fill(-1),
         bag: createNewBag(srng, 0, generator),
-        hold: Piece.Empty,
+        hold: -1,
         canHold: true,
         lost: false,
         bagPool: 0,
         garbagePool: 0,
         move: 0,
-        combo: "",
+        combo: '',
         lastDamager: playerId,
         garbageQueue: [],
         clears: 0,
@@ -1928,13 +1928,13 @@ function deepCopyBoard(board) {
 }
 function highestTile(board) {
     for(let i = 0; i < 400; i++){
-        if (board.tiles[i] !== Piece.Empty) return Math.floor(i / 10);
+        if (board.tiles[i] !== -1) return Math.floor(i / 10);
     }
     return 40;
 }
 function highestGarbageTile(board) {
     for(let i = 0; i < 400; i++){
-        if (board.tiles[i] === Piece.Garbage) return Math.floor(i / 10);
+        if (board.tiles[i] === 7) return Math.floor(i / 10);
     }
     return 40;
 }
@@ -1958,7 +1958,7 @@ function pieceFits(piece, board, x, y, rotation) {
             const nx = x + j, ny = y + i;
             const index = ny * 10 + nx;
             if (nx < 0 || nx >= 10 || ny < 0 || ny >= 40) return false;
-            if (index > board.tiles.length || index < 0 || board.tiles[index] !== Piece.Empty) return false;
+            if (index > board.tiles.length || index < 0 || board.tiles[index] !== -1) return false;
         }
     }
     return true;
@@ -1974,7 +1974,7 @@ function defaultSubmoveState() {
     };
 }
 function makeSubmove(submove, board, submoveState) {
-    if (submoveState.submoves.includes(Direction.Drop)) return submoveState;
+    if (submoveState.submoves.includes("drop")) return submoveState;
     const state = {
         pieceX: submoveState.pieceX,
         pieceY: submoveState.pieceY,
@@ -1985,33 +1985,33 @@ function makeSubmove(submove, board, submoveState) {
         lastMoveSuccessful: false,
         dropLines: 0
     };
-    if (submove === Direction.Left) {
+    if (submove === "left") {
         if (pieceFits(board.bag[0], board, state.pieceX - 1, state.pieceY, state.pieceRotation)) {
             state.pieceX -= 1;
-            state.submoves.push(Direction.Left);
+            state.submoves.push("left");
             state.lastMoveSuccessful = true;
         }
-    } else if (submove === Direction.Right) {
+    } else if (submove === "right") {
         if (pieceFits(board.bag[0], board, state.pieceX + 1, state.pieceY, state.pieceRotation)) {
             state.pieceX += 1;
-            state.submoves.push(Direction.Right);
+            state.submoves.push("right");
             state.lastMoveSuccessful = true;
         }
-    } else if (submove === Direction.Down) {
+    } else if (submove === "down") {
         if (pieceFits(board.bag[0], board, state.pieceX, state.pieceY + 1, state.pieceRotation)) {
             state.pieceY += 1;
-            state.submoves.push(Direction.Down);
+            state.submoves.push("down");
             state.lastMoveSuccessful = true;
         }
-    } else if (submove === Direction.Drop) {
-        state.submoves.push(Direction.Drop);
+    } else if (submove === "drop") {
+        state.submoves.push("drop");
         state.lastMoveSuccessful = true;
         while(pieceFits(board.bag[0], board, state.pieceX, state.pieceY + 1, state.pieceRotation))state.pieceY += 1;
         state.dropLines = state.pieceY - submoveState.pieceY;
-    } else if (submove === Direction.RotateRight || submove === Direction.RotateLeft || submove === Direction.Rotate180) {
-        if (board.bag[0] !== Piece.O) {
-            const rotate = submove === Direction.RotateRight ? 1 : submove === Direction.RotateLeft ? -1 : 2;
-            const wallKickArray = board.bag[0] == Piece.I ? WALL_KICK_I : WALL_KICK;
+    } else if (submove === "rotateRight" || submove === "rotateLeft" || submove === "rotate180") {
+        if (board.bag[0] !== 3) {
+            const rotate = submove === "rotateRight" ? 1 : submove === "rotateLeft" ? -1 : 2;
+            const wallKickArray = board.bag[0] == 0 ? WALL_KICK_I : WALL_KICK;
             const oldRotation = state.pieceRotation;
             const newRotation = mod(state.pieceRotation + rotate, 4);
             for(let i = 0; i < 5; i++){
@@ -2041,7 +2041,7 @@ function getCombos(combo) {
     for(let i = 0; i < combo.length / 2; i += 1){
         if (combo[i * 2] === "0") continue;
         let addCombo;
-        const longCombo = combo.substring(0, i * 2 + 2).replace(/0/g, "");
+        const longCombo = combo.substring(0, i * 2 + 2).replace(/0/g, '');
         for(let j = 0; j <= longCombo.length / 2; j += 1){
             const newCombo = COMBOS[longCombo.substring(j * 2, i * 2 + 2)];
             if (newCombo) {
@@ -2061,9 +2061,9 @@ function getCombos(combo) {
         }
         if (addCombo) {
             addCombo.original = combo.substring(i * 2, i * 2 + 2);
-            if (addCombo.lines.type === "add") addCombo.lines.count = addCombo.lines.count + Math.max(0, Math.floor(valid / 2));
+            if (addCombo.lines.type === 'add') addCombo.lines.count = addCombo.lines.count + Math.max(0, Math.floor(valid / 2));
             else addCombo.lines.count = addCombo.lines.count * Math.max(1, Math.floor(valid / 2));
-            if (addCombo.juice.type === "add") addCombo.juice.count = addCombo.juice.count * Math.max(1, valid - 1);
+            if (addCombo.juice.type === 'add') addCombo.juice.count = addCombo.juice.count * Math.max(1, valid - 1);
             combos.push(addCombo);
             valid += 1;
         }
@@ -2073,10 +2073,10 @@ function getCombos(combo) {
 function makeMove(move, board, generator, rules, ignoreGarbage = false) {
     if (board.lost) return board;
     let newBoard = deepCopyBoard(board);
-    let usedPiece = Piece.Empty;
+    let usedPiece = -1;
     let submoveState = defaultSubmoveState();
     switch(move.type){
-        case MoveType.Move:
+        case "move":
             for (const submove of move.submoves || [])submoveState = makeSubmove(submove, newBoard, submoveState);
             const piece = getRotatedPiece(newBoard.bag[0], submoveState.pieceRotation);
             let over = true;
@@ -2087,21 +2087,21 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
                     if (index >= 200) over = false;
                 }
             }
-            usedPiece = newBoard.bag.shift() || Piece.Empty;
+            usedPiece = newBoard.bag.shift() || -1;
             newBoard.canHold = true;
             if (over) newBoard.lost = true;
             if (newBoard.finishingMoves >= 0) newBoard.finishingMoves -= 1;
             break;
-        case MoveType.Hold:
+        case "hold":
             if (newBoard.canHold) {
                 const hold = newBoard.hold;
                 newBoard.hold = newBoard.bag[0];
                 newBoard.canHold = false;
-                if (hold !== Piece.Empty) newBoard.bag[0] = hold;
+                if (hold !== -1) newBoard.bag[0] = hold;
                 else newBoard.bag.shift();
             }
             break;
-        case MoveType.AddGarbage:
+        case "addGarbage":
             let garbage = move.garbage || 0;
             if (highestTile(newBoard) - garbage <= 0 || highestGarbageTile(newBoard) - garbage <= 20) {
                 board.lost = true;
@@ -2111,7 +2111,7 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
             newBoard.garbagePool += garbage;
             const noGarbageIndex = Math.floor(rng() * 10);
             const preTiles = newBoard.tiles.slice(10 * garbage);
-            const postTiles = new Array(garbage * 10).fill(Piece.Empty).map((_, i)=>i % 10 === noGarbageIndex ? Piece.Empty : Piece.Garbage);
+            const postTiles = new Array(garbage * 10).fill(-1).map((_, i)=>i % 10 === noGarbageIndex ? -1 : 7);
             newBoard.tiles = [
                 ...preTiles,
                 ...postTiles
@@ -2126,10 +2126,10 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
     let clears = 0;
     for(let i = 0; i < 40; i++){
         const line = newBoard.tiles.slice(i * 10, (i + 1) * 10);
-        const cleared = line.every((tile)=>tile !== Piece.Empty);
+        const cleared = line.every((tile)=>tile !== -1);
         if (cleared) {
             if (rules.resendGarbage) clears += 1;
-            else if (line.every((tile)=>tile !== Piece.Garbage)) clears += 1;
+            else if (line.every((tile)=>tile !== 7)) clears += 1;
         } else lines.push(line);
     }
     newBoard.clears = clears;
@@ -2147,14 +2147,14 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
         }
         newBoard.clears -= j;
         if (rules.garbageDefense) for (let garbage of newBoard.garbageQueue)garbage.turns += 1;
-        if (newBoard.clears > 0 && usedPiece === Piece.T && submoveState.dropLines === 0) {
+        if (newBoard.clears > 0 && usedPiece === 4 && submoveState.dropLines === 0) {
             const submoves = move.submoves || [];
             const lastMove = [
                 ...submoves
-            ].reverse().find((submove)=>submove !== Direction.Down && submove !== Direction.Drop);
-            if (lastMove === Direction.RotateLeft || lastMove === Direction.RotateRight) {
+            ].reverse().find((submove)=>submove !== "down" && submove !== "drop");
+            if (lastMove === "rotateLeft" || lastMove === "rotateRight") {
                 function check(x, y) {
-                    return x < 0 || x >= 10 || y < 0 || y >= 40 || newBoard.tiles[y * 10 + x] !== Piece.Empty;
+                    return x < 0 || x >= 10 || y < 0 || y >= 40 || newBoard.tiles[y * 10 + x] !== -1;
                 }
                 const piece = rotateArray(T_CHECK, submoveState.pieceRotation);
                 let corners = 0;
@@ -2167,17 +2167,17 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
             }
         }
     }
-    const newTiles = new Array(400).fill(Piece.Empty);
+    const newTiles = new Array(400).fill(-1);
     for(let i = 0; i < lines.length; i++)newTiles.splice((i + (40 - lines.length)) * 10, 10, ...lines[i]);
     newBoard.tiles = newTiles;
-    if (!ignoreGarbage && move.type === MoveType.Move) {
+    if (!ignoreGarbage && move.type === "move") {
         for(let i = 0; i < newBoard.garbageQueue.length; i++){
             const garbage = newBoard.garbageQueue[i];
             garbage.turns -= 1;
             if (garbage.turns <= 0) {
                 newBoard.lastDamager = garbage.player;
                 newBoard = makeMove({
-                    type: MoveType.AddGarbage,
+                    type: "addGarbage",
                     garbage: garbage.amount
                 }, newBoard, generator, rules, true);
             }
@@ -2188,25 +2188,25 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
     for(let i = 0; i < newLayout.length; i++){
         for(let j = 0; j < newLayout[i].length; j++)if (newLayout[i][j] === 1) {
             const index = (i + 16) * 10 + (j + 3);
-            if (newBoard.tiles[index] !== Piece.Empty) newBoard.lost = true;
+            if (newBoard.tiles[index] !== -1) newBoard.lost = true;
         }
     }
-    if (move.type === MoveType.Move) {
+    if (move.type === "move") {
         if (newBoard.clears <= 0) {
             if (newBoard.combo.length >= 2) {
-                if (!rules.forgivingCombos || newBoard.combo.substring(newBoard.combo.length - 2) === "00") {
-                    if (newBoard.finishingMoves < 0) newBoard.combo = "";
-                } else newBoard.combo += "00";
+                if (!rules.forgivingCombos || newBoard.combo.substring(newBoard.combo.length - 2) === '00') {
+                    if (newBoard.finishingMoves < 0) newBoard.combo = '';
+                } else newBoard.combo += '00';
             }
         } else {
-            newBoard.combo += newBoard.clears + (tSpin ? "t" : "l");
-            if (newTiles.every((tile)=>tile === Piece.Empty)) newBoard.combo += "fc";
+            newBoard.combo += newBoard.clears + (tSpin ? 't' : 'l');
+            if (newTiles.every((tile)=>tile === -1)) newBoard.combo += 'fc';
             const combos = getCombos(newBoard.combo);
             const lastCombo = combos[combos.length - 1];
-            if (lastCombo.juice.type === "multiply") {
+            if (lastCombo.juice.type === 'multiply') {
                 let totalJuice = 0;
                 for (let combo of combos){
-                    if (combo.juice.type === "multiply") continue;
+                    if (combo.juice.type === 'multiply') continue;
                     totalJuice += combo.juice.count;
                 }
                 newBoard.juice += totalJuice;

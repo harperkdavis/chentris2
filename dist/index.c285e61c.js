@@ -1,53 +1,53 @@
 const RANKS = [
     {
         elo: 500,
-        name: "Merrill",
-        icon: "./assets/rank-merrill.png"
+        name: 'Merrill',
+        icon: './assets/rank-merrill.png'
     },
     {
         elo: 700,
-        name: "Concrete",
-        icon: "./assets/rank-concrete.png"
+        name: 'Concrete',
+        icon: './assets/rank-concrete.png'
     },
     {
         elo: 900,
-        name: "Water",
-        icon: "./assets/rank-water.png"
+        name: 'Water',
+        icon: './assets/rank-water.png'
     },
     {
         elo: 1100,
-        name: "Nathan",
-        icon: "./assets/rank-nathan.png"
+        name: 'Nathan',
+        icon: './assets/rank-nathan.png'
     },
     {
         elo: 1300,
-        name: "Skilled",
-        icon: "./assets/rank-skilled.png"
+        name: 'Skilled',
+        icon: './assets/rank-skilled.png'
     },
     {
         elo: 1500,
-        name: "Prodigious",
-        icon: "./assets/rank-prodigious.png"
+        name: 'Prodigious',
+        icon: './assets/rank-prodigious.png'
     },
     {
         elo: 1700,
-        name: "Elite",
-        icon: "./assets/rank-elite.png"
+        name: 'Elite',
+        icon: './assets/rank-elite.png'
     },
     {
         elo: 2000,
-        name: "Master",
-        icon: "./assets/rank-master.png"
+        name: 'Master',
+        icon: './assets/rank-master.png'
     },
     {
         elo: 2500,
-        name: "Chenmaster",
-        icon: "./assets/rank-chenmaster.png"
+        name: 'Chenmaster',
+        icon: './assets/rank-chenmaster.png'
     },
     {
         elo: 1000000000,
-        name: "Chenmeister",
-        icon: "./assets/rank-chenmeister.png"
+        name: 'Chenmeister',
+        icon: './assets/rank-chenmeister.png'
     }
 ];
 function loadRankIcons() {

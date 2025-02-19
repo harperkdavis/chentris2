@@ -1,2 +1,0 @@
-const menus={main:[{name:"FIND MATCH",onClick:()=>{socket.io.emit("find_match"),game.loading=!0,game.loadMessage="Finding match..."}},{name:"JOIN MATCH",onClick:()=>{state.joiningMatch=!0,game.isTyping=!0,game.typedString="",game.typeLengthLimit=9}},{name:"CREATE MATCH",onClick:()=>{socket.io.emit("create_match"),game.loading=!0,game.loadMessage="Creating..."}},{name:"SETTINGS",onClick:()=>{state.inSettings=!0}}]};function switchMenu(e){game.menu=menus[e],game.menuButtonAnims=new Array(game.menu.length).fill(0),game.menuAnim=1}
-//# sourceMappingURL=index.ffe8af0e.js.map
