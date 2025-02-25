@@ -12,7 +12,7 @@ import EloRating from 'elo-rating';
 import database from './database';
 import { Match } from './game';
 
-import { createNewBoard, defaultSubmoveState, makeMove, COMPETITIVE_DEFAULTS, NORMAL_DEFAULTS, getCombos, getJuiceLevel, highestTile } from './tetris';
+import { createNewBoard, defaultSubmoveState, makeMove, COMPETITIVE_DEFAULTS, NORMAL_DEFAULTS, getCombos, getJuiceLevel, highestTile, COSM_PALETTES, getLevel, COSM_BANNERS, COSM_NAME_COLORS } from './tetris';
 
 const K_VALUE = 100;
 
@@ -38,9 +38,9 @@ const matches = new Map<string, Match>();
 setInterval(tick, 50);
 let ticks = 0;
 
-let leaderboardCache = { normal: [], competitive: [] };
+let leaderboardCache = { normal: [], competitive: [], level: [], juice: [] };
 const getLeaderboardCache = async () => {
-    leaderboardCache =  { normal: await database.getLeaderboard(false), competitive: await database.getLeaderboard(true) };
+    leaderboardCache =  { normal: await database.getLeaderboard(false), competitive: await database.getLeaderboard(true), level: await database.getLevelLeaderboard(), juice: await database.getJuiceLeaderboard() };
 }
 
 getLeaderboardCache();
@@ -138,9 +138,83 @@ io.on('connection', async (socket: Socket) => {
         socket.emit('player_data', {
             user,
             leaderboard: leaderboardCache,
+            online: io.sockets.sockets.size,
             normalRank: await database.getRank(id, false),
             competitiveRank: await database.getRank(id, true),
         });
+    });
+
+    socket.on('purchase', async (data: { type: 'palette' | 'nameColor' | 'banner', which: string }) => {
+        const id = users.get(socket.id);
+        const user = await database.findUser({ _id: id });
+        const { type, which } = data;
+
+        console.log(type, which);
+        if (type === 'palette') {
+            if (COSM_PALETTES[which] && 
+                !user.palettesUnlocked.includes(which) && 
+                user.juice >= COSM_PALETTES[which].juiceCost && 
+                getLevel(user.xp) >= COSM_PALETTES[which].levelRequirement
+            ) {
+                user.palettesUnlocked = [...user.palettesUnlocked, which];
+                user.currentPalette = which;
+                user.juice = user.juice - COSM_PALETTES[which].juiceCost;
+                await user.save();
+                socket.emit('player_data_quiet', { user });
+            }
+        } else if (type === 'banner') {
+            if (COSM_BANNERS[which] && 
+                !user.bannersUnlocked.includes(which) && 
+                user.juice >= COSM_BANNERS[which].juiceCost && 
+                getLevel(user.xp) >= COSM_BANNERS[which].levelRequirement
+            ) {
+                user.bannersUnlocked = [...user.bannersUnlocked, which];
+                user.currentBanner = which;
+                user.juice = user.juice - COSM_BANNERS[which].juiceCost;
+                await user.save();
+
+                socket.emit('player_data_quiet', { user });
+            }
+        } else if (type === 'nameColor') {
+            if (COSM_NAME_COLORS[which] && 
+                !user.nameColorsUnlocked.includes(which) && 
+                user.juice >= COSM_NAME_COLORS[which].juiceCost && 
+                getLevel(user.xp) >= COSM_NAME_COLORS[which].levelRequirement
+            ) {
+                user.nameColorsUnlocked = [...user.nameColorsUnlocked, which];
+                user.currentNameColor = which;
+                user.juice = user.juice - COSM_NAME_COLORS[which].juiceCost;
+                await user.save();
+
+                socket.emit('player_data_quiet', { user });
+            }
+        }
+    });
+
+    socket.on('equip', async (data: { type: 'palette' | 'nameColor' | 'banner', which: string }) => {
+        const id = users.get(socket.id);
+        const user = await database.findUser({ _id: id });
+        const { type, which } = data;
+
+        if (type === 'palette') {
+            if (user.palettesUnlocked.includes(which)) {
+                user.currentPalette = which;
+                await user.save();
+                socket.emit('player_data_quiet', { user });
+            }
+        } else if (type === 'nameColor') {
+            if (user.nameColorsUnlocked.includes(which)) {
+                user.currentNameColor = which;
+                await user.save();
+                socket.emit('player_data_quiet', { user });
+            }
+        } else if (type === 'banner') {
+            if (user.bannersUnlocked.includes(which)) {
+                user.currentBanner = which;
+                await user.save();
+                socket.emit('player_data_quiet', { user });
+            }
+        }
     });
 
     socket.on('create_match', async () => {
@@ -576,7 +650,7 @@ async function tick() {
             } else {
                 match.matchOverDelay += 1;
     
-                if (match.matchOverDelay > 400) {
+                if (match.matchOverDelay > 200) {
                     match.over = false;
                     match.playing = false;
                     match.ending = false;   

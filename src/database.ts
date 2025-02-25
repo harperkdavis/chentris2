@@ -1,4 +1,6 @@
-const MONGO_URI = `mongodb+srv://admin:${process.env.MONGO_PASSWORD}@hked.mwinf.mongodb.net/chentris?retryWrites=true&w=majority`;
+const DEV = process.env.DEV === '1';
+
+const MONGO_URI = `mongodb+srv://admin:${process.env.MONGO_PASSWORD}@hked.mwinf.mongodb.net/${DEV ? 'chentrisDev' : 'chentris'}?retryWrites=true&w=majority`;
 import mongoose from 'mongoose';
 
 import User from './schemas/user.schema';
@@ -28,7 +30,15 @@ async function findUser(filter: object) {
 }
 
 async function getLeaderboard(competitive: boolean) {
-    return (await User.find({ [competitive ? 'compElo' : 'normalElo']: { $gt: 1000 } }).sort({ [competitive ? 'compElo' : 'normalElo']: -1 }).limit(20).exec()).map(user => ({ id: user._id, username: user.username, elo: user[competitive ? 'compElo' : 'normalElo'] }));
+    return (await User.find({ [competitive ? 'compElo' : 'normalElo']: { $gt: 1000 } }).sort({ [competitive ? 'compElo' : 'normalElo']: -1 }).limit(25).exec()).map(user => ({ id: user._id, username: user.username, elo: user[competitive ? 'compElo' : 'normalElo'] }));
+}
+
+async function getLevelLeaderboard() {
+    return (await User.find({ xp: { $gt: 0 } }).sort({ xp: -1 }).limit(25).exec()).map(user => ({ id: user._id, username: user.username, xp: user.xp }));
+}
+
+async function getJuiceLeaderboard() {
+    return (await User.find({ juice: { $gt: 0 } }).sort({ juice: -1 }).limit(25).exec()).map(user => ({ id: user._id, username: user.username, juice: user.juice }));
 }
 
 async function getRank(user: string, competitive: boolean) {
@@ -40,5 +50,7 @@ export default {
     newUser,
     findUser,
     getLeaderboard,
+    getLevelLeaderboard,
+    getJuiceLeaderboard,
     getRank,
 }

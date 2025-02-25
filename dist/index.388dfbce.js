@@ -26,12 +26,34 @@ const menus = {
             }
         },
         {
+            name: "COSMETICS",
+            onClick: ()=>{
+                state.inSubMenu = true;
+                state.subMenu = submenus.Cosmetics;
+            }
+        },
+        {
+            name: "LEADERBOARD",
+            onClick: ()=>{
+                state.inSubMenu = true;
+                state.subMenu = submenus.Leaderboard;
+            }
+        },
+        {
             name: "SETTINGS",
             onClick: ()=>{
-                state.inSettings = true;
+                state.inSubMenu = true;
+                state.subMenu = submenus.Settings;
+                game.settingsPieceX = 0;
+                game.settingsRot = 0;
             }
         }
     ]
+};
+const submenus = {
+    Settings: 0,
+    Leaderboard: 1,
+    Cosmetics: 2
 };
 function switchMenu(menu) {
     game.menu = menus[menu];

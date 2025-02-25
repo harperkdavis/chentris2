@@ -1,4 +1,4 @@
-const PIECES = [
+export const PIECES = [
     {
         layout: [ // I-piece 0
             [0, 0, 0, 0],
@@ -6,14 +6,16 @@ const PIECES = [
             [0, 0, 0, 0],
             [0, 0, 0, 0]
         ], 
-        color: [130, 250, 230]
+        color: [130, 250, 230],
+        width: 4,
     },
     {
         layout: [ // J-piece 1
             [1, 0, 0],
             [1, 1, 1],
             [0, 0, 0]
-        ], color: [130, 150, 250]
+        ], color: [130, 150, 250],
+        width: 3,
     },
     {
         layout: [ // L-piece 2
@@ -21,14 +23,16 @@ const PIECES = [
             [1, 1, 1],
             [0, 0, 0]
         ], 
-        color: [240, 160, 110]
+        color: [240, 160, 110],
+        width: 3,
     },
     {
         layout: [ // O-piece 3
             [1, 1],
             [1, 1]
         ], 
-        color: [240, 230, 110]
+        color: [240, 230, 110],
+        width: 2,
     },
     {
         layout: [ // T-piece 4
@@ -36,7 +40,8 @@ const PIECES = [
             [1, 1, 1],
             [0, 0, 0]
         ], 
-        color: [180, 130, 240]
+        color: [180, 130, 240],
+        width: 3,
     },
     {
         layout: [ // Z-piece 5
@@ -44,7 +49,8 @@ const PIECES = [
             [0, 1, 1],
             [0, 0, 0]
         ], 
-        color: [240, 130, 150]
+        color: [240, 130, 150],
+        width: 3,
     },
     {
         layout: [ // S-piece 6
@@ -52,17 +58,306 @@ const PIECES = [
             [1, 1, 0],
             [0, 0, 0]
         ], 
-        color: [130, 240, 120]
+        color: [130, 240, 120],
+        width: 3,
     },
     {
         layout: [ // Garbage 7 (Not intended to be used)
             [1]
         ],
         color: [200, 200, 200],
+        width: 3,
     }
 ];
 
-const COMBOS = {
+export interface Cosmetic<T> {
+    data: T,
+    levelRequirement: number,
+    juiceCost: number
+}
+
+export type Palette = [number, number, number][];
+export type NameColor = [number, number, number];
+export type Banner = string;
+
+function hexToRgb(hex: string): [number, number, number] {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0, 0, 0];
+}
+
+export const COSM_PALETTES: { [key: string]: Cosmetic<Palette> } = {
+    'Default': {
+        data: [
+            [130, 250, 230], // I 
+            [130, 150, 250], // J
+            [240, 160, 110], // L
+            [240, 230, 110], // O
+            [180, 130, 240], // T
+            [240, 130, 150], // Z
+            [130, 240, 120], // S
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 0,
+        juiceCost: 0,
+    },
+    'Alternate': {
+        data: [
+            [180, 130, 240], // I 
+            [130, 240, 120], // J
+            [240, 130, 150], // L
+            [130, 250, 230], // O
+            [240, 230, 110], // T
+            [240, 160, 110], // Z
+            [130, 150, 250], // S
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 0,
+        juiceCost: 1000,
+    },
+    'Deep': {
+        data: [
+            hexToRgb('#43aa8b'),
+            hexToRgb('#577590'),
+            hexToRgb('#f8961e'),
+            hexToRgb('#f9c74f'),
+            hexToRgb('#f3722c'),
+            hexToRgb('#f94144'),
+            hexToRgb('#90be6d'),
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 0,
+        juiceCost: 10_000,
+    },
+    'Vintage': {
+        data: [
+            hexToRgb('#797d62'),
+            hexToRgb('#9b9b7a'),
+            hexToRgb('#d9ae94'),
+            hexToRgb('#f1dca7'),
+            hexToRgb('#ffcb69'),
+            hexToRgb('#d08c60'),
+            hexToRgb('#997b66'),
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 0,
+        juiceCost: 100_000,
+    },
+    'Terminal': {
+        data: [
+            [0, 255, 255], // I 
+            [0, 0, 255], // J
+            [255, 127, 0], // L
+            [255, 255, 0], // O
+            [255, 0, 255], // T
+            [255, 0, 0], // Z
+            [0, 255, 0], // S
+            [127, 127, 127] // G
+        ],
+        levelRequirement: 5,
+        juiceCost: 200_000,
+    },
+    'Sunset': {
+        data: [
+            hexToRgb('#003f5c'),
+            hexToRgb('#58508d'),
+            hexToRgb('#bc5090'),
+            hexToRgb('#ff6361'),
+            hexToRgb('#ffa600'),
+            hexToRgb('#ffd380'),
+            hexToRgb('#ffe9c0'),
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 10,
+        juiceCost: 400_000,
+    },
+    'Fiery': {
+        data: [
+            hexToRgb('#e62314'),
+            hexToRgb('#e83715'),
+            hexToRgb('#ea4c15'),
+            hexToRgb('#ec6116'),
+            hexToRgb('#ed7517'),
+            hexToRgb('#ef8a17'),
+            hexToRgb('#f19e18'),
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 20,
+        juiceCost: 1_000_000,
+    },
+    'Ocean': {
+        data: [
+            hexToRgb('#145277'),
+            hexToRgb('#266785'),
+            hexToRgb('#397c93'),
+            hexToRgb('#4c91a1'),
+            hexToRgb('#5ea6af'),
+            hexToRgb('#71bbbd'),
+            hexToRgb('#83d0cb'),
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 20,
+        juiceCost: 1_000_000,
+    },
+    'Pink': {
+        data: [
+            hexToRgb('#fcf3c4'),
+            hexToRgb('#fcdbbe'),
+            hexToRgb('#fbc3b8'),
+            hexToRgb('#fbabb2'),
+            hexToRgb('#fa92ac'),
+            hexToRgb('#fa7aa6'),
+            hexToRgb('#f962a0'),
+            [255, 200, 255] // G
+        ],
+        levelRequirement: 30,
+        juiceCost: 3_000_000,
+    },
+    'Conditional Formatting': {
+        data: [
+            hexToRgb('#84e3c8'),
+            hexToRgb('#a8e6cf'),
+            hexToRgb('#dcedc1'),
+            hexToRgb('#ffd3b6'),
+            hexToRgb('#ffaaa5'),
+            hexToRgb('#ff8b94'),
+            hexToRgb('#ff7480'),
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 30,
+        juiceCost: 20_000_000,
+    },
+    'Monochrome': {
+        data: [
+            [200, 200, 200],
+            [200, 200, 200],
+            [200, 200, 200],
+            [200, 200, 200],
+            [200, 200, 200],
+            [200, 200, 200],
+            [200, 200, 200],
+            [200, 200, 200] // G
+        ],
+        levelRequirement: 30,
+        juiceCost: 50_000_000,
+    },
+    'Aura': {
+        data: [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0] // G
+        ],
+        levelRequirement: 50,
+        juiceCost: 1_000_000_000,
+    },
+};
+
+export const COSM_NAME_COLORS: { [key: string]: Cosmetic<NameColor> } = {
+    'Default': {
+        data: [0, 0, 0],
+        levelRequirement: 0,
+        juiceCost: 0,
+    },
+    'Red': {
+        data: [200, 0, 0],
+        levelRequirement: 10,
+        juiceCost: 0,
+    },
+    'Blue': {
+        data: [0, 0, 200],
+        levelRequirement: 20,
+        juiceCost: 0,
+    },
+    'Green': {
+        data: [0, 200, 0],
+        levelRequirement: 30,
+        juiceCost: 0,
+    },
+    'Purple': {
+        data: [100, 50, 200],
+        levelRequirement: 40,
+        juiceCost: 0,
+    },
+    'Aura': {
+        data: [255, 255, 255],
+        levelRequirement: 50,
+        juiceCost: 0,
+    },
+};
+
+export const COSM_BANNERS: { [key: string]: Cosmetic<Banner> } = {
+    'Default': {
+        data: 'bannerDefault.png',
+        levelRequirement: 0,
+        juiceCost: 0,
+    },
+    'Gray': {
+        data: 'bannerGray.png',
+        levelRequirement: 0,
+        juiceCost: 5_000,
+    },
+    'Blue': {
+        data: 'bannerBlue.png',
+        levelRequirement: 0,
+        juiceCost: 10_000,
+    },
+    'Blocks': {
+        data: 'bannerBlocks.png',
+        levelRequirement: 0,
+        juiceCost: 10_000,
+    },
+    'Fade': {
+        data: 'bannerFade.png',
+        levelRequirement: 0,
+        juiceCost: 50_000,
+    },
+    'Certified Master': {
+        data: 'bannerMaster.png',
+        levelRequirement: 0,
+        juiceCost: 200_000,
+    },
+    'Nathan Mode ON': {
+        data: 'bannerNathan.png',
+        levelRequirement: 0,
+        juiceCost: 300_000,
+    },
+    'Karl Mode ON': {
+        data: 'bannerKarl.png',
+        levelRequirement: 0,
+        juiceCost: 300_000,
+    },
+    'Silly Mode ON': {
+        data: 'bannerSilly.png',
+        levelRequirement: 0,
+        juiceCost: 500_000,
+    },
+    'Does anyone have any methods at all': {
+        data: 'bannerMethods.png',
+        levelRequirement: 0,
+        juiceCost: 500_000,
+    },
+    'Nebula': {
+        data: 'bannerNebula.png',
+        levelRequirement: 0,
+        juiceCost: 1_000_000,
+    },
+    'Freedom': {
+        data: 'bannerFreedom.png',
+        levelRequirement: 0,
+        juiceCost: 1_000_000,
+    },
+    'Aura': {
+        data: 'bannerAura.png',
+        levelRequirement: 50,
+        juiceCost: 1_000_000_000,
+    },
+};
+
+export const COMBOS = {
     '00': { name: 'none', lines: { type: 'add', count: 0 }, juice: { type: 'add', count: 0 }},
     // 1 - order
 
@@ -173,13 +468,13 @@ const COMBOS = {
     // 2 lines
 };
 
-const T_CHECK = [
+export const T_CHECK = [
     [1, 0, 1],
     [0, 0, 0],
     [1, 0, 1]
 ];
 
-const WALL_KICK = {
+export const WALL_KICK = {
     0: {
         3: [
             [0, 0],
@@ -302,7 +597,7 @@ const WALL_KICK = {
     }
 }
   
-const WALL_KICK_I = {
+export const WALL_KICK_I = {
     0: {
         3: [
             [0, 0],
@@ -445,7 +740,7 @@ export interface SubmoveState {
     dropLines: number,
 }
 
-enum Piece {
+export enum Piece {
     Empty = -1,
     I = 0,
     J = 1,
@@ -457,13 +752,13 @@ enum Piece {
     Garbage = 7,
 };
 
-enum MoveType {
+export enum MoveType {
     Move = "move",
     Hold = "hold",
     AddGarbage = "addGarbage",
 };
 
-enum Direction {
+export enum Direction {
     Left = "left",
     Right = "right",
 
@@ -502,7 +797,7 @@ export const NORMAL_DEFAULTS: Rules = {
     garbageDefense: true,
 };
 
-function createNewBag(srng: string, bagIndex: number, generator: Function): Array<Piece> {
+export function createNewBag(srng: string, bagIndex: number, generator: Function): Array<Piece> {
     let pieces = [Piece.I, Piece.J, Piece.L, Piece.O, Piece.T, Piece.Z, Piece.S];
 
     const bag: Array<Piece> = [];
@@ -550,7 +845,7 @@ export function createNewBoard(playerId: string, matchId: string, gameId: string
     };
 }
 
-function deepCopyBoard(board: Board): Board {
+export function deepCopyBoard(board: Board): Board {
     return {
         srng: board.srng,
 
@@ -590,7 +885,7 @@ export function highestTile(board: Board): number {
     return 40;
 }
 
-function highestGarbageTile(board: Board): number {
+export function highestGarbageTile(board: Board): number {
     for (let i = 0; i < 400; i++) {
         if (board.tiles[i] === Piece.Garbage) {
             return Math.floor(i / 10);
@@ -599,7 +894,7 @@ function highestGarbageTile(board: Board): number {
     return 40;
 }
 
-function rotateArray(array: Array<Array<number>>, rotation: number): Array<Array<number>> {
+export function rotateArray(array: Array<Array<number>>, rotation: number): Array<Array<number>> {
     const rot = mod(rotation, 4);
 
     if (rot <= 0) {
@@ -614,12 +909,12 @@ function rotateArray(array: Array<Array<number>>, rotation: number): Array<Array
 
 }
 
-function getRotatedPiece(piece: Piece, rotation: number): Array<Array<number>> {
+export function getRotatedPiece(piece: Piece, rotation: number): Array<Array<number>> {
     const layout = PIECES[piece].layout;
     return rotateArray(layout, rotation);
 }
 
-function pieceFits(piece: Piece, board: Board, x: number, y: number, rotation: number): boolean {
+export function pieceFits(piece: Piece, board: Board, x: number, y: number, rotation: number): boolean {
     const layout = getRotatedPiece(piece, rotation);
 
     for (let i = 0; i < layout.length; i++) {
@@ -1012,6 +1307,16 @@ export function makeMove(move: Move, board: Board, generator: Function, rules: R
 
 }
 
-function mod(n, m) {
+export function mod(n: number, m: number) {
     return ((n % m) + m) % m;
+}
+
+const LOG_1_05 = Math.log(1.05);
+
+export function getLevel(xp: number) {
+    return Math.floor(Math.log(Math.sqrt(xp) / 100 + 1) / LOG_1_05 + 1);
+}
+
+export function getXp(level: number) {
+    return Math.floor((100 * (Math.pow(1.05, level - 1) - 1)) ** 2);
 }

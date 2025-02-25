@@ -9,11 +9,11 @@ const input = {
 };
 const game = {
     loading: true,
-    loadMessage: 'Starting...',
+    loadMessage: "Starting...",
     isTyping: false,
-    typedString: '',
+    typedString: "",
     typeLengthLimit: 0,
-    error: '',
+    error: "",
     errorAnim: -1,
     inGame: false,
     gameData: {},
@@ -23,6 +23,7 @@ const game = {
     menu: menus.main,
     menuButtonAnims: [],
     menuAnim: 0,
+    online: 0,
     matchAnim: 0,
     boardOrigin: [
         0,
@@ -36,7 +37,10 @@ const game = {
     boardScale: 0,
     boardNotifications: [],
     awaitingKeypress: false,
-    keypressToChange: '',
+    settingsPieceX: 0,
+    settingsRot: 0,
+    keypressToChange: "",
+    cosmeticsPage: 'palette',
     hocoAnim: -1,
     leaderboard: {},
     normalRank: 0,
@@ -798,54 +802,128 @@ const state = {
     creatingNewAccount: false,
     loadingData: false,
     joiningMatch: false,
-    inSettings: false
+    inSubMenu: false,
+    subMenu: null
 };
 const images = {
     nathan: null,
-    small: null
+    small: null,
+    banners: {}
 };
 let SQUARE_SIZE = 0;
 const controls = {
     left: 37,
     right: 39,
     down: 40,
-    drop: ' '.charCodeAt(0),
+    drop: " ".charCodeAt(0),
     rotateRight: 38,
-    rotateLeft: 'Z'.charCodeAt(0),
-    rotate180: 'X'.charCodeAt(0),
-    hold: 'C'.charCodeAt(0)
+    rotateLeft: "Z".charCodeAt(0),
+    rotate180: "X".charCodeAt(0),
+    hold: "C".charCodeAt(0)
 };
 let settings = null;
 const defaultSettings = {
-    'moveSpeed': 2,
-    'controls.left': 37,
-    'controls.right': 39,
-    'controls.down': 40,
-    'controls.drop': ' '.charCodeAt(0),
-    'controls.rotateRight': 38,
-    'controls.rotateLeft': 'Z'.charCodeAt(0),
-    'controls.rotate180': 'A'.charCodeAt(0),
-    'controls.hold': 'C'.charCodeAt(0)
+    moveSpeed: 2,
+    moveDelayFactor: 2,
+    screenShakeFactor: 1,
+    "controls.left": 37,
+    "controls.right": 39,
+    "controls.down": 40,
+    "controls.drop": " ".charCodeAt(0),
+    "controls.rotateRight": 38,
+    "controls.rotateLeft": "Z".charCodeAt(0),
+    "controls.rotate180": "A".charCodeAt(0),
+    "controls.hold": "C".charCodeAt(0)
 };
 const ON_OR_OFF = [
     {
-        key: 'on',
+        key: "on",
         value: true
     },
     {
-        key: 'off',
+        key: "off",
         value: false
+    }
+];
+const MOVE_SPEED_SETTINGS = [
+    {
+        key: "fast",
+        value: 2
+    },
+    {
+        key: "very fast",
+        value: 1
+    },
+    {
+        key: "very slow",
+        value: 20
+    },
+    {
+        key: "slow",
+        value: 10
+    },
+    {
+        key: "reasonable",
+        value: 5
+    },
+    {
+        key: "normal",
+        value: 4
+    },
+    {
+        key: "slightly faster",
+        value: 3
+    }
+];
+const MOVE_DELAY_FACTOR_SETTINGS = [
+    {
+        key: "normal",
+        value: 2
+    },
+    {
+        key: "extended",
+        value: 4
+    },
+    {
+        key: "none",
+        value: 1
+    }
+];
+const SCREEN_SHAKE_SETTINGS = [
+    {
+        key: "normal",
+        value: 1
+    },
+    {
+        key: "lots",
+        value: 2
+    },
+    {
+        key: "nauseating",
+        value: 4
+    },
+    {
+        key: "i wouldn't",
+        value: 100
+    },
+    {
+        key: "off",
+        value: 0
+    },
+    {
+        key: "reduced",
+        value: 0.5
     }
 ];
 function resetState() {
     for(let val in state)state[val] = false;
     game.inGame = false;
     game.loading = false;
-    game.loadMessage = '';
+    game.loadMessage = "";
     game.isTyping = false;
-    game.typedString = '';
+    game.typedString = "";
     game.typeLengthLimit = 0;
-    game.error = '';
+    game.error = "";
     game.errorAnim = -1;
     game.inGame = false;
     game.gameData = {};
@@ -868,15 +946,22 @@ function resetState() {
     game.boardScale = 1;
     game.boardNotifications = [];
     game.awaitingKeypress = false;
-    game.keypressToChange = '';
+    game.settingsPieceX = 0;
+    game.settingsRot = 0;
+    game.keypressToChange = "";
+    game.cosmeticsPage = 'palette';
     game.hocoAnim = -1;
     game.leaderboard = {};
     game.normalRank = 0;
     game.competitiveRank = 0;
 }
 function preload() {
-    images.nathan = loadImage('./assets/nathan.png');
-    images.small = loadImage('./assets/nathan32.png');
+    images.nathan = loadImage("./assets/nathan.png");
+    images.small = loadImage("./assets/nathan32.png");
+    for(const bannerName in COSM_BANNERS){
+        const imageName = COSM_BANNERS[bannerName].data;
+        images.banners[bannerName] = loadImage(`./assets/cosmetics/${imageName}`);
+    }
 }
 function setup() {
     createCanvas();
@@ -888,7 +973,7 @@ function setup() {
 function reset() {
     background(250);
     game.loading = true;
-    game.loadMessage = 'Starting...';
+    game.loadMessage = "Starting...";
     socket.io = null;
     socket.connected = false;
     socket.registered = false;
@@ -897,7 +982,7 @@ function reset() {
 }
 function resetSettings() {
     settings = null;
-    localStorage.removeItem('chentris_2_settings');
+    localStorage.removeItem("chentris_2_settings");
     loadSettings();
 }
 function getSetting(key1) {
@@ -913,27 +998,30 @@ function setSetting(key1, value) {
     saveSettings();
 }
 function loadSettings() {
-    if (localStorage.getItem('chentris_2_settings')) settings = JSON.parse(localStorage.getItem('chentris_2_settings'));
+    if (localStorage.getItem("chentris_2_settings")) settings = {
+        ...defaultSettings,
+        ...JSON.parse(localStorage.getItem("chentris_2_settings"))
+    };
     else {
         saveSettings();
         loadSettings();
     }
 }
 function saveSettings() {
-    localStorage.setItem('chentris_2_settings', JSON.stringify(settings || defaultSettings));
+    localStorage.setItem("chentris_2_settings", JSON.stringify(settings || defaultSettings));
 }
 function getId() {
-    return localStorage.getItem('chentris_2_id');
+    return localStorage.getItem("chentris_2_id");
 }
 function setId(id) {
-    return localStorage.setItem('chentris_2_id', id || 'null');
+    return localStorage.setItem("chentris_2_id", id || "null");
 }
 function loadData() {
     resetState();
     game.loading = true;
-    game.loadMessage = 'Loading player...';
+    game.loadMessage = "Loading player...";
     state.loadingData = true;
-    socket.io.emit('player_data');
+    socket.io.emit("player_data");
 }
 function connect() {
     socket.io = io({
@@ -944,59 +1032,64 @@ function connect() {
     });
     socket.connected = true;
     game.loading = true;
-    game.loadMessage = 'Connecting...';
-    socket.io.on('connect', ()=>{
+    game.loadMessage = "Connecting...";
+    socket.io.on("connect", ()=>{
         game.loading = true;
-        game.loadMessage = 'Registering...';
+        game.loadMessage = "Registering...";
     });
-    socket.io.on('register', (data)=>{
+    socket.io.on("register", (data)=>{
         if (data.registered) {
             socket.registered = true;
             loadData();
         } else {
-            if (data.error === 'INVALID_ID') {
-                game.error = 'The id is invalid. If the issue persists, clear your local storage.';
+            if (data.error === "INVALID_ID") {
+                game.error = "The id is invalid. If the issue persists, clear your local storage.";
                 game.errorAnim = 99999;
-            } else if (data.error === 'NULL_ID' || data.error === 'INVALID_USERNAME') {
+            } else if (data.error === "NULL_ID" || data.error === "INVALID_USERNAME") {
                 game.loading = false;
-                game.loadMessage = '';
+                game.loadMessage = "";
                 game.isTyping = true;
-                game.typedString = '';
+                game.typedString = "";
                 game.typeLengthLimit = 16;
                 state.creatingNewAccount = true;
-                if (data.error === 'INVALID_USERNAME') {
-                    game.error = 'Your username is invalid.';
+                if (data.error === "INVALID_USERNAME") {
+                    game.error = "Your username is invalid.";
                     game.errorAnim = 5;
                 }
             }
         }
     });
-    socket.io.on('set_id', (data)=>{
+    socket.io.on("set_id", (data)=>{
         setId(data.id);
     });
-    socket.io.on('player_data', (data)=>{
+    socket.io.on("player_data", (data)=>{
         game.loading = false;
-        game.loadMessage = '';
+        game.loadMessage = "";
         game.playerData = data.user;
         console.log(data);
         if (data.leaderboard) {
             game.leaderboard = data.leaderboard;
+            game.online = data.online;
             game.normalRank = data.normalRank;
             game.competitiveRank = data.competitiveRank;
         }
         if (!data.inGame) {
             game.mainMenuAnim = 1;
-            switchMenu('main');
+            switchMenu("main");
             if (window.location.hash.length >= 1) {
                 if (window.location.hash.length === 5) joinMatch(window.location.hash.substring(1));
                 else {
-                    game.error = 'Invalid match link.';
+                    game.error = "Invalid match link.";
                     game.errorAnim = 5;
                 }
             }
         }
     });
-    socket.io.on('error', (data)=>{
+    socket.io.on("player_data_quiet", (data)=>{
+        console.log('quiet', data);
+        game.playerData = data.user;
+    });
+    socket.io.on("error", (data)=>{
         game.errorAnim = 5;
         game.error = `Fatal packet error type <${data.type}>: ${data.error}. Reloading in 5 seconds.`;
         setTimeout(()=>{
@@ -1004,10 +1097,10 @@ function connect() {
             connect();
         }, 5000);
     });
-    socket.io.on('match_found', (data)=>{
+    socket.io.on("match_found", (data)=>{
         game.loading = false;
-        game.loadMessage = '';
-        window.location.hash = '';
+        game.loadMessage = "";
+        window.location.hash = "";
         if (data.error) {
             game.error = data.message;
             game.errorAnim = 5;
@@ -1049,7 +1142,7 @@ function connect() {
             attackOption: 0
         };
     });
-    socket.io.on('board_reset', ()=>{
+    socket.io.on("board_reset", ()=>{
         const board = deepCopyBoard(game.gameData.match.boards[game.playerData._id]);
         game.boardOrigin = [
             width / 2,
@@ -1084,7 +1177,7 @@ function connect() {
         };
         game.localData.board.move = 0;
     });
-    socket.io.on('match_state', (data)=>{
+    socket.io.on("match_state", (data)=>{
         if (!game.inGame) return;
         const board = data.match.boards[game.playerData._id];
         const moveNumber = game.localData.board.move;
@@ -1102,11 +1195,11 @@ function connect() {
     });
 }
 function joinMatch(code) {
-    socket.io.emit('join_match', {
+    socket.io.emit("join_match", {
         code
     });
     game.loading = true;
-    game.loadMessage = 'Joining...';
+    game.loadMessage = "Joining...";
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
@@ -1114,14 +1207,14 @@ function windowResized() {
 }
 function keyTyped() {
     if (game.isTyping) {
-        if (game.typedString.length < game.typeLengthLimit && key !== 'Enter') game.typedString += key;
+        if (game.typedString.length < game.typeLengthLimit && key !== "Enter") game.typedString += key;
     }
 }
 function keyPressed() {
     if (game.awaitingKeypress) {
         if (keyCode !== ESCAPE) setSetting(game.keypressToChange, keyCode);
         game.awaitingKeypress = false;
-        game.keypressToChange = '';
+        game.keypressToChange = "";
     }
     if (keyCode === BACKSPACE && game.isTyping) {
         if (game.typedString.length > 0) game.typedString = game.typedString.substring(0, game.typedString.length - 1);
@@ -1148,14 +1241,14 @@ function update() {
     const deltaTime = frameRate() > 0 ? 1 / frameRate() : 0;
     if (game.errorAnim > 0) game.errorAnim -= deltaTime;
     if (state.creatingNewAccount) {
-        if (input.keys['\r'.charCodeAt(0)] === 0) {
+        if (input.keys["\r".charCodeAt(0)] === 0) {
             const username = game.typedString.trim().substring(0, 32);
             if (username.length > 0) {
-                socket.io.emit('create_account', {
+                socket.io.emit("create_account", {
                     username
                 });
                 game.loading = true;
-                game.loadMessage = 'Registering...';
+                game.loadMessage = "Registering...";
                 game.creatingNewAccount = false;
             }
         }
@@ -1167,11 +1260,11 @@ function update() {
         if (!game.inGame) {
             if (state.joiningMatch) {
                 const match = /[^0-9]/g;
-                game.typedString = game.typedString.replace(match, '');
+                game.typedString = game.typedString.replace(match, "");
                 const stopJoiningMatch = ()=>{
                     state.joiningMatch = false;
                     game.isTyping = false;
-                    game.typedString = '';
+                    game.typedString = "";
                     game.typeLengthLimit = 0;
                 };
                 buttonState(width / 2 + 160, height / 2 - 50, 40, 20, ()=>{}, stopJoiningMatch);
@@ -1179,29 +1272,126 @@ function update() {
                 if (game.typedString.length === 4) {
                     joinMatch(game.typedString);
                     game.isTyping = false;
-                    game.typedString = '';
+                    game.typedString = "";
                     game.typeLengthLimit = -1;
                     state.joiningMatch = false;
                 }
-            } else if (state.inSettings) {
-                const leaveOptions = ()=>{
-                    state.inSettings = false;
+            } else if (state.inSubMenu) {
+                const leave = ()=>{
+                    state.inSubMenu = false;
                 };
-                buttonState(width / 2 + 460, height / 2 - 300, 40, 20, ()=>{}, leaveOptions);
-                if (input.keys[ESCAPE] === 0) leaveOptions();
-                function awaitKeypress(name) {
-                    game.awaitingKeypress = true;
-                    game.keypressToChange = name;
+                buttonState(width / 2 + 460, height / 2 - 300, 40, 20, ()=>{}, leave);
+                if (input.keys[ESCAPE] === 0) leave();
+                if (state.subMenu === submenus.Settings) {
+                    function awaitKeypress(name) {
+                        game.awaitingKeypress = true;
+                        game.keypressToChange = name;
+                    }
+                    buttonState(width / 2 + 140, height / 2 - 250, 100, 20, ()=>{}, ()=>awaitKeypress("controls.left"));
+                    buttonState(width / 2 + 140, height / 2 - 220, 100, 20, ()=>{}, ()=>awaitKeypress("controls.right"));
+                    buttonState(width / 2 + 140, height / 2 - 190, 100, 20, ()=>{}, ()=>awaitKeypress("controls.down"));
+                    buttonState(width / 2 + 140, height / 2 - 160, 100, 20, ()=>{}, ()=>awaitKeypress("controls.drop"));
+                    buttonState(width / 2 + 140, height / 2 - 130, 100, 20, ()=>{}, ()=>awaitKeypress("controls.rotateLeft"));
+                    buttonState(width / 2 + 140, height / 2 - 100, 100, 20, ()=>{}, ()=>awaitKeypress("controls.rotateRight"));
+                    buttonState(width / 2 + 140, height / 2 - 70, 100, 20, ()=>{}, ()=>awaitKeypress("controls.rotate180"));
+                    buttonState(width / 2 + 140, height / 2 - 40, 100, 20, ()=>{}, ()=>awaitKeypress("controls.hold"));
+                    buttonState(width / 2 + 340, height / 2 + 260, 150, 30, ()=>{}, ()=>resetSettings());
+                    selectState(width / 2 - 245, height / 2 - 100, 100, 20, MOVE_SPEED_SETTINGS, ()=>settings["moveSpeed"], (val)=>{
+                        settings["moveSpeed"] = val;
+                        saveSettings();
+                    });
+                    selectState(width / 2 - 245, height / 2 - 50, 100, 20, MOVE_DELAY_FACTOR_SETTINGS, ()=>settings["moveDelayFactor"], (val)=>{
+                        settings["moveDelayFactor"] = val;
+                        saveSettings();
+                    });
+                    selectState(width / 2 - 245, height / 2, 100, 20, SCREEN_SHAKE_SETTINGS, ()=>settings["screenShakeFactor"], (val)=>{
+                        settings["screenShakeFactor"] = val;
+                        saveSettings();
+                    });
+                    if (input.keys[settings["controls.left"]] % settings["moveSpeed"] === 0 && (input.keys[settings["controls.left"]] === 0 || input.keys[settings["controls.left"]] > settings["moveSpeed"] * settings["moveDelayFactor"])) game.settingsPieceX -= 1;
+                    if (input.keys[settings["controls.right"]] % settings["moveSpeed"] === 0 && (input.keys[settings["controls.right"]] === 0 || input.keys[settings["controls.right"]] > settings["moveSpeed"] * settings["moveDelayFactor"])) game.settingsPieceX += 1;
+                    game.settingsPieceX = constrain(game.settingsPieceX, -5, 5);
+                } else if (state.subMenu === submenus.Cosmetics) {
+                    buttonState(width / 2 - 490, height / 2 - 290, 100, 30, ()=>{}, ()=>{
+                        game.cosmeticsPage = 'palette';
+                    });
+                    buttonState(width / 2 - 380, height / 2 - 290, 100, 30, ()=>{}, ()=>{
+                        game.cosmeticsPage = 'banner';
+                    });
+                    buttonState(width / 2 - 270, height / 2 - 290, 100, 30, ()=>{}, ()=>{
+                        game.cosmeticsPage = 'nameColor';
+                    });
+                    let i = 0;
+                    if (game.cosmeticsPage === 'palette') for(const paletteName in COSM_PALETTES){
+                        const x = width / 2 - 490 + floor(i / 6) * 310;
+                        const y = height / 2 - 240 + i % 6 * 80;
+                        if ((game.playerData.palettesUnlocked || [
+                            'Default'
+                        ]).includes(paletteName)) {
+                            if (game.playerData.currentPalette !== paletteName) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
+                                socket.io.emit('equip', {
+                                    type: 'palette',
+                                    which: paletteName
+                                });
+                            });
+                        } else {
+                            const data = COSM_PALETTES[paletteName];
+                            if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
+                                socket.io.emit('purchase', {
+                                    type: 'palette',
+                                    which: paletteName
+                                });
+                            });
+                        }
+                        i += 1;
+                    }
+                    else if (game.cosmeticsPage === 'banner') for(const bannerName in COSM_BANNERS){
+                        const x = width / 2 - 490 + floor(i / 6) * 310;
+                        const y = height / 2 - 240 + i % 6 * 80;
+                        if ((game.playerData.bannersUnlocked || [
+                            'Default'
+                        ]).includes(bannerName)) {
+                            if (game.playerData.currentBanner !== bannerName) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
+                                socket.io.emit('equip', {
+                                    type: 'banner',
+                                    which: bannerName
+                                });
+                            });
+                        } else {
+                            const data = COSM_BANNERS[bannerName];
+                            if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
+                                socket.io.emit('purchase', {
+                                    type: 'banner',
+                                    which: bannerName
+                                });
+                            });
+                        }
+                        i += 1;
+                    }
+                    else if (game.cosmeticsPage === 'nameColor') for(const nameColor in COSM_NAME_COLORS){
+                        const x = width / 2 - 490 + floor(i / 6) * 310;
+                        const y = height / 2 - 240 + i % 6 * 80;
+                        if ((game.playerData.nameColorsUnlocked || [
+                            'Default'
+                        ]).includes(nameColor)) {
+                            if (game.playerData.currentNameColor !== nameColor) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
+                                socket.io.emit('equip', {
+                                    type: 'nameColor',
+                                    which: nameColor
+                                });
+                            });
+                        } else {
+                            const data = COSM_NAME_COLORS[nameColor];
+                            if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
+                                socket.io.emit('purchase', {
+                                    type: 'nameColor',
+                                    which: nameColor
+                                });
+                            });
+                        }
+                        i += 1;
+                    }
                 }
-                buttonState(width / 2 + 140, height / 2 - 250, 100, 20, ()=>{}, ()=>awaitKeypress('controls.left'));
-                buttonState(width / 2 + 140, height / 2 - 220, 100, 20, ()=>{}, ()=>awaitKeypress('controls.right'));
-                buttonState(width / 2 + 140, height / 2 - 190, 100, 20, ()=>{}, ()=>awaitKeypress('controls.down'));
-                buttonState(width / 2 + 140, height / 2 - 160, 100, 20, ()=>{}, ()=>awaitKeypress('controls.drop'));
-                buttonState(width / 2 + 140, height / 2 - 130, 100, 20, ()=>{}, ()=>awaitKeypress('controls.rotateLeft'));
-                buttonState(width / 2 + 140, height / 2 - 100, 100, 20, ()=>{}, ()=>awaitKeypress('controls.rotateRight'));
-                buttonState(width / 2 + 140, height / 2 - 70, 100, 20, ()=>{}, ()=>awaitKeypress('controls.rotate180'));
-                buttonState(width / 2 + 140, height / 2 - 40, 100, 20, ()=>{}, ()=>awaitKeypress('controls.hold'));
-                buttonState(width / 2 + 340, height / 2 + 260, 150, 30, ()=>{}, ()=>resetSettings());
             } else for(let i = 0; i < game.menu.length; i++){
                 const mouseOver = mouseX < 300 && mouseY > 100 + i * 50 && mouseY < 140 + i * 50;
                 game.menuButtonAnims[i] = lerp(game.menuButtonAnims[i], mouseOver ? 1 : 0, clamp(30 * deltaTime, 0, 1));
@@ -1210,17 +1400,17 @@ function update() {
         }
     }
     if (game.inGame) {
-        if (input.keys['\r'.charCodeAt(0)] === 0) {
+        if (input.keys["\r".charCodeAt(0)] === 0) {
             if (!game.gameData.match.playing) {
                 game.localData.ready = !game.localData.ready;
-                socket.io.emit('ready', {
+                socket.io.emit("ready", {
                     ready: game.localData.ready
                 });
             }
         }
-        buttonState(20, 95, 180, 30, ()=>{}, ()=>navigator.clipboard.writeText(`https://play.hked.live/chentris2#${game.gameData.match.joinCode}`), !game.gameData.match.options.allowJoining);
+        buttonState(20, 95, 180, 30, ()=>{}, ()=>navigator.clipboard.writeText(`https://chentris2.hked.live/#${game.gameData.match.joinCode}`), !game.gameData.match.options.allowJoining);
         buttonState(20, 130, 180, 30, ()=>{}, ()=>{
-            socket.io.emit('leave_match');
+            socket.io.emit("leave_match");
             reset();
             connect();
         }, false);
@@ -1230,7 +1420,7 @@ function update() {
                 ...game.gameData.match.options
             };
             newOptions[name] = newValue;
-            socket.io.emit('match_options', {
+            socket.io.emit("match_options", {
                 options: newOptions
             });
         }
@@ -1239,68 +1429,68 @@ function update() {
                 ...game.gameData.match.rules
             };
             newRules[name] = newValue;
-            socket.io.emit('match_options', {
+            socket.io.emit("match_options", {
                 rules: newRules
             });
         }
-        selectState(150, 200, 40, 20, ON_OR_OFF, ()=>game.gameData.match.options.allowJoining, (v)=>changeOption('allowJoining', v), false);
-        selectState(150, 225, 40, 20, ON_OR_OFF, ()=>game.gameData.match.options.public, (v)=>changeOption('public', v), false);
-        selectState(150, 250, 40, 20, ON_OR_OFF, ()=>game.gameData.match.options.ranked, (v)=>changeOption('ranked', v), false);
+        selectState(150, 200, 40, 20, ON_OR_OFF, ()=>game.gameData.match.options.allowJoining, (v)=>changeOption("allowJoining", v), false);
+        selectState(150, 225, 40, 20, ON_OR_OFF, ()=>game.gameData.match.options.public, (v)=>changeOption("public", v), false);
+        selectState(150, 250, 40, 20, ON_OR_OFF, ()=>game.gameData.match.options.ranked, (v)=>changeOption("ranked", v), false);
         const comp = game.gameData.match.rules.competitive;
-        selectState(150, 325, 40, 20, ON_OR_OFF, ()=>comp, (v)=>changeRule('competitive', v), false);
+        selectState(150, 325, 40, 20, ON_OR_OFF, ()=>comp, (v)=>changeRule("competitive", v), false);
         selectState(150, 350, 40, 20, [
             {
-                key: 'slow',
+                key: "slow",
                 value: 80
             },
             {
-                key: 'medium',
+                key: "medium",
                 value: 320
             },
             {
-                key: 'fast',
+                key: "fast",
                 value: 640
             },
             {
-                key: 'very fast',
+                key: "very fast",
                 value: 1280
             },
             {
-                key: 'good luck',
+                key: "good luck",
                 value: 5120
             },
             {
-                key: 'why',
+                key: "why",
                 value: 40960
             },
             {
-                key: 'snail',
+                key: "snail",
                 value: 20
             }
-        ], ()=>game.gameData.match.rules.initialSpeed, (v)=>changeRule('initialSpeed', v), comp);
-        selectState(150, 375, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.resendGarbage, (v)=>changeRule('resendGarbage', v), comp);
-        selectState(150, 400, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.forgivingCombos, (v)=>changeRule('forgivingCombos', v), comp);
+        ], ()=>game.gameData.match.rules.initialSpeed, (v)=>changeRule("initialSpeed", v), comp);
+        selectState(150, 375, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.resendGarbage, (v)=>changeRule("resendGarbage", v), comp);
+        selectState(150, 400, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.forgivingCombos, (v)=>changeRule("forgivingCombos", v), comp);
         selectState(150, 425, 40, 20, [
             {
-                key: 'one',
+                key: "one",
                 value: 1
             },
             {
-                key: 'two',
+                key: "two",
                 value: 2
             },
             {
-                key: 'three',
+                key: "three",
                 value: 3
             }
-        ], ()=>game.gameData.match.rules.garbageTurns, (v)=>changeRule('garbageTurns', v), comp);
-        selectState(150, 450, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.garbageDefense, (v)=>changeRule('garbageDefense', v), comp);
+        ], ()=>game.gameData.match.rules.garbageTurns, (v)=>changeRule("garbageTurns", v), comp);
+        selectState(150, 450, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.garbageDefense, (v)=>changeRule("garbageDefense", v), comp);
         if (!game.inGame) return;
         for (let notif of game.boardNotifications)notif.time += deltaTime;
         game.boardNotifications = game.boardNotifications.filter((notif)=>notif.time <= 1);
         if (game.hocoAnim >= 0 && game.hocoAnim <= 100) game.hocoAnim += deltaTime * 10;
         else if (game.hocoAnim > 100) game.hocoAnim = -1;
-        if (input.keys['J'.charCodeAt(0)] === 0) game.hocoAnim = 0;
+        if (input.keys["J".charCodeAt(0)] === 0) game.hocoAnim = 0;
         let origin = {
             x: 0,
             y: 0
@@ -1326,79 +1516,79 @@ function update() {
         else game.localData.deadAnim = lerp(game.localData.deadAnim, 0, clamp(30 * deltaTime, 0, 1));
         if (game.localData.stateAcc > 0.05) {
             game.localData.stateAcc = 0;
-            socket.io.emit('submove_state', {
+            socket.io.emit("submove_state", {
                 state: game.localData.state,
                 timers: game.localData.timers,
                 attackOption: game.localData.attackOption
             });
         }
         if (game.localData.timers.dropping) {
-            game.localData.timers.shortDrop += deltaTime * (input.keys[settings['controls.down']] >= 0 ? 4 : 1);
+            game.localData.timers.shortDrop += deltaTime * (input.keys[settings["controls.down"]] >= 0 ? 4 : 1);
             game.localData.timers.longDrop += deltaTime;
         }
         let move = null;
-        if (input.keys[settings['controls.hold']] === 0) {
+        if (input.keys[settings["controls.hold"]] === 0) {
             move = {
-                type: 'hold'
+                type: "hold"
             };
             if (game.localData.board.canHold) game.localData.state = defaultSubmoveState();
         }
         const fallPerMinute = 60 / game.localData.speed;
-        if (input.keys[settings['controls.down']] % settings['moveSpeed'] === 0 || game.localData.timers.fall >= fallPerMinute) {
-            game.localData.state = makeSubmove('down', game.localData.board, game.localData.state);
+        if (input.keys[settings["controls.down"]] % settings["moveSpeed"] === 0 || game.localData.timers.fall >= fallPerMinute) {
+            game.localData.state = makeSubmove("down", game.localData.board, game.localData.state);
             let first = true;
             while(game.localData.timers.fall >= fallPerMinute){
-                if (!first) game.localData.state = makeSubmove('down', game.localData.board, game.localData.state);
+                if (!first) game.localData.state = makeSubmove("down", game.localData.board, game.localData.state);
                 first = false;
                 game.localData.timers.fall -= fallPerMinute;
             }
         }
-        if (input.keys[settings['controls.left']] % settings['moveSpeed'] === 0 && (input.keys[settings['controls.left']] === 0 || input.keys[settings['controls.left']] > settings['moveSpeed'] * 2)) {
-            game.localData.state = makeSubmove('left', game.localData.board, game.localData.state);
+        if (input.keys[settings["controls.left"]] % settings["moveSpeed"] === 0 && (input.keys[settings["controls.left"]] === 0 || input.keys[settings["controls.left"]] > settings["moveSpeed"] * settings["moveDelayFactor"])) {
+            game.localData.state = makeSubmove("left", game.localData.board, game.localData.state);
             if (game.localData.state.lastMoveSuccessful) {
                 game.localData.timers.shortDrop = 0;
-                game.boardTranslation[0] -= 2;
-                game.boardRotation -= 0.002;
+                game.boardTranslation[0] -= 2 * settings["screenShakeFactor"];
+                game.boardRotation -= 0.002 * settings["screenShakeFactor"];
             }
         }
-        if (input.keys[settings['controls.right']] % settings['moveSpeed'] === 0 && (input.keys[settings['controls.right']] === 0 || input.keys[settings['controls.right']] > settings['moveSpeed'] * 2)) {
-            game.localData.state = makeSubmove('right', game.localData.board, game.localData.state);
+        if (input.keys[settings["controls.right"]] % settings["moveSpeed"] === 0 && (input.keys[settings["controls.right"]] === 0 || input.keys[settings["controls.right"]] > settings["moveSpeed"] * settings["moveDelayFactor"])) {
+            game.localData.state = makeSubmove("right", game.localData.board, game.localData.state);
             if (game.localData.state.lastMoveSuccessful) {
                 game.localData.timers.shortDrop = 0;
-                game.boardTranslation[0] += 2;
-                game.boardRotation += 0.002;
+                game.boardTranslation[0] += 2 * settings["screenShakeFactor"];
+                game.boardRotation += 0.002 * settings["screenShakeFactor"];
             }
         }
-        if (input.keys[settings['controls.rotateRight']] === 0) {
-            game.localData.state = makeSubmove('rotateRight', game.localData.board, game.localData.state);
+        if (input.keys[settings["controls.rotateRight"]] === 0) {
+            game.localData.state = makeSubmove("rotateRight", game.localData.board, game.localData.state);
             if (game.localData.state.lastMoveSuccessful) {
                 game.localData.timers.shortDrop = 0;
-                game.boardRotation += 0.001;
+                game.boardRotation += 0.001 * settings["screenShakeFactor"];
             }
         }
-        if (input.keys[settings['controls.rotateLeft']] === 0) {
-            game.localData.state = makeSubmove('rotateLeft', game.localData.board, game.localData.state);
+        if (input.keys[settings["controls.rotateLeft"]] === 0) {
+            game.localData.state = makeSubmove("rotateLeft", game.localData.board, game.localData.state);
             if (game.localData.state.lastMoveSuccessful) {
                 game.localData.timers.shortDrop = 0;
-                game.boardRotation -= 0.001;
+                game.boardRotation -= 0.001 * settings["screenShakeFactor"];
+            }
+        }
+        if (input.keys[settings["controls.rotate180"]] === 0) {
+            game.localData.state = makeSubmove("rotate180", game.localData.board, game.localData.state);
+            if (game.localData.state.lastMoveSuccessful) {
+                game.localData.timers.shortDrop = 0;
+                game.boardRotation -= 0.002 * settings["screenShakeFactor"];
             }
         }
         for(let i = 0; i < 5; i += 1)if (input.keys[(i + 1).toString().charCodeAt(0)] === 0) game.localData.attackOption = i;
-        if (input.keys[settings['controls.rotate180']] === 0) {
-            game.localData.state = makeSubmove('rotate180', game.localData.board, game.localData.state);
-            if (game.localData.state.lastMoveSuccessful) {
-                game.localData.timers.shortDrop = 0;
-                game.boardRotation -= 0.002;
-            }
-        }
-        game.localData.timers.dropping = game.localData.state.pieceY === makeSubmove('drop', game.localData.board, game.localData.state).pieceY;
-        if (input.keys[settings['controls.drop']] === 0 || game.localData.timers.shortDrop >= max(0.5, 120 / game.localData.speed) || game.localData.timers.longDrop >= max(2, 640 / game.localData.speed)) {
-            if (input.keys[settings['controls.drop']] === 0) {
-                game.localData.state = makeSubmove('drop', game.localData.board, game.localData.state);
-                game.boardTranslation[1] += 10;
+        game.localData.timers.dropping = game.localData.state.pieceY === makeSubmove("drop", game.localData.board, game.localData.state).pieceY;
+        if (input.keys[settings["controls.drop"]] === 0 || game.localData.timers.shortDrop >= max(0.5, 120 / game.localData.speed) || game.localData.timers.longDrop >= max(2, 640 / game.localData.speed)) {
+            if (input.keys[settings["controls.drop"]] === 0) {
+                game.localData.state = makeSubmove("drop", game.localData.board, game.localData.state);
+                game.boardTranslation[1] += 10 * settings["screenShakeFactor"];
             }
             move = {
-                type: 'move',
+                type: "move",
                 submoves: game.localData.state.submoves
             };
             game.localData.timers = {
@@ -1411,15 +1601,15 @@ function update() {
         }
         if (move) {
             game.localData.board = makeMove(move, game.localData.board, Math.seedrandom, game.gameData.match.rules);
-            socket.io.emit('move', {
+            socket.io.emit("move", {
                 move,
                 time: Date.now()
             });
             if (game.localData.board.clears > 0) {
                 const clears = game.localData.board.clears;
                 const squareClears = clears ** 2;
-                game.boardRotation += clears * 0.1;
-                game.boardScale += squareClears * 0.02;
+                game.boardRotation += clears * 0.1 * settings["screenShakeFactor"];
+                game.boardScale += squareClears * 0.02 * settings["screenShakeFactor"];
             }
             game.gameData.moves.push({
                 move,
@@ -1545,19 +1735,19 @@ function drawCreateAccount() {
     textAlign(CENTER, CENTER);
     textStyle(BOLD);
     textSize(16);
-    text('Chentris 2', width / 2, height / 2 - 90);
+    text("Chentris 2", width / 2, height / 2 - 90);
     textStyle(NORMAL);
-    text('Welcome! Before continuing, please create a username.', width / 2, height / 2 - 50);
-    text('Press enter to continue.', width / 2, height / 2 + 40);
+    text("Welcome! Before continuing, please create a username.", width / 2, height / 2 - 50);
+    text("Press enter to continue.", width / 2, height / 2 + 40);
     textSize(32);
     textWrap(CHAR);
-    text(game.typedString + '_', width / 2 - 250, height / 2, 500);
+    text(game.typedString + "_", width / 2 - 250, height / 2, 500);
 }
-function drawPiece(x, y, rot, size, piece, trans = 255, strokeless = false) {
+function drawPiece(x, y, rot, size, piece, palette = "Default", trans = 255, strokeless = false) {
     const layout = getRotatedPiece(piece, rot);
-    const color = PIECES[piece].color;
+    const color = COSM_PALETTES[palette].data[piece];
     strokeless ? noStroke() : stroke(0);
-    fill(color[0], color[1], color[2], trans);
+    fill(...color, trans);
     for(let i = 0; i < layout.length; i++){
         for(let j = 0; j < layout[i].length; j++)if (layout[i][j] === 1) rect(x + j * size, y + i * size, size, size);
     }
@@ -1575,7 +1765,7 @@ function getIdealPos(index, size, wi, hi) {
         (y + 0.5) / minSqrt * hi
     ];
 }
-function drawBoard(board, state, timers, squareSize, detail) {
+function drawBoard(board, state, timers, squareSize, detail, palette = "Default") {
     if (detail >= 0) {
         fill(250);
         stroke(0);
@@ -1608,8 +1798,8 @@ function drawBoard(board, state, timers, squareSize, detail) {
             fill(50 + random(0, 50), 100 + random(0, 50), 200 + random(0, 50));
             rect(-6 * squareSize, (9.5 - i * 0.5) * squareSize, 0.5 * squareSize, 0.5 * squareSize);
         }
-        for(let i = 0; i < 5; i++)drawPiece(6.5 * squareSize, (-10 + 4 * i) * squareSize, 0, squareSize, board.bag[i + 1]);
-        if (board.hold !== -1) drawPiece((-6 - PIECES[board.hold].layout.length) * squareSize, -10 * squareSize, 0, squareSize, board.hold, board.canHold ? 255 : 100);
+        for(let i = 0; i < 5; i++)drawPiece(6.5 * squareSize, (-10 + 4 * i) * squareSize, 0, squareSize, board.bag[i + 1], palette);
+        if (board.hold !== -1) drawPiece((-6 - PIECES[board.hold].layout.length) * squareSize, -10 * squareSize, 0, squareSize, board.hold, palette, board.canHold ? 255 : 100);
     }
     if (detail >= 1) {
         textAlign(TOP, CENTER);
@@ -1617,18 +1807,18 @@ function drawBoard(board, state, timers, squareSize, detail) {
         noStroke();
         textSize(16);
         textStyle(NORMAL);
-        drawPiece((state.pieceX - 5) * squareSize, (state.pieceY - 30) * squareSize, state.pieceRotation, squareSize, board.bag[0], timers.dropping ? (sin(millis() * 0.02) + 1) * 100 + 50 : 255);
+        drawPiece((state.pieceX - 5) * squareSize, (state.pieceY - 30) * squareSize, state.pieceRotation, squareSize, board.bag[0], palette, timers.dropping ? (sin(millis() * 0.02) + 1) * 100 + 50 : 255);
     }
     if (detail >= 3) {
-        const dropSubmove = makeSubmove('drop', board, state);
-        drawPiece((dropSubmove.pieceX - 5) * squareSize, (dropSubmove.pieceY - 30) * squareSize, state.pieceRotation, squareSize, board.bag[0], 100, true);
+        const dropSubmove = makeSubmove("drop", board, state);
+        drawPiece((dropSubmove.pieceX - 5) * squareSize, (dropSubmove.pieceY - 30) * squareSize, state.pieceRotation, squareSize, board.bag[0], palette, 100, true);
     }
     if (detail >= 1) {
         for(let i = 0; i < 40; i++)for(let j = 0; j < 10; j++){
             const index = i * 10 + j;
             const tile = board.tiles[index];
             if (tile >= 0) {
-                const color = PIECES[tile].color;
+                const color = COSM_PALETTES[palette].data[tile];
                 stroke(0);
                 fill(color[0], color[1], color[2]);
                 rect((-5 + j) * squareSize, (-30 + i) * squareSize, squareSize, squareSize);
@@ -1710,14 +1900,14 @@ function drawBoard(board, state, timers, squareSize, detail) {
             text(`x${count}`, -6 * squareSize, -5 * squareSize);
             textSize(16);
             textAlign(RIGHT, TOP);
-            text(`${sumLines} ${sumLines === 1 ? 'line' : 'lines'}`, -6 * squareSize, -5 * squareSize);
+            text(`${sumLines} ${sumLines === 1 ? "line" : "lines"}`, -6 * squareSize, -5 * squareSize);
         }
         textSize(16);
         textStyle(BOLD);
         textAlign(RIGHT, BOTTOM);
         noStroke();
         fill(0);
-        text(`${board.lines} line${board.lines === 1 ? '' : 's'}`, -6.5 * squareSize, 8 * squareSize);
+        text(`${board.lines} line${board.lines === 1 ? "" : "s"}`, -6.5 * squareSize, 8 * squareSize);
         text(`${board.juice} juice`, -6.5 * squareSize, 9 * squareSize);
         text(`Level ${Math.floor(getJuiceLevel(board.juice))} (x${1 + Math.floor(getJuiceLevel(board.juice)) * 0.2})`, -6.5 * squareSize, 10 * squareSize);
         textSize(300);
@@ -1729,11 +1919,11 @@ function drawBoard(board, state, timers, squareSize, detail) {
     }
 }
 function getKeyName(k) {
-    if (k === 37) return 'left';
-    if (k === 39) return 'right';
-    if (k === 40) return 'down';
-    if (k === 38) return 'up';
-    if (k === ' '.charCodeAt(0)) return 'space';
+    if (k === 37) return "left";
+    if (k === 39) return "right";
+    if (k === 40) return "down";
+    if (k === 38) return "up";
+    if (k === " ".charCodeAt(0)) return "space";
     return String.fromCharCode(k);
 }
 function drawState() {
@@ -1745,7 +1935,7 @@ function drawState() {
         image(images.nathan, 0, 0, width, height);
         textSize(64);
         fill(255);
-        text('Something went wrong!', 100, 100);
+        text("Something went wrong!", 100, 100);
         return;
     }
     if (!game.inGame) {
@@ -1779,43 +1969,15 @@ function drawState() {
         text("Chentris 2", 20 - 400 * game.mainMenuAnim, 20);
         push();
         translate(0, -600 * game.mainMenuAnim);
-        textAlign(LEFT, TOP);
-        textStyle(BOLD);
-        textSize(16);
-        noStroke();
         fill(0);
-        text('TOP NORMAL', width - 650, 10);
-        text('TOP COMPETITIVE', width - 450, 10);
-        push();
-        for(let i = 0; i < 20; i += 1){
-            translate(-game.mainMenuAnim * 10, -40 * game.mainMenuAnim * i);
-            noStroke();
-            fill(0);
-            textAlign(RIGHT, TOP);
-            textStyle(BOLD);
-            text(`${i + 1}.`, width - 655, 30 + 20 * i);
-            text(`${i + 1}.`, width - 455, 30 + 20 * i);
-            textAlign(LEFT, TOP);
-            if (game.leaderboard.normal[i] && game.leaderboard.normal[i].id === game.playerData._id) textStyle(BOLD);
-            else textStyle(NORMAL);
-            text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].username : '-', width - 650, 30 + 20 * i);
-            if (game.leaderboard.competitive[i] && game.leaderboard.competitive[i].id === game.playerData._id) textStyle(BOLD);
-            else textStyle(NORMAL);
-            text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].username : '-', width - 450, 30 + 20 * i);
-            textStyle(ITALIC);
-            textAlign(RIGHT, TOP);
-            text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : '-', width - 500, 30 + 20 * i);
-            text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : '-', width - 300, 30 + 20 * i);
-            noFill();
-            stroke(0);
-            image(getRank(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : 0).icon, width - 495, 37 + 20 * i - 8, 16, 16);
-            image(getRank(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : 0).icon, width - 295, 37 + 20 * i - 8, 16, 16);
-            rect(width - 495, 37 + 20 * i - 8, 16, 16);
-            rect(width - 295, 37 + 20 * i - 8, 16, 16);
-        }
-        pop();
+        noStroke();
+        textSize(16);
+        textAlign(CENTER, TOP);
+        textStyle(ITALIC);
+        text(`online: ${game.online}`, width / 2, 10);
         fill(250);
         stroke(0);
+        textStyle(BOLDITALIC);
         textSize(32);
         beginShape();
         vertex(width - 10, 15);
@@ -1826,6 +1988,7 @@ function drawState() {
         noStroke();
         fill(0);
         textAlign(RIGHT, TOP);
+        fill(...COSM_NAME_COLORS[game.playerData.currentNameColor || 'Default'].data);
         text(game.playerData.username, width - 20, 20);
         textStyle(NORMAL);
         textSize(16);
@@ -1840,11 +2003,11 @@ function drawState() {
         textStyle(BOLD);
         textAlign(CENTER, TOP);
         textSize(10);
-        text('Normal', width - 155, 88);
-        text('Competitive', width - 55, 88);
+        text("Normal", width - 155, 88);
+        text("Competitive", width - 55, 88);
         textSize(16);
-        text(game.playerData.normalElo + ' (#' + game.normalRank + ')', width - 155, 100);
-        text(game.playerData.compElo + ' (#' + game.competitiveRank + ')', width - 55, 100);
+        text(game.playerData.normalElo + " (#" + game.normalRank + ")", width - 155, 100);
+        text(game.playerData.compElo + " (#" + game.competitiveRank + ")", width - 55, 100);
         const normalRank = getRank(game.playerData.normalElo);
         const compRank = getRank(game.playerData.compElo);
         image(normalRank.icon, width - 170, 120);
@@ -1890,22 +2053,6 @@ function drawState() {
         fill(0);
         text(game.playerData.juice.toLocaleString(), width - 35, 271);
         pop();
-        push();
-        translate(300 * game.mainMenuAnim, 0);
-        textAlign(RIGHT, TOP);
-        textSize(16);
-        let prevElo = 0;
-        for(let i = 0; i < RANKS.length; i++){
-            let rank = RANKS[i];
-            image(rank.icon, width - 40, height - 40 - 40 * i);
-            textStyle(BOLD);
-            text(rank.name, width - 45, height - 40 - 40 * i);
-            textStyle(NORMAL);
-            if (rank.elo < 1000000000) text(prevElo + ' - ' + (rank.elo - 1), width - 45, height - 20 - 40 * i);
-            else text(prevElo + '+', width - 45, height - 20 - 40 * i);
-            prevElo = rank.elo;
-        }
-        pop();
         textAlign(LEFT, CENTER);
         textSize(24);
         textStyle(BOLD);
@@ -1941,7 +2088,7 @@ function drawState() {
             textSize(16);
             textStyle(BOLD);
             textAlign(CENTER, TOP);
-            text('Enter Join Code', width / 2, height / 2 - 40);
+            text("Enter Join Code", width / 2, height / 2 - 40);
             textSize(32);
             for(let i = 0; i < 4; i++){
                 const x = (i - 1.5) * (380 / 9);
@@ -1950,68 +2097,259 @@ function drawState() {
                 if (char) text(char, width / 2 + x, height / 2);
             }
             fill(250, 120, 100);
-            drawButton(width / 2 + 160, height / 2 - 50, 40, 20, 'x', ()=>fill(230, 100, 80), ()=>fill(220, 90, 70));
+            drawButton(width / 2 + 160, height / 2 - 50, 40, 20, "x", ()=>fill(230, 100, 80), ()=>fill(220, 90, 70));
         }
-        if (state.inSettings) {
+        if (state.inSubMenu) {
             stroke(0);
             fill(250);
             rect(width / 2 - 500, height / 2 - 300, 1000, 600);
-            line(width / 2, height / 2 - 300, width / 2, height / 2 + 300);
             fill(250, 120, 100);
-            drawButton(width / 2 + 460, height / 2 - 300, 40, 20, 'x', ()=>fill(230, 100, 80), ()=>fill(220, 90, 70));
-            textSize(24);
-            textStyle(BOLD);
-            textAlign(LEFT, TOP);
-            text('Settings', width / 2 - 490, height / 2 - 290);
-            text('Controls', width / 2 + 10, height / 2 - 290);
-            textStyle(NORMAL);
-            textAlign(LEFT, TOP);
-            textSize(16);
-            text('Move Left', width / 2 + 10, height / 2 - 250);
-            text('Move Right', width / 2 + 10, height / 2 - 220);
-            text('Soft Drop', width / 2 + 10, height / 2 - 190);
-            text('Hard Drop', width / 2 + 10, height / 2 - 160);
-            text('Rotate Left', width / 2 + 10, height / 2 - 130);
-            text('Rotate Right', width / 2 + 10, height / 2 - 100);
-            text('Rotate 180', width / 2 + 10, height / 2 - 70);
-            text('Hold', width / 2 + 10, height / 2 - 40);
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 250, 100, 20, getKeyName(settings['controls.left']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 220, 100, 20, getKeyName(settings['controls.right']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 190, 100, 20, getKeyName(settings['controls.down']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 160, 100, 20, getKeyName(settings['controls.drop']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 130, 100, 20, getKeyName(settings['controls.rotateLeft']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 100, 100, 20, getKeyName(settings['controls.rotateRight']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 70, 100, 20, getKeyName(settings['controls.rotate180']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 140, height / 2 - 40, 100, 20, getKeyName(settings['controls.hold']), ()=>fill(230), ()=>fill(210));
-            fill(250);
-            drawButton(width / 2 + 340, height / 2 + 260, 150, 30, 'Reset Settings', ()=>fill(230), ()=>fill(210));
-            if (game.awaitingKeypress) {
-                fill(0);
+            drawButton(width / 2 + 460, height / 2 - 300, 40, 20, "x", ()=>fill(230, 100, 80), ()=>fill(220, 90, 70));
+            if (state.subMenu === submenus.Settings) {
+                line(width / 2, height / 2 - 300, width / 2, height / 2 + 300);
+                textSize(24);
+                textStyle(BOLD);
+                textAlign(LEFT, TOP);
+                text("Settings", width / 2 - 490, height / 2 - 290);
+                text("Controls", width / 2 + 10, height / 2 - 290);
+                textStyle(NORMAL);
+                textAlign(LEFT, TOP);
                 textSize(16);
+                text("Move Left", width / 2 + 10, height / 2 - 250);
+                text("Move Right", width / 2 + 10, height / 2 - 220);
+                text("Soft Drop", width / 2 + 10, height / 2 - 190);
+                text("Hard Drop", width / 2 + 10, height / 2 - 160);
+                text("Rotate Left", width / 2 + 10, height / 2 - 130);
+                text("Rotate Right", width / 2 + 10, height / 2 - 100);
+                text("Rotate 180", width / 2 + 10, height / 2 - 70);
+                text("Hold", width / 2 + 10, height / 2 - 40);
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 250, 100, 20, getKeyName(settings["controls.left"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 220, 100, 20, getKeyName(settings["controls.right"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 190, 100, 20, getKeyName(settings["controls.down"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 160, 100, 20, getKeyName(settings["controls.drop"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 130, 100, 20, getKeyName(settings["controls.rotateLeft"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 100, 100, 20, getKeyName(settings["controls.rotateRight"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 70, 100, 20, getKeyName(settings["controls.rotate180"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 140, height / 2 - 40, 100, 20, getKeyName(settings["controls.hold"]), ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 + 340, height / 2 + 260, 150, 30, "Reset Settings", ()=>fill(230), ()=>fill(210));
+                if (game.awaitingKeypress) {
+                    fill(0);
+                    textSize(16);
+                    noStroke();
+                    textAlign(LEFT, TOP);
+                    textStyle(BOLD);
+                    text("Press any key to set keybind. Press ESC to cancel.", width / 2 + 10, height / 2); // text for when you are setting a control
+                }
+                fill(0);
                 noStroke();
+                textAlign(CENTER, TOP);
+                text("you can move this piece", width / 2 - 250, height / 2 - 250);
+                drawPiece(width / 2 - 250 - SQUARE_SIZE * 1.5 + game.settingsPieceX * SQUARE_SIZE, height / 2 - 200, 0, SQUARE_SIZE, 4, game.playerData.currentPalette);
+                fill(250);
+                drawSelect(width / 2 - 245, height / 2 - 100, 100, 20, MOVE_SPEED_SETTINGS, ()=>settings["moveSpeed"]);
+                drawSelect(width / 2 - 245, height / 2 - 50, 100, 20, MOVE_DELAY_FACTOR_SETTINGS, ()=>settings["moveDelayFactor"]);
+                drawSelect(width / 2 - 245, height / 2, 100, 20, SCREEN_SHAKE_SETTINGS, ()=>settings["screenShakeFactor"]);
+                textAlign(RIGHT, TOP);
+                fill(0);
+                noStroke();
+                text("move sensitivity", width / 2 - 255, height / 2 - 100);
+                text("move delay factor", width / 2 - 255, height / 2 - 50);
+                text("screen shake", width / 2 - 255, height / 2);
+            } else if (state.subMenu === submenus.Leaderboard) {
                 textAlign(LEFT, TOP);
                 textStyle(BOLD);
-                text('Press any key to set keybind. Press ESC to cancel.', width / 2 + 10, height / 2); // text for when you are setting a control
+                textSize(16);
+                noStroke();
+                fill(0);
+                text("TOP NORMAL", width / 2 - 470, height / 2 - 290);
+                text("TOP COMPETITIVE", width / 2 - 270, height / 2 - 290);
+                text("HIGHEST LEVEL", width / 2 - 70, height / 2 - 290);
+                text("RICHEST", width / 2 + 130, height / 2 - 290);
+                for(let i = 0; i < 25; i += 1){
+                    noStroke();
+                    fill(0);
+                    textAlign(RIGHT, TOP);
+                    textStyle(BOLD);
+                    text(`${i + 1}.`, width / 2 - 470, height / 2 - 270 + 20 * i);
+                    text(`${i + 1}.`, width / 2 - 270, height / 2 - 270 + 20 * i);
+                    text(`${i + 1}.`, width / 2 - 70, height / 2 - 270 + 20 * i);
+                    text(`${i + 1}.`, width / 2 + 130, height / 2 - 270 + 20 * i);
+                    textAlign(LEFT, TOP);
+                    if (game.leaderboard.normal[i] && game.leaderboard.normal[i].id === game.playerData._id) textStyle(BOLD);
+                    else textStyle(NORMAL);
+                    text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].username : "-", width / 2 - 465, height / 2 - 270 + 20 * i);
+                    if (game.leaderboard.competitive[i] && game.leaderboard.competitive[i].id === game.playerData._id) textStyle(BOLD);
+                    else textStyle(NORMAL);
+                    text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].username : "-", width / 2 - 265, height / 2 - 270 + 20 * i);
+                    if (game.leaderboard.level[i] && game.leaderboard.level[i].id === game.playerData._id) textStyle(BOLD);
+                    else textStyle(NORMAL);
+                    text(game.leaderboard.level[i] ? game.leaderboard.level[i].username : "-", width / 2 - 65, height / 2 - 270 + 20 * i);
+                    if (game.leaderboard.juice[i] && game.leaderboard.juice[i].id === game.playerData._id) textStyle(BOLD);
+                    else textStyle(NORMAL);
+                    text(game.leaderboard.juice[i] ? game.leaderboard.juice[i].username : "-", width / 2 + 135, height / 2 - 270 + 20 * i);
+                    textStyle(ITALIC);
+                    textAlign(RIGHT, TOP);
+                    text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : "-", width / 2 - 320, height / 2 - 270 + 20 * i);
+                    text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : "-", width / 2 - 120, height / 2 - 270 + 20 * i);
+                    text(game.leaderboard.level[i] ? getLevel(game.leaderboard.level[i].xp) : "-", width / 2 + 100, height / 2 - 270 + 20 * i);
+                    text(game.leaderboard.juice[i] ? game.leaderboard.juice[i].juice.toLocaleString() : "-", width / 2 + 360, height / 2 - 270 + 20 * i);
+                    noFill();
+                    stroke(0);
+                    image(getRank(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : 0).icon, width / 2 - 315, height / 2 - 263 + 20 * i - 8, 16, 16);
+                    image(getRank(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : 0).icon, width / 2 - 115, height / 2 - 263 + 20 * i - 8, 16, 16);
+                    rect(width / 2 - 315, height / 2 - 263 + 20 * i - 8, 16, 16);
+                    rect(width / 2 - 115, height / 2 - 263 + 20 * i - 8, 16, 16);
+                }
+                noStroke();
+                fill(0);
+                textAlign(RIGHT, TOP);
+                textSize(16);
+                let prevElo = 0;
+                for(let i = 0; i < RANKS.length; i++){
+                    let rank = RANKS[i];
+                    image(rank.icon, width / 2 + 460, height / 2 + 300 - 40 - 40 * i);
+                    textStyle(BOLD);
+                    text(rank.name, width / 2 + 455, height / 2 + 300 - 40 - 40 * i);
+                    textStyle(NORMAL);
+                    if (rank.elo < 1000000000) text(prevElo + " - " + (rank.elo - 1), width / 2 + 455, height / 2 + 300 - 20 - 40 * i);
+                    else text(prevElo + "+", width / 2 + 455, height / 2 + 300 - 20 - 40 * i);
+                    prevElo = rank.elo;
+                }
+            } else if (state.subMenu === submenus.Cosmetics) {
+                fill(250);
+                drawButton(width / 2 - 490, height / 2 - 290, 100, 30, 'Palettes', ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 - 380, height / 2 - 290, 100, 30, 'Banners', ()=>fill(230), ()=>fill(210));
+                fill(250);
+                drawButton(width / 2 - 270, height / 2 - 290, 100, 30, 'Name Colors', ()=>fill(230), ()=>fill(210));
+                let i = 0;
+                if (game.cosmeticsPage === 'palette') for(const paletteName in COSM_PALETTES){
+                    const x = width / 2 - 490 + floor(i / 6) * 310;
+                    const y = height / 2 - 240 + i % 6 * 80;
+                    textAlign(LEFT, TOP);
+                    textStyle(BOLD);
+                    fill(0);
+                    noStroke();
+                    text(paletteName, x, y);
+                    let wSum = 0;
+                    for(let j = 0; j < 8; j += 1){
+                        drawPiece(x + 5 + wSum * 10, y + 20, 0, 10, j, paletteName);
+                        wSum += PIECES[j].width + 1;
+                    }
+                    if ((game.playerData.palettesUnlocked || [
+                        'Default'
+                    ]).includes(paletteName)) {
+                        if (game.playerData.currentPalette === paletteName) {
+                            fill(200, 200, 250);
+                            drawButton(x, y + 50, 300, 20, 'equipped', ()=>fill(230), ()=>fill(210), true);
+                        } else {
+                            fill(250);
+                            drawButton(x, y + 50, 300, 20, 'equip', ()=>fill(230), ()=>fill(210), false);
+                        }
+                    } else {
+                        const data = COSM_PALETTES[paletteName];
+                        if (getLevel(game.playerData.xp) < data.levelRequirement) drawButton(x, y + 50, 300, 20, `unlocks at level ${data.levelRequirement}`, ()=>fill(230), ()=>fill(210), true);
+                        else if (game.playerData.juice < data.juiceCost) {
+                            fill(250, 200, 200);
+                            drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost.toLocaleString()}`, ()=>fill(230, 200, 200), ()=>fill(210), false);
+                        } else {
+                            fill(250);
+                            drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost}`, ()=>fill(230), ()=>fill(210), false);
+                        }
+                    }
+                    i += 1;
+                }
+                else if (game.cosmeticsPage === 'banner') for(const bannerName in COSM_BANNERS){
+                    const x = width / 2 - 490 + floor(i / 6) * 310;
+                    const y = height / 2 - 240 + i % 6 * 80;
+                    textAlign(LEFT, TOP);
+                    textStyle(BOLD);
+                    fill(0);
+                    noStroke();
+                    text(bannerName, x, y);
+                    image(images.banners[bannerName], x, y + 15, 200, 40);
+                    stroke(0);
+                    noFill();
+                    rect(x, y + 15, 200, 40);
+                    noStroke();
+                    if ((game.playerData.bannersUnlocked || [
+                        'Default'
+                    ]).includes(bannerName)) {
+                        if (game.playerData.currentBanner === bannerName) {
+                            fill(200, 200, 250);
+                            drawButton(x, y + 50, 300, 20, 'equipped', ()=>fill(230), ()=>fill(210), true);
+                        } else {
+                            fill(250);
+                            drawButton(x, y + 50, 300, 20, 'equip', ()=>fill(230), ()=>fill(210), false);
+                        }
+                    } else {
+                        const data = COSM_BANNERS[bannerName];
+                        if (getLevel(game.playerData.xp) < data.levelRequirement) drawButton(x, y + 50, 300, 20, `unlocks at level ${data.levelRequirement}`, ()=>fill(230), ()=>fill(210), true);
+                        else if (game.playerData.juice < data.juiceCost) {
+                            fill(250, 200, 200);
+                            drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost.toLocaleString()}`, ()=>fill(230, 200, 200), ()=>fill(210), false);
+                        } else {
+                            fill(250);
+                            drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost}`, ()=>fill(230), ()=>fill(210), false);
+                        }
+                    }
+                    i += 1;
+                }
+                else if (game.cosmeticsPage === 'nameColor') for(const nameColor in COSM_NAME_COLORS){
+                    const x = width / 2 - 490 + floor(i / 6) * 310;
+                    const y = height / 2 - 240 + i % 6 * 80;
+                    textAlign(LEFT, TOP);
+                    textStyle(BOLD);
+                    fill(0);
+                    noStroke();
+                    text(nameColor, x, y);
+                    const data = COSM_NAME_COLORS[nameColor];
+                    console.log(data.data);
+                    fill(...data.data);
+                    text(game.playerData.username, x, y + 30);
+                    if ((game.playerData.nameColorsUnlocked || [
+                        'Default'
+                    ]).includes(nameColor)) {
+                        if (game.playerData.currentNameColor === nameColor) {
+                            fill(200, 200, 250);
+                            drawButton(x, y + 50, 300, 20, 'equipped', ()=>fill(230), ()=>fill(210), true);
+                        } else {
+                            fill(250);
+                            drawButton(x, y + 50, 300, 20, 'equip', ()=>fill(230), ()=>fill(210), false);
+                        }
+                    } else {
+                        if (getLevel(game.playerData.xp) < data.levelRequirement) drawButton(x, y + 50, 300, 20, `unlocks at level ${data.levelRequirement}`, ()=>fill(230), ()=>fill(210), true);
+                        else if (game.playerData.juice < data.juiceCost) {
+                            fill(250, 200, 200);
+                            drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost.toLocaleString()}`, ()=>fill(230, 200, 200), ()=>fill(210), false);
+                        } else {
+                            fill(250);
+                            drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost}`, ()=>fill(230), ()=>fill(210), false);
+                        }
+                    }
+                    i += 1;
+                }
             }
         }
         textAlign(LEFT, TOP);
         textSize(16);
-        text('Update 2', 20 - 400 * game.mainMenuAnim, height - 200);
+        textStyle(BOLD);
+        text("Update 3", 20 - 400 * game.mainMenuAnim, height - 200);
         textStyle(NORMAL);
-        text('- Fixed more than 2 players not sending lines', 20 - 400 * game.mainMenuAnim, height - 180);
-        text('- Fixed score after matches', 20 - 400 * game.mainMenuAnim, height - 160);
-        text('- Lobby codes are 4 numbers instead of 9', 20 - 400 * game.mainMenuAnim, height - 140);
-        text('- Find matches now works for the first time', 20 - 400 * game.mainMenuAnim, height - 120);
-        text('- Added leaderboard and rankings', 20 - 400 * game.mainMenuAnim, height - 100);
-        text('- Initial speed actually changes speed', 20 - 400 * game.mainMenuAnim, height - 80);
+        fill(0);
+        text("- Added sensitivity control", 20 - 400 * game.mainMenuAnim, height - 180);
+        text("- Added screen shake setting", 20 - 400 * game.mainMenuAnim, height - 160);
+        text("- New leaderboards for level and juice", 20 - 400 * game.mainMenuAnim, height - 140);
+        text("- Cosmetics available", 20 - 400 * game.mainMenuAnim, height - 120);
         return;
     }
     // In game
@@ -2021,11 +2359,11 @@ function drawState() {
         textStyle(BOLD);
         textAlign(LEFT, TOP);
         textSize(32);
-        text('Match Results', 20, 20);
+        text("Match Results", 20, 20);
         textSize(24);
         const winner = game.gameData.match.data[game.gameData.match.results.winner];
-        text('Winner: ' + (winner ? winner.username : 'Nobody'), 20, 60);
-        text(`Returning to lobby in ${floor((400 - game.gameData.match.matchOverDelay) / 20)}...`, 20, height - 50);
+        text("Winner: " + (winner ? winner.username : "Nobody"), 20, 60);
+        text(`Returning to lobby in ${floor((200 - game.gameData.match.matchOverDelay) / 20)}...`, 20, height - 50);
         const rewards = game.gameData.match.results.rewards[game.playerData._id];
         const anim = clamp(game.gameData.match.matchOverDelay - 20, 0, 80) / 80;
         const animXp = floor(game.playerData.xp + anim * rewards.xp);
@@ -2033,7 +2371,7 @@ function drawState() {
         const animJuice = floor(game.playerData.juice + anim * rewards.juice);
         text(`XP: +${floor(anim * rewards.xp)}`, 20, height - 200);
         text(`JUICE: +${floor(anim * rewards.juice)}`, 20, height - 170);
-        text(`ELO: ${rewards.elo > 0 ? '+' : ''}${round(anim * rewards.elo)}`, 20, height - 140);
+        text(`ELO: ${rewards.elo > 0 ? "+" : ""}${round(anim * rewards.elo)}`, 20, height - 140);
         fill(0);
         textAlign(LEFT, BOTTOM);
         textSize(24);
@@ -2084,21 +2422,21 @@ function drawState() {
     rotate(game.boardRotation + deadAnimX * 0.002);
     scale(game.boardScale);
     translate(game.boardTranslation[0], game.boardTranslation[1]);
-    drawBoard(game.localData.board, game.localData.state, game.localData.timers, SQUARE_SIZE, 5);
+    drawBoard(game.localData.board, game.localData.state, game.localData.timers, SQUARE_SIZE, 5, game.playerData.currentPalette);
     if (!game.gameData.match.playing) {
         textStyle(BOLD);
         textSize(32);
         textAlign(CENTER, CENTER);
         fill(0, 100);
         noStroke();
-        text('Practice', 0, 0);
+        text("Practice", 0, 0);
     } else {
         textSize(20);
         textAlign(CENTER, TOP);
         textStyle(BOLD);
         fill(0);
         noStroke();
-        text(`${game.gameData.match.kills[game.playerData._id]} KO${game.gameData.match.kills[game.playerData._id] === 1 ? '' : 's'}`, 0, 11 * SQUARE_SIZE);
+        text(`${game.gameData.match.kills[game.playerData._id]} KO${game.gameData.match.kills[game.playerData._id] === 1 ? "" : "s"}`, 0, 11 * SQUARE_SIZE);
     }
     pop();
     textStyle(BOLD);
@@ -2121,86 +2459,86 @@ function drawState() {
         textSize(16);
         textStyle(BOLD);
         textAlign(CENTER, BOTTOM);
-        text('Match', 110, 25);
-        text('Rules', 110, 304);
+        text("Match", 110, 25);
+        text("Rules", 110, 304);
         textAlign(LEFT, TOP);
-        text('Code', 20, 40);
+        text("Code", 20, 40);
         textSize(32);
         for(let i = 0; i < 4; i++)text(game.gameData.match.joinCode[i], 20 + i * 20, 60);
         stroke(0);
         fill(120, 100, 250);
-        drawButton(20, 95, 180, 30, 'Copy Link', ()=>fill(100, 80, 230), ()=>{}, !game.gameData.match.options.allowJoining);
+        drawButton(20, 95, 180, 30, "Copy Link", ()=>fill(100, 80, 230), ()=>{}, !game.gameData.match.options.allowJoining);
         fill(250, 120, 100);
-        drawButton(20, 130, 180, 30, 'Leave Match', ()=>fill(230, 100, 80), ()=>{});
+        drawButton(20, 130, 180, 30, "Leave Match", ()=>fill(230, 100, 80), ()=>{});
         textAlign(LEFT, TOP);
         fill(0);
-        text('Allow joining', 20, 200);
-        text('Public', 20, 225);
-        text('Ranked', 20, 250);
+        text("Allow joining", 20, 200);
+        text("Public", 20, 225);
+        text("Ranked", 20, 250);
         function getOption(name) {
             return game.gameData.match.options[name];
         }
         function getRule(name) {
             return game.gameData.match.rules[name];
         }
-        drawSelect(150, 200, 50, 20, ON_OR_OFF, ()=>getOption('allowJoining'), false);
-        drawSelect(150, 225, 50, 20, ON_OR_OFF, ()=>getOption('public'), false);
-        drawSelect(150, 250, 50, 20, ON_OR_OFF, ()=>getOption('ranked'), false);
+        drawSelect(150, 200, 50, 20, ON_OR_OFF, ()=>getOption("allowJoining"), false);
+        drawSelect(150, 225, 50, 20, ON_OR_OFF, ()=>getOption("public"), false);
+        drawSelect(150, 250, 50, 20, ON_OR_OFF, ()=>getOption("ranked"), false);
         textAlign(LEFT, TOP);
-        text('Competitive', 20, 325);
-        text('Initial Speed', 20, 350);
-        text('Resend Garbage', 20, 375);
-        text('Forgiving Combos', 20, 400);
-        text('Garbage Turns', 20, 425);
-        text('Garbage Defense', 20, 450);
-        drawSelect(150, 325, 50, 20, ON_OR_OFF, ()=>getRule('competitive'), false);
+        text("Competitive", 20, 325);
+        text("Initial Speed", 20, 350);
+        text("Resend Garbage", 20, 375);
+        text("Forgiving Combos", 20, 400);
+        text("Garbage Turns", 20, 425);
+        text("Garbage Defense", 20, 450);
+        drawSelect(150, 325, 50, 20, ON_OR_OFF, ()=>getRule("competitive"), false);
         drawSelect(150, 350, 50, 20, [
             {
-                key: 'slow',
+                key: "slow",
                 value: 80
             },
             {
-                key: 'medium',
+                key: "medium",
                 value: 320
             },
             {
-                key: 'fast',
+                key: "fast",
                 value: 640
             },
             {
-                key: 'very fast',
+                key: "very fast",
                 value: 1280
             },
             {
-                key: 'good luck',
+                key: "good luck",
                 value: 5120
             },
             {
-                key: 'why',
+                key: "why",
                 value: 40960
             },
             {
-                key: 'snail',
+                key: "snail",
                 value: 20
             }
-        ], ()=>getRule('initialSpeed'), getRule('competitive'));
-        drawSelect(150, 375, 50, 20, ON_OR_OFF, ()=>getRule('resendGarbage'), getRule('competitive'));
-        drawSelect(150, 400, 50, 20, ON_OR_OFF, ()=>getRule('forgivingCombos'), getRule('competitive'));
+        ], ()=>getRule("initialSpeed"), getRule("competitive"));
+        drawSelect(150, 375, 50, 20, ON_OR_OFF, ()=>getRule("resendGarbage"), getRule("competitive"));
+        drawSelect(150, 400, 50, 20, ON_OR_OFF, ()=>getRule("forgivingCombos"), getRule("competitive"));
         drawSelect(150, 425, 50, 20, [
             {
-                key: 'one',
+                key: "one",
                 value: 1
             },
             {
-                key: 'two',
+                key: "two",
                 value: 2
             },
             {
-                key: 'three',
+                key: "three",
                 value: 3
             }
-        ], ()=>getRule('garbageTurns'), getRule('competitive'));
-        drawSelect(150, 450, 50, 20, ON_OR_OFF, ()=>getRule('garbageDefense'), getRule('competitive'));
+        ], ()=>getRule("garbageTurns"), getRule("competitive"));
+        drawSelect(150, 450, 50, 20, ON_OR_OFF, ()=>getRule("garbageDefense"), getRule("competitive"));
         pop();
         for(let i = 0; i < game.gameData.match.players.length; i++){
             const id = game.gameData.match.players[i];
@@ -2208,10 +2546,15 @@ function drawState() {
             if (!userData) continue;
             const y = i * 45;
             fill(250);
-            stroke(0);
+            noStroke();
             rect(width - 210, 10 + y, 200, 40);
+            image(images.banners[userData.currentBanner], width - 210, 10 + y, 200, 40);
+            stroke(0);
+            noFill();
+            rect(width - 210, 10 + y, 200, 40);
+            fill(250);
             rect(width - 45, 15 + y, 30, 30);
-            fill(0);
+            fill(...COSM_NAME_COLORS[userData.currentNameColor || 'Default'].data);
             noStroke();
             textAlign(RIGHT, TOP);
             textStyle(BOLD);
@@ -2221,10 +2564,10 @@ function drawState() {
             const rank = getRank(elo);
             textStyle(NORMAL);
             text(elo, width - 70, 33 + y);
-            textStyle(BOLD);
-            textSize(12);
+            textStyle(BOLDITALIC);
+            textSize(16);
             textAlign(CENTER, CENTER);
-            text(getLevel(userData.xp), width - 30, 30 + y);
+            text(getLevel(userData.xp), width - 30, 31 + y);
             image(rank.icon, width - 65, 32 + y, 14, 14);
             stroke(0);
             noFill();
@@ -2255,7 +2598,7 @@ function drawState() {
         textAlign(RIGHT, CENTER);
         textStyle(BOLD);
         noStroke();
-        text(`You are ${game.localData.ready ? 'READY' : 'NOT READY'}.`, width - 220, height / 2);
+        text(`You are ${game.localData.ready ? "READY" : "NOT READY (PRESS ENTER)"}.`, width - 220, height / 2);
     } else {
         fill(0);
         textAlign(LEFT, TOP);
@@ -2274,13 +2617,13 @@ function drawState() {
                 dropping: false,
                 shortDrop: 0,
                 longDrop: 0
-            }, game.localData.boardSizes[id], alivePlayers.length >= 25 ? 0 : alivePlayers.length >= 17 ? 1 : alivePlayers.length >= 10 ? 2 : alivePlayers.length >= 5 ? 3 : alivePlayers.length <= 2 ? 4 : 3);
+            }, game.localData.boardSizes[id], alivePlayers.length >= 25 ? 0 : alivePlayers.length >= 17 ? 1 : alivePlayers.length >= 10 ? 2 : alivePlayers.length >= 5 ? 3 : alivePlayers.length <= 2 ? 4 : 3, game.gameData.match.data[id].currentPalette);
             noStroke();
-            fill(0);
             textSize(16);
             textAlign(CENTER, BOTTOM);
             textStyle(BOLD);
-            text(`${game.gameData.match.data[id].username} (${game.gameData.match.kills[id]} KO${game.gameData.match.kills[id] === 1 ? '' : 's'})`, 0, -11 * game.localData.boardSizes[id]);
+            fill(...COSM_NAME_COLORS[game.gameData.match.data[id].currentNameColor || 'Default'].data);
+            text(`${game.gameData.match.data[id].username} (${game.gameData.match.kills[id]} KO${game.gameData.match.kills[id] === 1 ? "" : "s"})`, 0, -11 * game.localData.boardSizes[id]);
             pop();
         }
         if (alivePlayers.length > 2) for(let i = 0; i < 5; i += 1){
@@ -2295,11 +2638,11 @@ function drawState() {
             text(i + 1, width / 2 - 235 + i * 100, height - 25);
             textStyle(NORMAL);
             textAlign(LEFT, CENTER);
-            if (i === 0) text('random', width / 2 - 216 + i * 100, height - 24);
-            else if (i === 1) text('kills', width / 2 - 216 + i * 100, height - 24);
-            else if (i === 2) text('revenge', width / 2 - 216 + i * 100, height - 24);
-            else if (i === 3) text('winners', width / 2 - 216 + i * 100, height - 24);
-            else if (i === 4) text('losers', width / 2 - 216 + i * 100, height - 24);
+            if (i === 0) text("random", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 1) text("kills", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 2) text("revenge", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 3) text("winners", width / 2 - 216 + i * 100, height - 24);
+            else if (i === 4) text("losers", width / 2 - 216 + i * 100, height - 24);
         }
         if (game.localData.board.lost) {
             textSize(32);
@@ -2307,8 +2650,8 @@ function drawState() {
             textAlign(CENTER, CENTER);
             fill(0);
             noStroke();
-            if (game.gameData.match.results.winner === game.playerData._id) text('You win!', game.boardOrigin[0], game.boardOrigin[1]);
-            else text('You are eliminated!', game.boardOrigin[0], game.boardOrigin[1]);
+            if (game.gameData.match.results.winner === game.playerData._id) text("You win!", game.boardOrigin[0], game.boardOrigin[1]);
+            else text("You are eliminated!", game.boardOrigin[0], game.boardOrigin[1]);
         }
     }
 }

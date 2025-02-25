@@ -62,12 +62,5 @@ function getRank(elo) {
     }
     return RANKS[RANKS.length - 1];
 }
-const LOG_1_05 = Math.log(1.05);
-function getLevel(xp) {
-    return floor(log(sqrt(xp) / 100 + 1) / LOG_1_05 + 1);
-}
-function getXp(level) {
-    return floor((100 * (pow(1.05, level - 1) - 1)) ** 2);
-}
 
 //# sourceMappingURL=index.c285e61c.js.map

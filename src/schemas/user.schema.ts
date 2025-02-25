@@ -8,6 +8,14 @@ const userSchema = new mongoose.Schema({
     juice: {type: Number, default: 0},
     normalElo: {type: Number, default: 0},
     compElo: {type: Number, default: 0},
+
+    bannersUnlocked: { type: Array, default: ['Default']},
+    palettesUnlocked: { type: Array, default: ['Default']},
+    nameColorsUnlocked: { type: Array, default: ['Default']},
+
+    currentBanner: { type: String, default: 'Default' },
+    currentPalette: { type: String, default: 'Default' },
+    currentNameColor: { type: String, default: 'Default' }
 });
 
 const User = mongoose.model('user', userSchema);
