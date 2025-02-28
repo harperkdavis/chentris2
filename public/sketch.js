@@ -1803,7 +1803,8 @@ function drawState() {
         textAlign(CENTER, TOP);
         textStyle(ITALIC);
 
-        text(`online: ${game.online}`, width / 2, 10);
+        text(`online: ${game.online.total}`, width / 2, 10);
+        text(`(playing: ${game.online.inMatch}, in lobby: ${game.online.inLobby}, in game: ${game.online.inGame} (${game.online.inSoloGame} solo), matches active: ${game.online.matches})`, width / 2, 30);
 
         fill(250);
         stroke(0);

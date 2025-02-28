@@ -51,6 +51,32 @@ function printMemoryUsage() {
     console.log(process.memoryUsage());
 }
 
+function getOnlineStats() {
+    const total = io.sockets.sockets.size;
+    let inMatch = 0, inLobby = 0, inGame = 0, inSoloGame = 0;
+    for (const match of matches.values()) {
+        inMatch += match.players.length;
+        if (match.playing) {
+            if (match.solo) {
+                inGame += match.players.length;
+            } else {
+                inSoloGame += match.players.length;
+            }
+        } else {
+            inLobby += match.players.length;
+        }
+    }
+
+    return {
+        total,
+        inMatch,
+        inLobby,
+        inGame,
+        inSoloGame,
+        matches: matches.size,
+    }
+}
+
 setInterval(printMemoryUsage, 3_600_000);
 
 io.on('connection', async (socket: Socket) => {
@@ -138,7 +164,7 @@ io.on('connection', async (socket: Socket) => {
         socket.emit('player_data', {
             user,
             leaderboard: leaderboardCache,
-            online: io.sockets.sockets.size,
+            online: getOnlineStats(),
             normalRank: await database.getRank(id, false),
             competitiveRank: await database.getRank(id, true),
         });
@@ -223,7 +249,6 @@ io.on('connection', async (socket: Socket) => {
             if (data.sprint > 0) {
                 match.rules.sprint = data.sprint;
             }
-            match.ready[socket.id] = true;
             match.startCountdown = 1;
         }
     });
