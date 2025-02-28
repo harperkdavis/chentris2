@@ -248,6 +248,8 @@ io.on('connection', async (socket: Socket) => {
         if (data && data.solo) {
             if (data.sprint > 0) {
                 match.rules.sprint = data.sprint;
+            } else {
+                match.rules.sprint = 0;
             }
             match.startCountdown = 1;
         }
