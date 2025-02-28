@@ -26,6 +26,22 @@ const menus = {
             }
         }, 
         {
+            name: "40 LINE SPRINT",
+            onClick: () => {
+                socket.io.emit('create_match', { solo: true, sprint: 40 });
+                game.loading = true;
+                game.loadMessage = 'Creating...';
+            }
+        },
+        {
+            name: "ZEN",
+            onClick: () => {
+                socket.io.emit('create_match', { solo: true });
+                game.loading = true;
+                game.loadMessage = 'Creating...';
+            }
+        }, 
+        {
             name: "COSMETICS",
             onClick: () => {
                 state.inSubMenu = true;

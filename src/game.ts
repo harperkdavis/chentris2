@@ -16,6 +16,9 @@ export interface Match {
     notification: string,
     newNotification: boolean,
 
+    started: number,
+    ended: number,
+
     data: object,
     ready: object,
     boards: object,

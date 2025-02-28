@@ -42,7 +42,7 @@ const game = {
     settingsRot: 0,
     keypressToChange: "",
 
-    cosmeticsPage: 'palette',
+    cosmeticsPage: "palette",
 
     hocoAnim: -1,
 
@@ -52,26 +52,18 @@ const game = {
 };
 
 const HOCO_SECRET = [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,
-    0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
-    0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,
-    0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-    0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-    0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,
-    0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
-    0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
 ];
 
 const state = {
@@ -186,7 +178,7 @@ function resetState() {
     game.settingsRot = 0;
     game.keypressToChange = "";
 
-    game.cosmeticsPage = 'palette';
+    game.cosmeticsPage = "palette";
 
     game.hocoAnim = -1;
 
@@ -359,7 +351,7 @@ function connect() {
     });
 
     socket.io.on("player_data_quiet", (data) => {
-        console.log('quiet', data);
+        console.log("quiet", data);
         game.playerData = data.user;
     });
 
@@ -469,12 +461,7 @@ function connect() {
         game.localData.board = board;
 
         for (let move of game.gameData.moves) {
-            game.localData.board = makeMove(
-                move.move,
-                game.localData.board,
-                Math.seedrandom,
-                game.gameData.match.rules
-            );
+            game.localData.board = makeMove(move.move, game.localData.board, Math.seedrandom, game.gameData.match.rules);
         }
 
         game.localData.board.move = moveNumber;
@@ -734,77 +721,155 @@ function update() {
 
                     if (
                         input.keys[settings["controls.left"]] % settings["moveSpeed"] === 0 &&
-                        (input.keys[settings["controls.left"]] === 0 ||
-                            input.keys[settings["controls.left"]] > settings["moveSpeed"] * settings["moveDelayFactor"])
+                        (input.keys[settings["controls.left"]] === 0 || input.keys[settings["controls.left"]] > settings["moveSpeed"] * settings["moveDelayFactor"])
                     ) {
                         game.settingsPieceX -= 1;
                     }
 
                     if (
                         input.keys[settings["controls.right"]] % settings["moveSpeed"] === 0 &&
-                        (input.keys[settings["controls.right"]] === 0 ||
-                            input.keys[settings["controls.right"]] >
-                                settings["moveSpeed"] * settings["moveDelayFactor"])
+                        (input.keys[settings["controls.right"]] === 0 || input.keys[settings["controls.right"]] > settings["moveSpeed"] * settings["moveDelayFactor"])
                     ) {
                         game.settingsPieceX += 1;
                     }
 
                     game.settingsPieceX = constrain(game.settingsPieceX, -5, 5);
                 } else if (state.subMenu === submenus.Cosmetics) {
-                    buttonState(width / 2 - 490, height / 2 - 290, 100, 30, () => {}, () => { game.cosmeticsPage = 'palette' });
-                    buttonState(width / 2 - 380, height / 2 - 290, 100, 30, () => {}, () => { game.cosmeticsPage = 'banner' });
-                    buttonState(width / 2 - 270, height / 2 - 290, 100, 30, () => {}, () => { game.cosmeticsPage = 'nameColor' });
-                    
+                    buttonState(
+                        width / 2 - 490,
+                        height / 2 - 290,
+                        100,
+                        30,
+                        () => {},
+                        () => {
+                            game.cosmeticsPage = "palette";
+                        }
+                    );
+                    buttonState(
+                        width / 2 - 380,
+                        height / 2 - 290,
+                        100,
+                        30,
+                        () => {},
+                        () => {
+                            game.cosmeticsPage = "banner";
+                        }
+                    );
+                    buttonState(
+                        width / 2 - 270,
+                        height / 2 - 290,
+                        100,
+                        30,
+                        () => {},
+                        () => {
+                            game.cosmeticsPage = "nameColor";
+                        }
+                    );
+
                     let i = 0;
-                    if (game.cosmeticsPage === 'palette') {
+                    if (game.cosmeticsPage === "palette") {
                         for (const paletteName in COSM_PALETTES) {
                             const x = width / 2 - 490 + floor(i / 6) * 310;
                             const y = height / 2 - 240 + (i % 6) * 80;
 
-                            if ((game.playerData.palettesUnlocked || ['Default']).includes(paletteName)) {
+                            if ((game.playerData.palettesUnlocked || ["Default"]).includes(paletteName)) {
                                 if (game.playerData.currentPalette !== paletteName) {
-                                    buttonState(x, y + 50, 300, 20, () => {}, () => { socket.io.emit('equip', { type: 'palette', which: paletteName }) });
+                                    buttonState(
+                                        x,
+                                        y + 50,
+                                        300,
+                                        20,
+                                        () => {},
+                                        () => {
+                                            socket.io.emit("equip", { type: "palette", which: paletteName });
+                                        }
+                                    );
                                 }
                             } else {
                                 const data = COSM_PALETTES[paletteName];
                                 if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) {
-                                    buttonState(x, y + 50, 300, 20, () => {}, () => { socket.io.emit('purchase', { type: 'palette', which: paletteName }); })
+                                    buttonState(
+                                        x,
+                                        y + 50,
+                                        300,
+                                        20,
+                                        () => {},
+                                        () => {
+                                            socket.io.emit("purchase", { type: "palette", which: paletteName });
+                                        }
+                                    );
                                 }
                             }
 
                             i += 1;
                         }
-                    } else if (game.cosmeticsPage === 'banner') {
+                    } else if (game.cosmeticsPage === "banner") {
                         for (const bannerName in COSM_BANNERS) {
                             const x = width / 2 - 490 + floor(i / 6) * 310;
                             const y = height / 2 - 240 + (i % 6) * 80;
 
-                            if ((game.playerData.bannersUnlocked || ['Default']).includes(bannerName)) {
+                            if ((game.playerData.bannersUnlocked || ["Default"]).includes(bannerName)) {
                                 if (game.playerData.currentBanner !== bannerName) {
-                                    buttonState(x, y + 50, 300, 20, () => {}, () => { socket.io.emit('equip', { type: 'banner', which: bannerName }) });
+                                    buttonState(
+                                        x,
+                                        y + 50,
+                                        300,
+                                        20,
+                                        () => {},
+                                        () => {
+                                            socket.io.emit("equip", { type: "banner", which: bannerName });
+                                        }
+                                    );
                                 }
                             } else {
                                 const data = COSM_BANNERS[bannerName];
                                 if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) {
-                                    buttonState(x, y + 50, 300, 20, () => {}, () => { socket.io.emit('purchase', { type: 'banner', which: bannerName }); })
+                                    buttonState(
+                                        x,
+                                        y + 50,
+                                        300,
+                                        20,
+                                        () => {},
+                                        () => {
+                                            socket.io.emit("purchase", { type: "banner", which: bannerName });
+                                        }
+                                    );
                                 }
                             }
 
                             i += 1;
                         }
-                    }  else if (game.cosmeticsPage === 'nameColor') {
+                    } else if (game.cosmeticsPage === "nameColor") {
                         for (const nameColor in COSM_NAME_COLORS) {
                             const x = width / 2 - 490 + floor(i / 6) * 310;
                             const y = height / 2 - 240 + (i % 6) * 80;
 
-                            if ((game.playerData.nameColorsUnlocked || ['Default']).includes(nameColor)) {
+                            if ((game.playerData.nameColorsUnlocked || ["Default"]).includes(nameColor)) {
                                 if (game.playerData.currentNameColor !== nameColor) {
-                                    buttonState(x, y + 50, 300, 20, () => {}, () => { socket.io.emit('equip', { type: 'nameColor', which: nameColor }) });
+                                    buttonState(
+                                        x,
+                                        y + 50,
+                                        300,
+                                        20,
+                                        () => {},
+                                        () => {
+                                            socket.io.emit("equip", { type: "nameColor", which: nameColor });
+                                        }
+                                    );
                                 }
                             } else {
                                 const data = COSM_NAME_COLORS[nameColor];
                                 if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) {
-                                    buttonState(x, y + 50, 300, 20, () => {}, () => { socket.io.emit('purchase', { type: 'nameColor', which: nameColor }); })
+                                    buttonState(
+                                        x,
+                                        y + 50,
+                                        300,
+                                        20,
+                                        () => {},
+                                        () => {
+                                            socket.io.emit("purchase", { type: "nameColor", which: nameColor });
+                                        }
+                                    );
                                 }
                             }
 
@@ -812,16 +877,11 @@ function update() {
                         }
                     }
                 }
-
             } else {
                 for (let i = 0; i < game.menu.length; i++) {
                     const mouseOver = mouseX < 300 && mouseY > 100 + i * 50 && mouseY < 140 + i * 50;
 
-                    game.menuButtonAnims[i] = lerp(
-                        game.menuButtonAnims[i],
-                        mouseOver ? 1 : 0,
-                        clamp(0.5 * 60 * deltaTime, 0, 1)
-                    );
+                    game.menuButtonAnims[i] = lerp(game.menuButtonAnims[i], mouseOver ? 1 : 0, clamp(0.5 * 60 * deltaTime, 0, 1));
 
                     if (input.mouse[LEFT] === 0 && mouseOver) {
                         game.menu[i].onClick();
@@ -982,6 +1042,33 @@ function update() {
             (v) => changeRule("garbageDefense", v),
             comp
         );
+        selectState(
+            150,
+            475,
+            50,
+            20,
+            ON_OR_OFF,
+            () => game.gameData.match.rules.comboIgnoresIncoming,
+            (v) => changeRule("comboIgnoresIncoming", v),
+            comp
+        );
+        selectState(
+            150,
+            500,
+            50,
+            20,
+            [
+                { key: "off", value: 0 },
+                { key: "20 lines", value: 20 },
+                { key: "40 lines", value: 40 },
+                { key: "100 lines", value: 100 },
+                { key: "1000 lines", value: 1000 },
+                { key: "1000000 lines", value: 1_000_000 },
+            ],
+            () => game.gameData.match.rules.sprint,
+            (v) => changeRule("sprint", v),
+            comp
+        );
 
         if (!game.inGame) {
             return;
@@ -1004,10 +1091,7 @@ function update() {
 
         let origin = { x: 0, y: 0 };
 
-        if (
-            !game.gameData.match.playing ||
-            game.gameData.match.players.filter((id) => !game.gameData.match.boards[id].lost).length <= 1
-        ) {
+        if (!game.gameData.match.playing || game.gameData.match.players.filter((id) => !game.gameData.match.boards[id].lost).length <= 1) {
             origin = { x: width / 2, y: height / 2 };
         } else {
             origin = { x: SQUARE_SIZE * 13, y: height / 2 };
@@ -1060,10 +1144,7 @@ function update() {
         }
 
         const fallPerMinute = 60 / game.localData.speed;
-        if (
-            input.keys[settings["controls.down"]] % settings["moveSpeed"] === 0 ||
-            game.localData.timers.fall >= fallPerMinute
-        ) {
+        if (input.keys[settings["controls.down"]] % settings["moveSpeed"] === 0 || game.localData.timers.fall >= fallPerMinute) {
             game.localData.state = makeSubmove("down", game.localData.board, game.localData.state);
 
             let first = true;
@@ -1078,8 +1159,7 @@ function update() {
 
         if (
             input.keys[settings["controls.left"]] % settings["moveSpeed"] === 0 &&
-            (input.keys[settings["controls.left"]] === 0 ||
-                input.keys[settings["controls.left"]] > settings["moveSpeed"] * settings["moveDelayFactor"])
+            (input.keys[settings["controls.left"]] === 0 || input.keys[settings["controls.left"]] > settings["moveSpeed"] * settings["moveDelayFactor"])
         ) {
             game.localData.state = makeSubmove("left", game.localData.board, game.localData.state);
             if (game.localData.state.lastMoveSuccessful) {
@@ -1092,8 +1172,7 @@ function update() {
 
         if (
             input.keys[settings["controls.right"]] % settings["moveSpeed"] === 0 &&
-            (input.keys[settings["controls.right"]] === 0 ||
-                input.keys[settings["controls.right"]] > settings["moveSpeed"] * settings["moveDelayFactor"])
+            (input.keys[settings["controls.right"]] === 0 || input.keys[settings["controls.right"]] > settings["moveSpeed"] * settings["moveDelayFactor"])
         ) {
             game.localData.state = makeSubmove("right", game.localData.board, game.localData.state);
             if (game.localData.state.lastMoveSuccessful) {
@@ -1138,8 +1217,7 @@ function update() {
             }
         }
 
-        game.localData.timers.dropping =
-            game.localData.state.pieceY === makeSubmove("drop", game.localData.board, game.localData.state).pieceY;
+        game.localData.timers.dropping = game.localData.state.pieceY === makeSubmove("drop", game.localData.board, game.localData.state).pieceY;
 
         if (
             input.keys[settings["controls.drop"]] === 0 ||
@@ -1201,22 +1279,10 @@ function update() {
                     game.localData.boardSizes[id] = 0;
                 }
 
-                game.localData.boardAnims[id][0] = lerp(
-                    game.localData.boardAnims[id][0],
-                    idealPos[0],
-                    clamp(0.1 * 60 * deltaTime, 0, 1)
-                );
-                game.localData.boardAnims[id][1] = lerp(
-                    game.localData.boardAnims[id][1],
-                    idealPos[1],
-                    clamp(0.1 * 60 * deltaTime, 0, 1)
-                );
+                game.localData.boardAnims[id][0] = lerp(game.localData.boardAnims[id][0], idealPos[0], clamp(0.1 * 60 * deltaTime, 0, 1));
+                game.localData.boardAnims[id][1] = lerp(game.localData.boardAnims[id][1], idealPos[1], clamp(0.1 * 60 * deltaTime, 0, 1));
 
-                game.localData.boardSizes[id] = lerp(
-                    game.localData.boardSizes[id],
-                    isSpectator ? SQUARE_SIZE : size,
-                    clamp(0.05 * 60 * deltaTime, 0, 1)
-                );
+                game.localData.boardSizes[id] = lerp(game.localData.boardSizes[id], isSpectator ? SQUARE_SIZE : size, clamp(0.05 * 60 * deltaTime, 0, 1));
 
                 if (!game.gameData.match.boards[id].lost) {
                     if (!isSpectator) {
@@ -1452,15 +1518,7 @@ function drawBoard(board, state, timers, squareSize, detail, palette = "Default"
         }
 
         if (board.hold !== -1) {
-            drawPiece(
-                (-6 - PIECES[board.hold].layout.length) * squareSize,
-                -10 * squareSize,
-                0,
-                squareSize,
-                board.hold,
-                palette,
-                board.canHold ? 255 : 100
-            );
+            drawPiece((-6 - PIECES[board.hold].layout.length) * squareSize, -10 * squareSize, 0, squareSize, board.hold, palette, board.canHold ? 255 : 100);
         }
     }
 
@@ -1485,16 +1543,7 @@ function drawBoard(board, state, timers, squareSize, detail, palette = "Default"
     if (detail >= 3) {
         const dropSubmove = makeSubmove("drop", board, state);
 
-        drawPiece(
-            (dropSubmove.pieceX - 5) * squareSize,
-            (dropSubmove.pieceY - 30) * squareSize,
-            state.pieceRotation,
-            squareSize,
-            board.bag[0],
-            palette,
-            100,
-            true
-        );
+        drawPiece((dropSubmove.pieceX - 5) * squareSize, (dropSubmove.pieceY - 30) * squareSize, state.pieceRotation, squareSize, board.bag[0], palette, 100, true);
     }
 
     if (detail >= 1) {
@@ -1627,13 +1676,41 @@ function drawBoard(board, state, timers, squareSize, detail, palette = "Default"
         textAlign(RIGHT, BOTTOM);
         noStroke();
         fill(0);
-        text(`${board.lines} line${board.lines === 1 ? "" : "s"}`, -6.5 * squareSize, 8 * squareSize);
-        text(`${board.juice} juice`, -6.5 * squareSize, 9 * squareSize);
-        text(
-            `Level ${Math.floor(getJuiceLevel(board.juice))} (x${1 + Math.floor(getJuiceLevel(board.juice)) * 0.2})`,
-            -6.5 * squareSize,
-            10 * squareSize
-        );
+        text(`${board.lines} line${board.lines === 1 ? "" : "s"}`, -6 * squareSize, 8 * squareSize);
+        text(`${board.juice} juice`, -6 * squareSize, 9 * squareSize);
+        text(`Level ${Math.floor(getJuiceLevel(board.juice))} (x${1 + Math.floor(getJuiceLevel(board.juice)) * 0.2})`, -6 * squareSize, 10 * squareSize);
+
+        console.log(game.gameData.match.rules);
+        if (game.gameData.match.playing && game.gameData.match.rules.sprint > 0) {
+            const sprint = game.gameData.match.rules.sprint;
+            const myLines = game.localData.board.lines;
+            const remaining = sprint - myLines;
+            if (remaining > 0) {
+                textSize(16);
+                fill(0);
+                textAlign(RIGHT, BOTTOM);
+                text("remaining", -6 * squareSize, -0.1 * squareSize);
+                textSize(32);
+                textAlign(RIGHT, TOP);
+                text(remaining.toLocaleString(), -6 * squareSize, 0);
+
+                if (!game.gameData.match.solo && detail >= 5) {
+                    let otherMax = 0;
+                    for (const id of game.gameData.match.players.filter((id) => id !== game.playerData._id)) {
+                        otherMax = Math.max(otherMax, game.gameData.match.boards[id].lines);
+                    }
+
+                    const ahead = myLines - otherMax;
+                    textSize(16);
+                    fill(sin(millis() / 200) * 100);
+                    if (ahead < 0) {
+                        text(`${-ahead} behind!`, -6 * squareSize, 2 * squareSize);
+                    } else if (ahead > 0) {
+                        text(`${ahead} ahead!`, -6 * squareSize, 2 * squareSize);
+                    }
+                }
+            }
+        }
 
         textSize(300);
         textStyle(BOLD);
@@ -1718,20 +1795,19 @@ function drawState() {
         push();
 
         translate(0, -600 * game.mainMenuAnim);
-        
+
         fill(0);
         noStroke();
 
         textSize(16);
         textAlign(CENTER, TOP);
         textStyle(ITALIC);
-        
+
         text(`online: ${game.online}`, width / 2, 10);
 
         fill(250);
         stroke(0);
         textStyle(BOLDITALIC);
-        
 
         textSize(32);
 
@@ -1746,7 +1822,7 @@ function drawState() {
         fill(0);
 
         textAlign(RIGHT, TOP);
-        fill(...COSM_NAME_COLORS[game.playerData.currentNameColor || 'Default'].data);
+        fill(...COSM_NAME_COLORS[game.playerData.currentNameColor || "Default"].data);
         text(game.playerData.username, width - 20, 20);
 
         textStyle(NORMAL);
@@ -2041,40 +2117,12 @@ function drawState() {
                 noStroke();
                 textAlign(CENTER, TOP);
                 text("you can move this piece", width / 2 - 250, height / 2 - 250);
-                drawPiece(
-                    width / 2 - 250 - SQUARE_SIZE * 1.5 + game.settingsPieceX * SQUARE_SIZE,
-                    height / 2 - 200,
-                    0,
-                    SQUARE_SIZE,
-                    4,
-                    game.playerData.currentPalette
-                );
+                drawPiece(width / 2 - 250 - SQUARE_SIZE * 1.5 + game.settingsPieceX * SQUARE_SIZE, height / 2 - 200, 0, SQUARE_SIZE, 4, game.playerData.currentPalette);
 
                 fill(250);
-                drawSelect(
-                    width / 2 - 245,
-                    height / 2 - 100,
-                    100,
-                    20,
-                    MOVE_SPEED_SETTINGS,
-                    () => settings["moveSpeed"]
-                );
-                drawSelect(
-                    width / 2 - 245,
-                    height / 2 - 50,
-                    100,
-                    20,
-                    MOVE_DELAY_FACTOR_SETTINGS,
-                    () => settings["moveDelayFactor"]
-                );
-                drawSelect(
-                    width / 2 - 245,
-                    height / 2,
-                    100,
-                    20,
-                    SCREEN_SHAKE_SETTINGS,
-                    () => settings["screenShakeFactor"]
-                );
+                drawSelect(width / 2 - 245, height / 2 - 100, 100, 20, MOVE_SPEED_SETTINGS, () => settings["moveSpeed"]);
+                drawSelect(width / 2 - 245, height / 2 - 50, 100, 20, MOVE_DELAY_FACTOR_SETTINGS, () => settings["moveDelayFactor"]);
+                drawSelect(width / 2 - 245, height / 2, 100, 20, SCREEN_SHAKE_SETTINGS, () => settings["screenShakeFactor"]);
 
                 textAlign(RIGHT, TOP);
                 fill(0);
@@ -2109,85 +2157,41 @@ function drawState() {
                     } else {
                         textStyle(NORMAL);
                     }
-                    text(
-                        game.leaderboard.normal[i] ? game.leaderboard.normal[i].username : "-",
-                        width / 2 - 465,
-                        height / 2 - 270 + 20 * i
-                    );
+                    text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].username : "-", width / 2 - 465, height / 2 - 270 + 20 * i);
 
                     if (game.leaderboard.competitive[i] && game.leaderboard.competitive[i].id === game.playerData._id) {
                         textStyle(BOLD);
                     } else {
                         textStyle(NORMAL);
                     }
-                    text(
-                        game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].username : "-",
-                        width / 2 - 265,
-                        height / 2 - 270 + 20 * i
-                    );
+                    text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].username : "-", width / 2 - 265, height / 2 - 270 + 20 * i);
 
                     if (game.leaderboard.level[i] && game.leaderboard.level[i].id === game.playerData._id) {
                         textStyle(BOLD);
                     } else {
                         textStyle(NORMAL);
                     }
-                    text(
-                        game.leaderboard.level[i] ? game.leaderboard.level[i].username : "-",
-                        width / 2 - 65,
-                        height / 2 - 270 + 20 * i
-                    );
+                    text(game.leaderboard.level[i] ? game.leaderboard.level[i].username : "-", width / 2 - 65, height / 2 - 270 + 20 * i);
 
                     if (game.leaderboard.juice[i] && game.leaderboard.juice[i].id === game.playerData._id) {
                         textStyle(BOLD);
                     } else {
                         textStyle(NORMAL);
                     }
-                    text(
-                        game.leaderboard.juice[i] ? game.leaderboard.juice[i].username : "-",
-                        width / 2 + 135,
-                        height / 2 - 270 + 20 * i
-                    );
+                    text(game.leaderboard.juice[i] ? game.leaderboard.juice[i].username : "-", width / 2 + 135, height / 2 - 270 + 20 * i);
 
                     textStyle(ITALIC);
                     textAlign(RIGHT, TOP);
-                    text(
-                        game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : "-",
-                        width / 2 - 320,
-                        height / 2 - 270 + 20 * i
-                    );
-                    text(
-                        game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : "-",
-                        width / 2 - 120,
-                        height / 2 - 270 + 20 * i
-                    );
-                    text(
-                        game.leaderboard.level[i] ? getLevel(game.leaderboard.level[i].xp) : "-",
-                        width / 2 + 100,
-                        height / 2 - 270 + 20 * i
-                    );
-                    text(
-                        game.leaderboard.juice[i] ? game.leaderboard.juice[i].juice.toLocaleString() : "-",
-                        width / 2 + 360,
-                        height / 2 - 270 + 20 * i
-                    );
+                    text(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : "-", width / 2 - 320, height / 2 - 270 + 20 * i);
+                    text(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : "-", width / 2 - 120, height / 2 - 270 + 20 * i);
+                    text(game.leaderboard.level[i] ? getLevel(game.leaderboard.level[i].xp) : "-", width / 2 + 100, height / 2 - 270 + 20 * i);
+                    text(game.leaderboard.juice[i] ? game.leaderboard.juice[i].juice.toLocaleString() : "-", width / 2 + 360, height / 2 - 270 + 20 * i);
 
                     noFill();
                     stroke(0);
 
-                    image(
-                        getRank(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : 0).icon,
-                        width / 2 - 315,
-                        height / 2 - 263 + 20 * i - 8,
-                        16,
-                        16
-                    );
-                    image(
-                        getRank(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : 0).icon,
-                        width / 2 - 115,
-                        height / 2 - 263 + 20 * i - 8,
-                        16,
-                        16
-                    );
+                    image(getRank(game.leaderboard.normal[i] ? game.leaderboard.normal[i].elo : 0).icon, width / 2 - 315, height / 2 - 263 + 20 * i - 8, 16, 16);
+                    image(getRank(game.leaderboard.competitive[i] ? game.leaderboard.competitive[i].elo : 0).icon, width / 2 - 115, height / 2 - 263 + 20 * i - 8, 16, 16);
 
                     rect(width / 2 - 315, height / 2 - 263 + 20 * i - 8, 16, 16);
                     rect(width / 2 - 115, height / 2 - 263 + 20 * i - 8, 16, 16);
@@ -2214,14 +2218,38 @@ function drawState() {
                 }
             } else if (state.subMenu === submenus.Cosmetics) {
                 fill(250);
-                drawButton(width / 2 - 490, height / 2 - 290, 100, 30, 'Palettes', () => fill(230), () => fill(210));
+                drawButton(
+                    width / 2 - 490,
+                    height / 2 - 290,
+                    100,
+                    30,
+                    "Palettes",
+                    () => fill(230),
+                    () => fill(210)
+                );
                 fill(250);
-                drawButton(width / 2 - 380, height / 2 - 290, 100, 30, 'Banners', () => fill(230), () => fill(210));
+                drawButton(
+                    width / 2 - 380,
+                    height / 2 - 290,
+                    100,
+                    30,
+                    "Banners",
+                    () => fill(230),
+                    () => fill(210)
+                );
                 fill(250);
-                drawButton(width / 2 - 270, height / 2 - 290, 100, 30, 'Name Colors', () => fill(230), () => fill(210));
+                drawButton(
+                    width / 2 - 270,
+                    height / 2 - 290,
+                    100,
+                    30,
+                    "Name Colors",
+                    () => fill(230),
+                    () => fill(210)
+                );
 
                 let i = 0;
-                if (game.cosmeticsPage === 'palette') {
+                if (game.cosmeticsPage === "palette") {
                     for (const paletteName in COSM_PALETTES) {
                         const x = width / 2 - 490 + floor(i / 6) * 310;
                         const y = height / 2 - 240 + (i % 6) * 80;
@@ -2236,31 +2264,76 @@ function drawState() {
                             drawPiece(x + 5 + wSum * 10, y + 20, 0, 10, j, paletteName);
                             wSum += PIECES[j].width + 1;
                         }
-                        
-                        if ((game.playerData.palettesUnlocked || ['Default']).includes(paletteName)) {
+
+                        if ((game.playerData.palettesUnlocked || ["Default"]).includes(paletteName)) {
                             if (game.playerData.currentPalette === paletteName) {
                                 fill(200, 200, 250);
-                                drawButton(x, y + 50, 300, 20, 'equipped', () => fill(230), () => fill(210), true);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    "equipped",
+                                    () => fill(230),
+                                    () => fill(210),
+                                    true
+                                );
                             } else {
                                 fill(250);
-                                drawButton(x, y + 50, 300, 20, 'equip', () => fill(230), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    "equip",
+                                    () => fill(230),
+                                    () => fill(210),
+                                    false
+                                );
                             }
                         } else {
                             const data = COSM_PALETTES[paletteName];
                             if (getLevel(game.playerData.xp) < data.levelRequirement) {
-                                drawButton(x, y + 50, 300, 20, `unlocks at level ${data.levelRequirement}`, () => fill(230), () => fill(210), true);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `unlocks at level ${data.levelRequirement}`,
+                                    () => fill(230),
+                                    () => fill(210),
+                                    true
+                                );
                             } else if (game.playerData.juice < data.juiceCost) {
                                 fill(250, 200, 200);
-                                drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost.toLocaleString()}`, () => fill(230, 200, 200), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `purchase - ${data.juiceCost.toLocaleString()}`,
+                                    () => fill(230, 200, 200),
+                                    () => fill(210),
+                                    false
+                                );
                             } else {
                                 fill(250);
-                                drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost}`, () => fill(230), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `purchase - ${data.juiceCost}`,
+                                    () => fill(230),
+                                    () => fill(210),
+                                    false
+                                );
                             }
                         }
 
                         i += 1;
                     }
-                } else if (game.cosmeticsPage === 'banner') {
+                } else if (game.cosmeticsPage === "banner") {
                     for (const bannerName in COSM_BANNERS) {
                         const x = width / 2 - 490 + floor(i / 6) * 310;
                         const y = height / 2 - 240 + (i % 6) * 80;
@@ -2275,31 +2348,76 @@ function drawState() {
                         noFill();
                         rect(x, y + 15, 200, 40);
                         noStroke();
-                        
-                        if ((game.playerData.bannersUnlocked || ['Default']).includes(bannerName)) {
+
+                        if ((game.playerData.bannersUnlocked || ["Default"]).includes(bannerName)) {
                             if (game.playerData.currentBanner === bannerName) {
                                 fill(200, 200, 250);
-                                drawButton(x, y + 50, 300, 20, 'equipped', () => fill(230), () => fill(210), true);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    "equipped",
+                                    () => fill(230),
+                                    () => fill(210),
+                                    true
+                                );
                             } else {
                                 fill(250);
-                                drawButton(x, y + 50, 300, 20, 'equip', () => fill(230), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    "equip",
+                                    () => fill(230),
+                                    () => fill(210),
+                                    false
+                                );
                             }
                         } else {
                             const data = COSM_BANNERS[bannerName];
                             if (getLevel(game.playerData.xp) < data.levelRequirement) {
-                                drawButton(x, y + 50, 300, 20, `unlocks at level ${data.levelRequirement}`, () => fill(230), () => fill(210), true);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `unlocks at level ${data.levelRequirement}`,
+                                    () => fill(230),
+                                    () => fill(210),
+                                    true
+                                );
                             } else if (game.playerData.juice < data.juiceCost) {
                                 fill(250, 200, 200);
-                                drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost.toLocaleString()}`, () => fill(230, 200, 200), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `purchase - ${data.juiceCost.toLocaleString()}`,
+                                    () => fill(230, 200, 200),
+                                    () => fill(210),
+                                    false
+                                );
                             } else {
                                 fill(250);
-                                drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost}`, () => fill(230), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `purchase - ${data.juiceCost}`,
+                                    () => fill(230),
+                                    () => fill(210),
+                                    false
+                                );
                             }
                         }
 
                         i += 1;
                     }
-                } else if (game.cosmeticsPage === 'nameColor') {
+                } else if (game.cosmeticsPage === "nameColor") {
                     for (const nameColor in COSM_NAME_COLORS) {
                         const x = width / 2 - 490 + floor(i / 6) * 310;
                         const y = height / 2 - 240 + (i % 6) * 80;
@@ -2313,25 +2431,69 @@ function drawState() {
                         console.log(data.data);
                         fill(...data.data);
                         text(game.playerData.username, x, y + 30);
-                        
-                        if ((game.playerData.nameColorsUnlocked || ['Default']).includes(nameColor)) {
+
+                        if ((game.playerData.nameColorsUnlocked || ["Default"]).includes(nameColor)) {
                             if (game.playerData.currentNameColor === nameColor) {
                                 fill(200, 200, 250);
-                                drawButton(x, y + 50, 300, 20, 'equipped', () => fill(230), () => fill(210), true);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    "equipped",
+                                    () => fill(230),
+                                    () => fill(210),
+                                    true
+                                );
                             } else {
                                 fill(250);
-                                drawButton(x, y + 50, 300, 20, 'equip', () => fill(230), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    "equip",
+                                    () => fill(230),
+                                    () => fill(210),
+                                    false
+                                );
                             }
                         } else {
-                            
                             if (getLevel(game.playerData.xp) < data.levelRequirement) {
-                                drawButton(x, y + 50, 300, 20, `unlocks at level ${data.levelRequirement}`, () => fill(230), () => fill(210), true);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `unlocks at level ${data.levelRequirement}`,
+                                    () => fill(230),
+                                    () => fill(210),
+                                    true
+                                );
                             } else if (game.playerData.juice < data.juiceCost) {
                                 fill(250, 200, 200);
-                                drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost.toLocaleString()}`, () => fill(230, 200, 200), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `purchase - ${data.juiceCost.toLocaleString()}`,
+                                    () => fill(230, 200, 200),
+                                    () => fill(210),
+                                    false
+                                );
                             } else {
                                 fill(250);
-                                drawButton(x, y + 50, 300, 20, `purchase - ${data.juiceCost}`, () => fill(230), () => fill(210), false);
+                                drawButton(
+                                    x,
+                                    y + 50,
+                                    300,
+                                    20,
+                                    `purchase - ${data.juiceCost}`,
+                                    () => fill(230),
+                                    () => fill(210),
+                                    false
+                                );
                             }
                         }
 
@@ -2372,10 +2534,7 @@ function drawState() {
         const anim = clamp(game.gameData.match.matchOverDelay - 20, 0, 80) / 80;
 
         const animXp = floor(game.playerData.xp + anim * rewards.xp);
-        const animElo = floor(
-            (game.gameData.match.rules.competitive ? game.playerData.compElo : game.playerData.normalElo) +
-                anim * rewards.elo
-        );
+        const animElo = floor((game.gameData.match.rules.competitive ? game.playerData.compElo : game.playerData.normalElo) + anim * rewards.elo);
         const animJuice = floor(game.playerData.juice + anim * rewards.juice);
 
         text(`XP: +${floor(anim * rewards.xp)}`, 20, height - 200);
@@ -2451,14 +2610,7 @@ function drawState() {
     scale(game.boardScale);
     translate(game.boardTranslation[0], game.boardTranslation[1]);
 
-    drawBoard(
-        game.localData.board,
-        game.localData.state,
-        game.localData.timers,
-        SQUARE_SIZE,
-        5,
-        game.playerData.currentPalette
-    );
+    drawBoard(game.localData.board, game.localData.state, game.localData.timers, SQUARE_SIZE, 5, game.playerData.currentPalette);
 
     if (!game.gameData.match.playing) {
         textStyle(BOLD);
@@ -2468,18 +2620,23 @@ function drawState() {
         noStroke();
         text("Practice", 0, 0);
     } else {
-        textSize(20);
+        textSize(16);
         textAlign(CENTER, TOP);
         textStyle(BOLD);
         fill(0);
         noStroke();
-        text(
-            `${game.gameData.match.kills[game.playerData._id]} KO${
-                game.gameData.match.kills[game.playerData._id] === 1 ? "" : "s"
-            }`,
-            0,
-            11 * SQUARE_SIZE
-        );
+
+        const end = game.gameData.match.ended || Date.now();
+        const elapsed = max(end - game.gameData.match.started, 0);
+        const time = `${nf(floor(elapsed / 60_000), 2, 0)}:${nf(floor(elapsed / 1000) % 60, 2, 0)}:${nf(elapsed % 1000, 3, 0)}`;
+        const pps = `${nf(game.localData.board.move ? game.localData.board.move / (max(elapsed, 1) / 1000) : 0, 0, 2)} pps`;
+        
+        if (game.gameData.match.solo) {
+            const kos = `${game.gameData.match.kills[game.playerData._id]} KO${game.gameData.match.kills[game.playerData._id] === 1 ? "" : "s"}`;
+            text(`${time} - ${pps} - ${kos}`, 0, 10.5 * SQUARE_SIZE);
+        } else {
+            text(`${time} - ${pps}`, 0, 10.5 * SQUARE_SIZE);
+        }
     }
 
     pop();
@@ -2502,7 +2659,7 @@ function drawState() {
         fill(250);
         stroke(0);
         rect(10, 30, 200, 250);
-        rect(10, 310, 200, 200);
+        rect(10, 310, 200, 250);
 
         fill(0);
         noStroke();
@@ -2565,12 +2722,15 @@ function drawState() {
         drawSelect(150, 250, 50, 20, ON_OR_OFF, () => getOption("ranked"), false);
 
         textAlign(LEFT, TOP);
+        textSize(16);
         text("Competitive", 20, 325);
         text("Initial Speed", 20, 350);
         text("Resend Garbage", 20, 375);
         text("Forgiving Combos", 20, 400);
         text("Garbage Turns", 20, 425);
         text("Garbage Defense", 20, 450);
+        text("Combo Not Incoming", 20, 475);
+        text("Sprint", 20, 500);
 
         drawSelect(150, 325, 50, 20, ON_OR_OFF, () => getRule("competitive"), false);
         drawSelect(
@@ -2606,6 +2766,23 @@ function drawState() {
             getRule("competitive")
         );
         drawSelect(150, 450, 50, 20, ON_OR_OFF, () => getRule("garbageDefense"), getRule("competitive"));
+        drawSelect(150, 475, 50, 20, ON_OR_OFF, () => getRule("comboIgnoresIncoming"), getRule("competitive"));
+        drawSelect(
+            150,
+            500,
+            50,
+            20,
+            [
+                { key: "off", value: 0 },
+                { key: "20 lines", value: 20 },
+                { key: "40 lines", value: 40 },
+                { key: "100 lines", value: 100 },
+                { key: "1000 lines", value: 1000 },
+                { key: "1000000 lines", value: 1_000_000 },
+            ],
+            () => getRule("sprint"),
+            getRule("competitive")
+        );
 
         pop();
 
@@ -2629,7 +2806,7 @@ function drawState() {
             fill(250);
             rect(width - 45, 15 + y, 30, 30);
 
-            fill(...COSM_NAME_COLORS[userData.currentNameColor || 'Default'].data);
+            fill(...COSM_NAME_COLORS[userData.currentNameColor || "Default"].data);
             noStroke();
             textAlign(RIGHT, TOP);
             textStyle(BOLD);
@@ -2722,17 +2899,7 @@ function drawState() {
                     longDrop: 0,
                 },
                 game.localData.boardSizes[id],
-                alivePlayers.length >= 25
-                    ? 0
-                    : alivePlayers.length >= 17
-                    ? 1
-                    : alivePlayers.length >= 10
-                    ? 2
-                    : alivePlayers.length >= 5
-                    ? 3
-                    : alivePlayers.length <= 2
-                    ? 4
-                    : 3,
+                alivePlayers.length >= 25 ? 0 : alivePlayers.length >= 17 ? 1 : alivePlayers.length >= 10 ? 2 : alivePlayers.length >= 5 ? 3 : alivePlayers.length <= 2 ? 4 : 3,
                 game.gameData.match.data[id].currentPalette
             );
 
@@ -2740,14 +2907,8 @@ function drawState() {
             textSize(16);
             textAlign(CENTER, BOTTOM);
             textStyle(BOLD);
-            fill(...COSM_NAME_COLORS[game.gameData.match.data[id].currentNameColor || 'Default'].data);
-            text(
-                `${game.gameData.match.data[id].username} (${game.gameData.match.kills[id]} KO${
-                    game.gameData.match.kills[id] === 1 ? "" : "s"
-                })`,
-                0,
-                -11 * game.localData.boardSizes[id]
-            );
+            fill(...COSM_NAME_COLORS[game.gameData.match.data[id].currentNameColor || "Default"].data);
+            text(`${game.gameData.match.data[id].username} (${game.gameData.match.kills[id]} KO${game.gameData.match.kills[id] === 1 ? "" : "s"})`, 0, -11 * game.localData.boardSizes[id]);
 
             pop();
         }

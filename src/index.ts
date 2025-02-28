@@ -217,8 +217,15 @@ io.on('connection', async (socket: Socket) => {
         }
     });
 
-    socket.on('create_match', async () => {
-        createNewGame(socket);
+    socket.on('create_match', async (data) => {
+        const match = await createNewGame(socket);
+        if (data && data.solo) {
+            if (data.sprint > 0) {
+                match.rules.sprint = data.sprint;
+            }
+            match.ready[socket.id] = true;
+            match.startCountdown = 1;
+        }
     });
 
     socket.on('join_match', async (data: any) => {
@@ -257,6 +264,8 @@ io.on('connection', async (socket: Socket) => {
                     forgivingCombos: competitive ? COMPETITIVE_DEFAULTS.forgivingCombos : (typeof(data.rules.forgivingCombos) === 'undefined' ? NORMAL_DEFAULTS.forgivingCombos : data.rules.forgivingCombos),
                     garbageTurns: competitive ? COMPETITIVE_DEFAULTS.garbageTurns : (typeof(data.rules.garbageTurns) === 'undefined' ? NORMAL_DEFAULTS.garbageTurns : data.rules.garbageTurns),
                     garbageDefense: competitive ? COMPETITIVE_DEFAULTS.garbageDefense : (typeof(data.rules.garbageDefense) === 'undefined' ? NORMAL_DEFAULTS.garbageDefense : data.rules.garbageDefense),
+                    comboIgnoresIncoming: competitive ? COMPETITIVE_DEFAULTS.comboIgnoresIncoming : (typeof(data.rules.comboIgnoresIncoming) === 'undefined' ? NORMAL_DEFAULTS.comboIgnoresIncoming : data.rules.comboIgnoresIncoming),
+                    sprint: competitive ? COMPETITIVE_DEFAULTS.sprint : (typeof(data.rules.sprint) === 'undefined' ? NORMAL_DEFAULTS.sprint : data.rules.sprint)
                 }
             }
 
@@ -303,7 +312,7 @@ io.on('connection', async (socket: Socket) => {
     });
 
     socket.on('move', async (move: any) => {
-        let match; 
+        let match: Match; 
         for (let m of matches.values()) {
             if (m.players.includes(users.get(socket.id))) {
                 match = m;
@@ -332,15 +341,14 @@ io.on('connection', async (socket: Socket) => {
                 const lastCombo = combos[combos.length - 1];
 
                 const alivePlayers = match.players.filter(id => !match.boards[id].lost);
-                if (alivePlayers.length >= 2) {
-                
+                if (alivePlayers.length >= 2 && match.rules.sprint <= 0) {
                     const index = match.players.indexOf(id);
-                    let otherIndex;
+                    let otherIndex: number;
                     if (alivePlayers.length === 2) {
                         otherIndex = match.players.indexOf(alivePlayers[0] === id ? alivePlayers[1] : alivePlayers[0]);
                     } else if (alivePlayers.length > 2 && match.states[id].attackOption === 1) { // Kills (gets highest line)
                         let highest = 40;
-                        let highestId = 0;
+                        let highestId = '';
                         for (let player of alivePlayers) {
                             if (player !== id) {
                                 const high = highestTile(match.boards[player])
@@ -359,7 +367,7 @@ io.on('connection', async (socket: Socket) => {
                         otherIndex = match.players.indexOf(match.boards[id].lastDamager);
                     } else if (alivePlayers.length > 2 && match.states[id].attackOption === 3) { // Highest juice
                         let highest = 0;
-                        let highestId = 0;
+                        let highestId = '';
                         for (let player of alivePlayers) {
                             if (player !== id) {
                                 const high = match.boards[player].juice;
@@ -373,7 +381,7 @@ io.on('connection', async (socket: Socket) => {
                         otherIndex = match.players.indexOf(highestId);
                     } else if (alivePlayers.length > 2 && match.states[id].attackOption === 4) { // Lowest juice
                         let lowest = 9999999999999;
-                        let lowestId = 0;
+                        let lowestId = '';
                         for (let player of alivePlayers) {
                             if (player !== id) {
                                 const val = match.boards[player].juice;
@@ -497,6 +505,8 @@ async function tick() {
                     match.over = false;
                     match.lastRemaining = match.players.length;
 
+                    match.started = Date.now();
+
                     match.order = [];
 
                     match.results = {
@@ -520,6 +530,21 @@ async function tick() {
             }
         } else {
             if (!match.over) {
+                if (match.rules.sprint > 0) {
+                    const res = Object.entries(match.boards).find(([id, board]) => board.lines >= match.rules.sprint);
+                    if (res) {
+                        const [winnerId, _] = res;
+                        for (const id in match.boards) {
+                            if (id !== winnerId) {
+                                match.boards[id].lost = true;
+                            }
+                        }
+                        
+                        // sort players by who was closest
+                        match.players.sort((aId, bId) => match.boards[aId].lines - match.boards[bId].lines);
+                    }
+                }
+
                 for (let player of match.players) {
                     if (!match.order.includes(player) && match.boards[player].lost) {
                         match.order.push(player);
@@ -527,13 +552,15 @@ async function tick() {
                 }
 
                 const alivePlayers = match.players.filter(id => !match.boards[id].lost);
-                if (!match.ending && alivePlayers.length === 1 && !match.solo) {
+                if (!match.ending && alivePlayers.length === 1 && (!match.solo || (match.rules.sprint > 0 && match.boards[alivePlayers[0]].lines >= match.rules.sprint))) {
                     match.newNotification = true;
                     match.notification = 'Winner!';
 
                     const winner = match.players.find(id => !match.boards[id].lost);
                     match.boards[winner].finishingMoves = 10;
                     match.results.winner = winner;
+
+                    match.ended = Date.now();
 
                     match.ending = true;
                     match.over = false;
@@ -552,77 +579,70 @@ async function tick() {
                         }
                     }
                     
-                    if (!match.solo) {
-                        const eloChange = {};
-                        const playerDatas = {};
+                    const eloChange = {};
+                    const playerDatas = {};
 
-                        for (let player of match.order) {
-                            playerDatas[player] = await database.findUser({_id: player});
-                        }
-
-                        if (match.options.ranked) {
-                            
-                            for (let player of match.order) {
-                                eloChange[player] = 0;
-                                
-                            }
-
-                            const kValue = Math.ceil(K_VALUE / Math.sqrt(match.order.length - 1) / 2);
-
-                            for (let i = 0; i < match.order.length; i += 1) {
-                                const playerId = match.order[i];
-                                const playerElo = match.rules.competitive ? playerDatas[playerId].compElo : playerDatas[playerId].normalElo;
-
-                                for (let j = 0; j < match.order.length; j += 1) {
-                                    const otherId = match.order[j];
-                                    const otherElo = match.rules.competitive ? playerDatas[otherId].compElo : playerDatas[otherId].normalElo;
-
-                                    if (i !== j) {
-                                        const elo = EloRating.calculate(playerElo, otherElo, (i > j), kValue);
-                                        eloChange[playerId] += (elo.playerRating - playerElo);
-                                        eloChange[otherId] += (elo.opponentRating - otherElo);
-                                    }
-                                }
-                            }
-                        }
-
-                        for (let id of match.order) {
-                            const user = await database.findUser({ _id: id });
-                            const elo = match.options.ranked ? Math.round(eloChange[id]) : 0;
-
-                            if (match.rules.competitive) {
-                                user.compElo += elo;
-                            } else {
-                                user.normalElo += elo;
-                            }
-
-                            if (match.players.includes(id)) {
-                                const juice = match.boards[id].juice;
-                                const lines = match.boards[id].lines;
-                                const kills = match.kills[id];
-
-                                const xp = Math.floor((juice / 100 + lines * 4) * (kills + 1));
-
-                                match.results.rewards[id] = {
-                                    juice,
-                                    xp,
-                                    elo,
-                                }
-
-                                user.juice += juice;
-                                user.xp += xp;
-                            }
-                            
-                            await user.save();
-                        }
-
-                        getLeaderboardCache();
-                    } else {
-                        match.over = false;
-                        match.playing = false;
-                        match.ending = false;   
-                        match.matchOverDelay = -1;
+                    for (let player of match.order) {
+                        playerDatas[player] = await database.findUser({_id: player});
                     }
+
+                    if (match.options.ranked && !match.solo) {
+                        
+                        for (let player of match.order) {
+                            eloChange[player] = 0;
+                            
+                        }
+
+                        const kValue = Math.ceil(K_VALUE / Math.sqrt(match.order.length - 1) / 2);
+
+                        for (let i = 0; i < match.order.length; i += 1) {
+                            const playerId = match.order[i];
+                            const playerElo = match.rules.competitive ? playerDatas[playerId].compElo : playerDatas[playerId].normalElo;
+
+                            for (let j = 0; j < match.order.length; j += 1) {
+                                const otherId = match.order[j];
+                                const otherElo = match.rules.competitive ? playerDatas[otherId].compElo : playerDatas[otherId].normalElo;
+
+                                if (i !== j) {
+                                    const elo = EloRating.calculate(playerElo, otherElo, (i > j), kValue);
+                                    eloChange[playerId] += (elo.playerRating - playerElo);
+                                    eloChange[otherId] += (elo.opponentRating - otherElo);
+                                }
+                            }
+                        }
+                    }
+
+                    for (let id of match.order) {
+                        const user = await database.findUser({ _id: id });
+                        const elo = match.options.ranked && !match.solo ? Math.round(eloChange[id]) : 0;
+
+                        if (match.rules.competitive) {
+                            user.compElo += elo;
+                        } else {
+                            user.normalElo += elo;
+                        }
+
+                        if (match.players.includes(id)) {
+                            const juice = match.boards[id].juice;
+                            const lines = match.boards[id].lines;
+                            const kills = match.kills[id];
+
+                            const xp = Math.floor((juice / 100 + lines * 4) * (kills + 1));
+
+                            match.results.rewards[id] = {
+                                juice,
+                                xp,
+                                elo,
+                            }
+
+                            user.juice += juice;
+                            user.xp += xp;
+                        }
+                        
+                        await user.save();
+                    }
+
+                    getLeaderboardCache();
                 }
 
                 if (alivePlayers.length === 10 && match.lastRemaining > 10) {
@@ -653,7 +673,10 @@ async function tick() {
                 if (match.matchOverDelay > 200) {
                     match.over = false;
                     match.playing = false;
-                    match.ending = false;   
+                    match.ending = false;  
+                    
+                    match.started = 0;
+                    match.ended = 0;
                     
                     match.matchOverDelay = -1;
 
@@ -722,6 +745,9 @@ async function createNewGame(socket: Socket) {
         players,
         order,
 
+        started: 0,
+        ended: 0,
+
         notification: '',
         newNotification: false,
 
@@ -773,6 +799,10 @@ async function joinMatch(socket: Socket, match: Match) {
     match.players.push(id);
 
     let user = await database.findUser({ _id: id });
+    if (!user) {
+        socket.emit('match_found', { error: true, message: 'There was an issue with your user. Reload the page, and if the issue persists, clear your local storage.'})
+        return;
+    }
     user.secret = 'shh';
 
     match.data[id] = user;

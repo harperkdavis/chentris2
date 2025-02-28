@@ -777,6 +777,9 @@ export interface Rules {
     forgivingCombos: boolean,
     garbageTurns: number,
     garbageDefense: boolean,
+    comboIgnoresIncoming: boolean,
+
+    sprint: number,
 }
 
 export const COMPETITIVE_DEFAULTS: Rules = {
@@ -786,6 +789,9 @@ export const COMPETITIVE_DEFAULTS: Rules = {
     forgivingCombos: false,
     garbageTurns: 1,
     garbageDefense: false,
+    comboIgnoresIncoming: false,
+
+    sprint: 0,
 };
 
 export const NORMAL_DEFAULTS: Rules = {
@@ -795,6 +801,9 @@ export const NORMAL_DEFAULTS: Rules = {
     forgivingCombos: true,
     garbageTurns: 2,
     garbageDefense: true,
+    comboIgnoresIncoming: false,
+
+    sprint: 0,
 };
 
 export function createNewBag(srng: string, bagIndex: number, generator: Function): Array<Piece> {
@@ -1188,7 +1197,9 @@ export function makeMove(move: Move, board: Board, generator: Function, rules: R
                 newBoard.garbageQueue.unshift(garbage);
             }
         }
-        newBoard.clears -= j;
+        if (!rules.comboIgnoresIncoming) {
+            newBoard.clears -= j;
+        }
 
         if (rules.garbageDefense) {
             for (let garbage of newBoard.garbageQueue) {
@@ -1292,9 +1303,9 @@ export function makeMove(move: Move, board: Board, generator: Function, rules: R
                     }
                     totalJuice += combo.juice.count;
                 }
-                newBoard.juice += totalJuice;
+                newBoard.juice += Math.round(totalJuice * (Math.floor(getJuiceLevel(newBoard.juice)) * 0.2 + 1));
             } else {
-                newBoard.juice += lastCombo.juice.count;
+                newBoard.juice += Math.round(lastCombo.juice.count * (Math.floor(getJuiceLevel(newBoard.juice)) * 0.2 + 1));
             }
         }
     }

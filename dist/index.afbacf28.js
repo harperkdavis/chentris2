@@ -2985,7 +2985,9 @@ const COMPETITIVE_DEFAULTS = {
     resendGarbage: true,
     forgivingCombos: false,
     garbageTurns: 1,
-    garbageDefense: false
+    garbageDefense: false,
+    comboIgnoresIncoming: false,
+    sprint: 0
 };
 const NORMAL_DEFAULTS = {
     competitive: false,
@@ -2993,7 +2995,9 @@ const NORMAL_DEFAULTS = {
     resendGarbage: true,
     forgivingCombos: true,
     garbageTurns: 2,
-    garbageDefense: true
+    garbageDefense: true,
+    comboIgnoresIncoming: false,
+    sprint: 0
 };
 function createNewBag(srng, bagIndex, generator) {
     let pieces = [
@@ -3280,7 +3284,7 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
             garbage.amount -= 1;
             if (garbage.amount > 0) newBoard.garbageQueue.unshift(garbage);
         }
-        newBoard.clears -= j;
+        if (!rules.comboIgnoresIncoming) newBoard.clears -= j;
         if (rules.garbageDefense) for (let garbage of newBoard.garbageQueue)garbage.turns += 1;
         if (newBoard.clears > 0 && usedPiece === 4 && submoveState.dropLines === 0) {
             const submoves = move.submoves || [];
@@ -3344,8 +3348,8 @@ function makeMove(move, board, generator, rules, ignoreGarbage = false) {
                     if (combo.juice.type === 'multiply') continue;
                     totalJuice += combo.juice.count;
                 }
-                newBoard.juice += totalJuice;
-            } else newBoard.juice += lastCombo.juice.count;
+                newBoard.juice += Math.round(totalJuice * (Math.floor(getJuiceLevel(newBoard.juice)) * 0.2 + 1));
+            } else newBoard.juice += Math.round(lastCombo.juice.count * (Math.floor(getJuiceLevel(newBoard.juice)) * 0.2 + 1));
         }
     }
     if (newBoard.finishingMoves < 0 && board.finishingMoves >= 0) newBoard.lost = true;

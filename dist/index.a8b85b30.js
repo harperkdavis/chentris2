@@ -40,7 +40,7 @@ const game = {
     settingsPieceX: 0,
     settingsRot: 0,
     keypressToChange: "",
-    cosmeticsPage: 'palette',
+    cosmeticsPage: "palette",
     hocoAnim: -1,
     leaderboard: {},
     normalRank: 0,
@@ -949,7 +949,7 @@ function resetState() {
     game.settingsPieceX = 0;
     game.settingsRot = 0;
     game.keypressToChange = "";
-    game.cosmeticsPage = 'palette';
+    game.cosmeticsPage = "palette";
     game.hocoAnim = -1;
     game.leaderboard = {};
     game.normalRank = 0;
@@ -1086,7 +1086,7 @@ function connect() {
         }
     });
     socket.io.on("player_data_quiet", (data)=>{
-        console.log('quiet', data);
+        console.log("quiet", data);
         game.playerData = data.user;
     });
     socket.io.on("error", (data)=>{
@@ -1313,78 +1313,78 @@ function update() {
                     game.settingsPieceX = constrain(game.settingsPieceX, -5, 5);
                 } else if (state.subMenu === submenus.Cosmetics) {
                     buttonState(width / 2 - 490, height / 2 - 290, 100, 30, ()=>{}, ()=>{
-                        game.cosmeticsPage = 'palette';
+                        game.cosmeticsPage = "palette";
                     });
                     buttonState(width / 2 - 380, height / 2 - 290, 100, 30, ()=>{}, ()=>{
-                        game.cosmeticsPage = 'banner';
+                        game.cosmeticsPage = "banner";
                     });
                     buttonState(width / 2 - 270, height / 2 - 290, 100, 30, ()=>{}, ()=>{
-                        game.cosmeticsPage = 'nameColor';
+                        game.cosmeticsPage = "nameColor";
                     });
                     let i = 0;
-                    if (game.cosmeticsPage === 'palette') for(const paletteName in COSM_PALETTES){
+                    if (game.cosmeticsPage === "palette") for(const paletteName in COSM_PALETTES){
                         const x = width / 2 - 490 + floor(i / 6) * 310;
                         const y = height / 2 - 240 + i % 6 * 80;
                         if ((game.playerData.palettesUnlocked || [
-                            'Default'
+                            "Default"
                         ]).includes(paletteName)) {
                             if (game.playerData.currentPalette !== paletteName) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
-                                socket.io.emit('equip', {
-                                    type: 'palette',
+                                socket.io.emit("equip", {
+                                    type: "palette",
                                     which: paletteName
                                 });
                             });
                         } else {
                             const data = COSM_PALETTES[paletteName];
                             if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
-                                socket.io.emit('purchase', {
-                                    type: 'palette',
+                                socket.io.emit("purchase", {
+                                    type: "palette",
                                     which: paletteName
                                 });
                             });
                         }
                         i += 1;
                     }
-                    else if (game.cosmeticsPage === 'banner') for(const bannerName in COSM_BANNERS){
+                    else if (game.cosmeticsPage === "banner") for(const bannerName in COSM_BANNERS){
                         const x = width / 2 - 490 + floor(i / 6) * 310;
                         const y = height / 2 - 240 + i % 6 * 80;
                         if ((game.playerData.bannersUnlocked || [
-                            'Default'
+                            "Default"
                         ]).includes(bannerName)) {
                             if (game.playerData.currentBanner !== bannerName) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
-                                socket.io.emit('equip', {
-                                    type: 'banner',
+                                socket.io.emit("equip", {
+                                    type: "banner",
                                     which: bannerName
                                 });
                             });
                         } else {
                             const data = COSM_BANNERS[bannerName];
                             if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
-                                socket.io.emit('purchase', {
-                                    type: 'banner',
+                                socket.io.emit("purchase", {
+                                    type: "banner",
                                     which: bannerName
                                 });
                             });
                         }
                         i += 1;
                     }
-                    else if (game.cosmeticsPage === 'nameColor') for(const nameColor in COSM_NAME_COLORS){
+                    else if (game.cosmeticsPage === "nameColor") for(const nameColor in COSM_NAME_COLORS){
                         const x = width / 2 - 490 + floor(i / 6) * 310;
                         const y = height / 2 - 240 + i % 6 * 80;
                         if ((game.playerData.nameColorsUnlocked || [
-                            'Default'
+                            "Default"
                         ]).includes(nameColor)) {
                             if (game.playerData.currentNameColor !== nameColor) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
-                                socket.io.emit('equip', {
-                                    type: 'nameColor',
+                                socket.io.emit("equip", {
+                                    type: "nameColor",
                                     which: nameColor
                                 });
                             });
                         } else {
                             const data = COSM_NAME_COLORS[nameColor];
                             if (getLevel(game.playerData.xp) >= data.levelRequirement && game.playerData.juice >= data.juiceCost) buttonState(x, y + 50, 300, 20, ()=>{}, ()=>{
-                                socket.io.emit('purchase', {
-                                    type: 'nameColor',
+                                socket.io.emit("purchase", {
+                                    type: "nameColor",
                                     which: nameColor
                                 });
                             });
@@ -1485,6 +1485,33 @@ function update() {
             }
         ], ()=>game.gameData.match.rules.garbageTurns, (v)=>changeRule("garbageTurns", v), comp);
         selectState(150, 450, 40, 20, ON_OR_OFF, ()=>game.gameData.match.rules.garbageDefense, (v)=>changeRule("garbageDefense", v), comp);
+        selectState(150, 475, 50, 20, ON_OR_OFF, ()=>game.gameData.match.rules.comboIgnoresIncoming, (v)=>changeRule("comboIgnoresIncoming", v), comp);
+        selectState(150, 500, 50, 20, [
+            {
+                key: "off",
+                value: 0
+            },
+            {
+                key: "20 lines",
+                value: 20
+            },
+            {
+                key: "40 lines",
+                value: 40
+            },
+            {
+                key: "100 lines",
+                value: 100
+            },
+            {
+                key: "1000 lines",
+                value: 1000
+            },
+            {
+                key: "1000000 lines",
+                value: 1000000
+            }
+        ], ()=>game.gameData.match.rules.sprint, (v)=>changeRule("sprint", v), comp);
         if (!game.inGame) return;
         for (let notif of game.boardNotifications)notif.time += deltaTime;
         game.boardNotifications = game.boardNotifications.filter((notif)=>notif.time <= 1);
@@ -1907,9 +1934,33 @@ function drawBoard(board, state, timers, squareSize, detail, palette = "Default"
         textAlign(RIGHT, BOTTOM);
         noStroke();
         fill(0);
-        text(`${board.lines} line${board.lines === 1 ? "" : "s"}`, -6.5 * squareSize, 8 * squareSize);
-        text(`${board.juice} juice`, -6.5 * squareSize, 9 * squareSize);
-        text(`Level ${Math.floor(getJuiceLevel(board.juice))} (x${1 + Math.floor(getJuiceLevel(board.juice)) * 0.2})`, -6.5 * squareSize, 10 * squareSize);
+        text(`${board.lines} line${board.lines === 1 ? "" : "s"}`, -6 * squareSize, 8 * squareSize);
+        text(`${board.juice} juice`, -6 * squareSize, 9 * squareSize);
+        text(`Level ${Math.floor(getJuiceLevel(board.juice))} (x${1 + Math.floor(getJuiceLevel(board.juice)) * 0.2})`, -6 * squareSize, 10 * squareSize);
+        console.log(game.gameData.match.rules);
+        if (game.gameData.match.playing && game.gameData.match.rules.sprint > 0) {
+            const sprint = game.gameData.match.rules.sprint;
+            const myLines = game.localData.board.lines;
+            const remaining = sprint - myLines;
+            if (remaining > 0) {
+                textSize(16);
+                fill(0);
+                textAlign(RIGHT, BOTTOM);
+                text("remaining", -6 * squareSize, -0.1 * squareSize);
+                textSize(32);
+                textAlign(RIGHT, TOP);
+                text(remaining.toLocaleString(), -6 * squareSize, 0);
+                if (!game.gameData.match.solo && detail >= 5) {
+                    let otherMax = 0;
+                    for (const id of game.gameData.match.players.filter((id)=>id !== game.playerData._id))otherMax = Math.max(otherMax, game.gameData.match.boards[id].lines);
+                    const ahead = myLines - otherMax;
+                    textSize(16);
+                    fill(sin(millis() / 200) * 100);
+                    if (ahead < 0) text(`${-ahead} behind!`, -6 * squareSize, 2 * squareSize);
+                    else if (ahead > 0) text(`${ahead} ahead!`, -6 * squareSize, 2 * squareSize);
+                }
+            }
+        }
         textSize(300);
         textStyle(BOLD);
         textAlign(CENTER, CENTER);
@@ -1988,7 +2039,7 @@ function drawState() {
         noStroke();
         fill(0);
         textAlign(RIGHT, TOP);
-        fill(...COSM_NAME_COLORS[game.playerData.currentNameColor || 'Default'].data);
+        fill(...COSM_NAME_COLORS[game.playerData.currentNameColor || "Default"].data);
         text(game.playerData.username, width - 20, 20);
         textStyle(NORMAL);
         textSize(16);
@@ -2226,13 +2277,13 @@ function drawState() {
                 }
             } else if (state.subMenu === submenus.Cosmetics) {
                 fill(250);
-                drawButton(width / 2 - 490, height / 2 - 290, 100, 30, 'Palettes', ()=>fill(230), ()=>fill(210));
+                drawButton(width / 2 - 490, height / 2 - 290, 100, 30, "Palettes", ()=>fill(230), ()=>fill(210));
                 fill(250);
-                drawButton(width / 2 - 380, height / 2 - 290, 100, 30, 'Banners', ()=>fill(230), ()=>fill(210));
+                drawButton(width / 2 - 380, height / 2 - 290, 100, 30, "Banners", ()=>fill(230), ()=>fill(210));
                 fill(250);
-                drawButton(width / 2 - 270, height / 2 - 290, 100, 30, 'Name Colors', ()=>fill(230), ()=>fill(210));
+                drawButton(width / 2 - 270, height / 2 - 290, 100, 30, "Name Colors", ()=>fill(230), ()=>fill(210));
                 let i = 0;
-                if (game.cosmeticsPage === 'palette') for(const paletteName in COSM_PALETTES){
+                if (game.cosmeticsPage === "palette") for(const paletteName in COSM_PALETTES){
                     const x = width / 2 - 490 + floor(i / 6) * 310;
                     const y = height / 2 - 240 + i % 6 * 80;
                     textAlign(LEFT, TOP);
@@ -2246,14 +2297,14 @@ function drawState() {
                         wSum += PIECES[j].width + 1;
                     }
                     if ((game.playerData.palettesUnlocked || [
-                        'Default'
+                        "Default"
                     ]).includes(paletteName)) {
                         if (game.playerData.currentPalette === paletteName) {
                             fill(200, 200, 250);
-                            drawButton(x, y + 50, 300, 20, 'equipped', ()=>fill(230), ()=>fill(210), true);
+                            drawButton(x, y + 50, 300, 20, "equipped", ()=>fill(230), ()=>fill(210), true);
                         } else {
                             fill(250);
-                            drawButton(x, y + 50, 300, 20, 'equip', ()=>fill(230), ()=>fill(210), false);
+                            drawButton(x, y + 50, 300, 20, "equip", ()=>fill(230), ()=>fill(210), false);
                         }
                     } else {
                         const data = COSM_PALETTES[paletteName];
@@ -2268,7 +2319,7 @@ function drawState() {
                     }
                     i += 1;
                 }
-                else if (game.cosmeticsPage === 'banner') for(const bannerName in COSM_BANNERS){
+                else if (game.cosmeticsPage === "banner") for(const bannerName in COSM_BANNERS){
                     const x = width / 2 - 490 + floor(i / 6) * 310;
                     const y = height / 2 - 240 + i % 6 * 80;
                     textAlign(LEFT, TOP);
@@ -2282,14 +2333,14 @@ function drawState() {
                     rect(x, y + 15, 200, 40);
                     noStroke();
                     if ((game.playerData.bannersUnlocked || [
-                        'Default'
+                        "Default"
                     ]).includes(bannerName)) {
                         if (game.playerData.currentBanner === bannerName) {
                             fill(200, 200, 250);
-                            drawButton(x, y + 50, 300, 20, 'equipped', ()=>fill(230), ()=>fill(210), true);
+                            drawButton(x, y + 50, 300, 20, "equipped", ()=>fill(230), ()=>fill(210), true);
                         } else {
                             fill(250);
-                            drawButton(x, y + 50, 300, 20, 'equip', ()=>fill(230), ()=>fill(210), false);
+                            drawButton(x, y + 50, 300, 20, "equip", ()=>fill(230), ()=>fill(210), false);
                         }
                     } else {
                         const data = COSM_BANNERS[bannerName];
@@ -2304,7 +2355,7 @@ function drawState() {
                     }
                     i += 1;
                 }
-                else if (game.cosmeticsPage === 'nameColor') for(const nameColor in COSM_NAME_COLORS){
+                else if (game.cosmeticsPage === "nameColor") for(const nameColor in COSM_NAME_COLORS){
                     const x = width / 2 - 490 + floor(i / 6) * 310;
                     const y = height / 2 - 240 + i % 6 * 80;
                     textAlign(LEFT, TOP);
@@ -2317,14 +2368,14 @@ function drawState() {
                     fill(...data.data);
                     text(game.playerData.username, x, y + 30);
                     if ((game.playerData.nameColorsUnlocked || [
-                        'Default'
+                        "Default"
                     ]).includes(nameColor)) {
                         if (game.playerData.currentNameColor === nameColor) {
                             fill(200, 200, 250);
-                            drawButton(x, y + 50, 300, 20, 'equipped', ()=>fill(230), ()=>fill(210), true);
+                            drawButton(x, y + 50, 300, 20, "equipped", ()=>fill(230), ()=>fill(210), true);
                         } else {
                             fill(250);
-                            drawButton(x, y + 50, 300, 20, 'equip', ()=>fill(230), ()=>fill(210), false);
+                            drawButton(x, y + 50, 300, 20, "equip", ()=>fill(230), ()=>fill(210), false);
                         }
                     } else {
                         if (getLevel(game.playerData.xp) < data.levelRequirement) drawButton(x, y + 50, 300, 20, `unlocks at level ${data.levelRequirement}`, ()=>fill(230), ()=>fill(210), true);
@@ -2431,12 +2482,19 @@ function drawState() {
         noStroke();
         text("Practice", 0, 0);
     } else {
-        textSize(20);
+        textSize(16);
         textAlign(CENTER, TOP);
         textStyle(BOLD);
         fill(0);
         noStroke();
-        text(`${game.gameData.match.kills[game.playerData._id]} KO${game.gameData.match.kills[game.playerData._id] === 1 ? "" : "s"}`, 0, 11 * SQUARE_SIZE);
+        const end = game.gameData.match.ended || Date.now();
+        const elapsed = max(end - game.gameData.match.started, 0);
+        const time = `${nf(floor(elapsed / 60000), 2, 0)}:${nf(floor(elapsed / 1000) % 60, 2, 0)}:${nf(elapsed % 1000, 3, 0)}`;
+        const pps = `${nf(game.localData.board.move ? game.localData.board.move / (max(elapsed, 1) / 1000) : 0, 0, 2)} pps`;
+        if (game.gameData.match.solo) {
+            const kos = `${game.gameData.match.kills[game.playerData._id]} KO${game.gameData.match.kills[game.playerData._id] === 1 ? "" : "s"}`;
+            text(`${time} - ${pps} - ${kos}`, 0, 10.5 * SQUARE_SIZE);
+        } else text(`${time} - ${pps}`, 0, 10.5 * SQUARE_SIZE);
     }
     pop();
     textStyle(BOLD);
@@ -2453,7 +2511,7 @@ function drawState() {
         fill(250);
         stroke(0);
         rect(10, 30, 200, 250);
-        rect(10, 310, 200, 200);
+        rect(10, 310, 200, 250);
         fill(0);
         noStroke();
         textSize(16);
@@ -2485,12 +2543,15 @@ function drawState() {
         drawSelect(150, 225, 50, 20, ON_OR_OFF, ()=>getOption("public"), false);
         drawSelect(150, 250, 50, 20, ON_OR_OFF, ()=>getOption("ranked"), false);
         textAlign(LEFT, TOP);
+        textSize(16);
         text("Competitive", 20, 325);
         text("Initial Speed", 20, 350);
         text("Resend Garbage", 20, 375);
         text("Forgiving Combos", 20, 400);
         text("Garbage Turns", 20, 425);
         text("Garbage Defense", 20, 450);
+        text("Combo Not Incoming", 20, 475);
+        text("Sprint", 20, 500);
         drawSelect(150, 325, 50, 20, ON_OR_OFF, ()=>getRule("competitive"), false);
         drawSelect(150, 350, 50, 20, [
             {
@@ -2539,6 +2600,33 @@ function drawState() {
             }
         ], ()=>getRule("garbageTurns"), getRule("competitive"));
         drawSelect(150, 450, 50, 20, ON_OR_OFF, ()=>getRule("garbageDefense"), getRule("competitive"));
+        drawSelect(150, 475, 50, 20, ON_OR_OFF, ()=>getRule("comboIgnoresIncoming"), getRule("competitive"));
+        drawSelect(150, 500, 50, 20, [
+            {
+                key: "off",
+                value: 0
+            },
+            {
+                key: "20 lines",
+                value: 20
+            },
+            {
+                key: "40 lines",
+                value: 40
+            },
+            {
+                key: "100 lines",
+                value: 100
+            },
+            {
+                key: "1000 lines",
+                value: 1000
+            },
+            {
+                key: "1000000 lines",
+                value: 1000000
+            }
+        ], ()=>getRule("sprint"), getRule("competitive"));
         pop();
         for(let i = 0; i < game.gameData.match.players.length; i++){
             const id = game.gameData.match.players[i];
@@ -2554,7 +2642,7 @@ function drawState() {
             rect(width - 210, 10 + y, 200, 40);
             fill(250);
             rect(width - 45, 15 + y, 30, 30);
-            fill(...COSM_NAME_COLORS[userData.currentNameColor || 'Default'].data);
+            fill(...COSM_NAME_COLORS[userData.currentNameColor || "Default"].data);
             noStroke();
             textAlign(RIGHT, TOP);
             textStyle(BOLD);
@@ -2622,7 +2710,7 @@ function drawState() {
             textSize(16);
             textAlign(CENTER, BOTTOM);
             textStyle(BOLD);
-            fill(...COSM_NAME_COLORS[game.gameData.match.data[id].currentNameColor || 'Default'].data);
+            fill(...COSM_NAME_COLORS[game.gameData.match.data[id].currentNameColor || "Default"].data);
             text(`${game.gameData.match.data[id].username} (${game.gameData.match.kills[id]} KO${game.gameData.match.kills[id] === 1 ? "" : "s"})`, 0, -11 * game.localData.boardSizes[id]);
             pop();
         }
